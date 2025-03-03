@@ -15,7 +15,7 @@ class BERTEmbedder:
         self.model = BertModel.from_pretrained(model_name).to(self.device)
         self.model.eval()
 
-    def embed_text(self, text, pooling='mean'):
+    def embed_text(self, text, pooling='cls'):
         """
         Embeds a given text (word or sentence) using BERT.
         

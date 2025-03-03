@@ -3,3 +3,7 @@ torch==2.6.0
 pillow==10.3.0
 scikit-learn==1.6.1
 matplotlib==3.10.0
+nltk==3.9.1
+openai==1.65.1
+python-dotenv==1.0.1
+tqdm==4.67.1
