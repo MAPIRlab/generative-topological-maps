@@ -192,24 +192,11 @@ def main(args):
 
             # Geometric feature = bounding box
             geometric_features[semantic_map_object.get_object_id()] = \
-                semantic_map_object.get_bbox_center()
+                get_geometric_feature(semantic_map_object)
 
-            # Semantic feature = BERT embedding
-            # print([semantic_map_object.get_most_probable_class()] +
-            #       semantic_map_object.get_most_probable_class_synonyms())
-            # semantic_features[semantic_map_object.get_object_id()] = \
-            #     bert.embed_text(
-            #         [semantic_map_object.get_most_probable_class()] + semantic_map_object.get_most_probable_class_synonyms())
-            # semantic_features[semantic_map_object.get_object_id()] = \
-            #     openai_embedder.embed_text(
-            #         [semantic_map_object.get_most_probable_class()] + semantic_map_object.get_most_probable_class_synonyms())
-            # semantic_features[semantic_map_object.get_object_id()] = \
-            #     openai_embedder.embed_text(
-            #         semantic_map_object.get_most_probable_class())
-            print(semantic_map_object.get_classes())
+            # Semantic feature = to be decided
             semantic_features[semantic_map_object.get_object_id()] = \
-                openai_embedder.embed_text(
-                    semantic_map_object.get_most_probable_class())
+                get_semantic_feature(semantic_map_object)
 
             # print(object_id, len(geometric_features[object_id]), len(semantic_features[object_id]))
 
@@ -242,6 +229,19 @@ def main(args):
         print("Saving Semantic Clusters plot")
         visualize_clusters(semantic_map_objects, semantic_clusters,
                            "Semantic Clustering", f"{semantic_map_id}_semantic.png")
+
+
+def get_geometric_feature(semantic_map_object: SemanticMapObject):
+    return semantic_map_object.get_bbox_center()
+
+
+def get_semantic_feature(semantic_map_object: SemanticMapObject):
+
+    # Get sentence from object
+    
+
+    return openai_embedder.embed_text(
+        semantic_map_object.get_most_probable_class())
 
 
 if __name__ == "__main__":
