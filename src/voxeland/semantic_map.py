@@ -7,7 +7,8 @@ class SemanticMap:
     Represents a semantic map containing multiple SemanticMapObjects.
     """
 
-    def __init__(self, objects: List[SemanticMapObject]):
+    def __init__(self, semantic_map_id: str, objects: List[SemanticMapObject]):
+        self.semantic_map_id = semantic_map_id
         self.objects: List[SemanticMapObject] = objects
 
     def find_object(self, object_id: str) -> Optional[SemanticMapObject]:
@@ -16,6 +17,10 @@ class SemanticMap:
             if obj.get_object_id() == object_id:
                 return obj
         return None
+
+    def get_semantic_map_id(self):
+        # TODO
+        return self.semantic_map_id
 
     def get_objects(self, unknown: bool = False) -> List[SemanticMapObject]:
         """Returns the list of SemanticMapObjects."""

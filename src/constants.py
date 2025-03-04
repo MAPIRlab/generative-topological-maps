@@ -1,3 +1,9 @@
 # Paths
 SEMANTIC_MAPS_FOLDER_PATH = "data/semantic_maps/"
-PLOTS_FOLDER_PATH = "results/plots/"
+RESULTS_FOLDER_PATH = "results/"
+
+# Semantic descriptors
+SEMANTIC_DESCRIPTOR_BERT = "bert"
+SEMANTIC_DESCRIPTOR_OPENAI = "openai"
+SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT = "deepseek+sbert"
+SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI = "deepseek+openai"

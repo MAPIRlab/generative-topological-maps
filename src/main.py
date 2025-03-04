@@ -1,20 +1,23 @@
 
+from functools import partial
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
 import argparse
 import os
 from typing import List
 
-import nltk
 
 from embedding.bert_embedder import BERTEmbedder
 from embedding.openai_embedder import OpenAIEmbedder
+from embedding.sentence_embedder import SentenceEmbedder
+from llm.large_language_model import LargeLanguageModel
+from prompt.sentence_generator_prompt import SentenceGeneratorPrompt
 from utils import file_utils
 import constants
-
 import numpy as np
-from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
-from sklearn.metrics import silhouette_score
+from scipy.spatial.distance import pdist, squareform
 
+from voxeland.clustering import ClusteringResult, ObjectCluster
 from voxeland.semantic_map import SemanticMap
 from voxeland.semantic_map_object import SemanticMapObject
 
@@ -24,163 +27,89 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def visualize_clusters(semantic_map_objects: List[SemanticMapObject], clusters, title, filename):
-    """Visualizes the clustered objects from a top-down view and saves the plot."""
-    plt.figure(figsize=(8, 8))
-    # Get distinct colors for clusters
-    colors = plt.cm.get_cmap("tab10", len(clusters))
-    legend_labels = []
-    legend_colors = []
+def geometric_semantic_distance(A, B, semantic_weight: float = 0.005):
+    """
+    Custom distance:
+    - Euclidean distance for the first three dimensions
+    - + 0.001 * Euclidean distance for all remaining dimensions
+    """
+    # print(A.shape)
+    # print(B.shape)
+    A, B = np.array(A), np.array(B)
 
-    for cluster_id, object_ids in clusters.items():
-        color = colors(cluster_id)
-        legend_labels.append(f"Cluster {cluster_id}")
-        legend_colors.append(color)
+    # Euclidean distance for the first three dimensions
+    dist_first_3 = np.sqrt(np.sum((A[:3] - B[:3]) ** 2))
+    print("first3", dist_first_3)
 
-        for obj_id in object_ids:
-            obj = next(
-                (o for o in semantic_map_objects if o.get_object_id() == obj_id), None)
-            if obj:
-                print(obj.get_most_probable_class())
-                bbox_center = obj.get_bbox_center()
-                print(bbox_center)
-                bbox_size = obj.get_bbox_size()
-                print(bbox_size)
-                x, y = bbox_center[:2]  # Top-down view (x, y plane)
-                w, h = bbox_size[:2]
+    # Euclidean distance for remaining dimensions (if any)
+    dist_rest = (np.sqrt(np.sum((A[3:] - B[3:]) ** 2))
+                 if len(A) > 3 else 0.0) * semantic_weight
+    print("rest", dist_rest)
 
-                # Draw bounding box
-                rect = plt.Rectangle(
-                    (x - w/2, y - h/2), w, h, edgecolor=color, facecolor=color, alpha=0.5)
-                plt.gca().add_patch(rect)
-
-                # Add label
-                plt.text(x, y, obj.get_most_probable_class(),
-                         fontsize=8, ha='center', va='center', color='black')
-
-    x_min, x_max = float('inf'), float('-inf')
-    y_min, y_max = float('inf'), float('-inf')
-
-    for cluster_id, object_ids in clusters.items():
-        color = colors(cluster_id)
-        for obj_id in object_ids:
-            obj = next(
-                (o for o in semantic_map_objects if o.get_object_id() == obj_id), None)
-            if obj:
-                bbox_center = obj.get_bbox_center()
-                bbox_size = obj.get_bbox_size()
-                x, y = bbox_center[:2]  # Top-down view (x, y plane)
-                w, h = bbox_size[:2]
-
-                x_min, x_max = min(x_min, x - w/2), max(x_max, x + w/2)
-                y_min, y_max = min(y_min, y - h/2), max(y_max, y + h/2)
-
-    plt.xlim(x_min - 1, x_max + 1)
-    plt.ylim(y_min - 1, y_max + 1)
-
-    plt.xlabel("X coordinate")
-    plt.ylabel("Y coordinate")
-    plt.title(title)
-    plt.grid(True)
-
-    # Add legend
-    legend_patches = [plt.Rectangle((0, 0), 1, 1, fc=color)
-                      for color in legend_colors]
-    plt.legend(legend_patches, legend_labels, loc="upper right")
-
-    os.makedirs(constants.PLOTS_FOLDER_PATH, exist_ok=True)
-    filepath = os.path.join(constants.PLOTS_FOLDER_PATH, filename)
-    plt.savefig(filepath)
-    print("saving...", filepath)
-    plt.close()
+    return dist_first_3 + dist_rest
 
 
-def find_optimal_clusters(data, max_k=10):
-    """Uses the Elbow Method and Silhouette Score to determine the optimal k."""
-    inertia = []
-    silhouette_scores = []
-    k_values = range(2, max_k + 1)
+def apply_clustering(object_label_descriptor_dict, eps, min_samples, semantic_weight) -> ClusteringResult:
+    """Performs DBSCAN clustering using a custom distance metric and returns a Clustering instance."""
 
-    for k in k_values:
-        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
-        kmeans.fit(data)
-        inertia.append(kmeans.inertia_)
-        silhouette_scores.append(silhouette_score(data, kmeans.labels_))
+    object_labels = list(object_label_descriptor_dict.keys())
+    object_descriptors = np.array(list(object_label_descriptor_dict.values()))
 
-    # Plot Elbow Method
-    plt.figure(figsize=(10, 5))
-    plt.subplot(1, 2, 1)
-    plt.plot(k_values, inertia, marker='o')
-    plt.xlabel('Number of clusters')
-    plt.ylabel('Inertia')
-    plt.title('Elbow Method')
+    # Compute the custom distance matrix
+    distance_matrix = squareform(
+        pdist(object_descriptors, metric=partial(geometric_semantic_distance, semantic_weight=semantic_weight)))
 
-    # Plot Silhouette Score
-    plt.subplot(1, 2, 2)
-    plt.plot(k_values, silhouette_scores, marker='o')
-    plt.xlabel('Number of clusters')
-    plt.ylabel('Silhouette Score')
-    plt.title('Silhouette Score')
+    # Apply DBSCAN with precomputed distance matrix
+    clustering = DBSCAN(eps=eps, min_samples=min_samples, metric="precomputed")
+    labels = clustering.fit_predict(distance_matrix)
 
-    plt.show()
+    # Group objects into clusters
+    clusters_dict = {}
+    for object_label, object_cluster in zip(object_labels, labels):
+        clusters_dict.setdefault(object_cluster, []).append(object_label)
 
-    # Choosing the best k based on Silhouette Score
-    best_k = k_values[np.argmax(silhouette_scores)]
-    return best_k
+    # Convert clusters into ObjectCluster instances
+    object_clusters = [ObjectCluster(cluster_id, obj_labels)
+                       for cluster_id, obj_labels in clusters_dict.items()]
+
+    return ClusteringResult(object_clusters)
 
 
-def apply_clustering(features, feature_type, k=None, max_k=10):
-    """Performs clustering and returns labels."""
-
-    data = np.array(list(features.values()))
-    if k is None:
-        best_k = find_optimal_clusters(data, max_k)
-    else:
-        best_k = k
-
-    kmeans = KMeans(n_clusters=best_k, random_state=42, n_init=10)
-    labels = kmeans.fit_predict(data)
-
-    # print(f"Optimal k for {feature_type}: {best_k}")
-    clusters = {i: [] for i in range(best_k)}
-
-    for obj_id, label in zip(features.keys(), labels):
-        clusters[label].append(obj_id)
-
-    # print(f"\n{feature_type} Clusters:")
-    # for cluster_id, objects in clusters.items():
-        # print(f"Cluster {cluster_id}: {objects}")
-
-    return best_k, clusters
+# Models
+bert_embedder = None
+openai_embedder = None
+sbert_embedder = None
+deepseek_llm = None
 
 
 def main(args):
-    # Prepare models
-    nltk.download("wordnet")
+    # Instantiate models
+    global bert_embedder, openai_embedder, sbert_embedder, deepseek_llm
     bert_embedder = BERTEmbedder()
     openai_embedder = OpenAIEmbedder()
+    sbert_embedder = SentenceEmbedder()
+    if args.semantic_descriptor in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
+        _, deepseek_llm = LargeLanguageModel.create_from_huggingface(
+            "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
 
     # Load and pre-process semantic map
-    semantic_maps = list()
+    semantic_maps: List[SemanticMap] = list()
     for semantic_map_file in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
 
         semantic_map_basename = file_utils.get_file_basename(semantic_map_file)
-
         # Load semantic map
         semantic_map_obj = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
                                                              semantic_map_file))
-
-        semantic_maps.append((semantic_map_basename, semantic_map_obj))
+        # Create SemanticMap object
+        semantic_maps.append(SemanticMap(semantic_map_basename,
+                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_obj["instances"].items()]))
 
     # For each semantic map
-    for (semantic_map_id, semantic_map_json_data) in semantic_maps[:args.number_maps]:
+    for semantic_map in semantic_maps[:args.number_maps]:
 
-        print(semantic_map_id)
-
-        # Create semantic map object
-        semantic_map_objects: List[SemanticMapObject] = [SemanticMapObject(
-            obj_id, obj_data) for obj_id, obj_data in semantic_map_json_data["instances"].items()]
-        semantic_map: SemanticMap = SemanticMap(semantic_map_objects)
+        print("#"*40)
+        print(f"Processing {semantic_map.get_semantic_map_id()}...")
+        print("#"*40)
 
         # Compute object semantic and geometric features
         semantic_features = dict()
@@ -188,60 +117,113 @@ def main(args):
 
         # For each object
         for semantic_map_object in tqdm(semantic_map.get_objects(),
-                                        desc="Generating geometric and semantic features..."):
+                                        desc=f"Generating features for {semantic_map.get_semantic_map_id()}..."):
 
             # Geometric feature = bounding box
             geometric_features[semantic_map_object.get_object_id()] = \
-                get_geometric_feature(semantic_map_object)
+                get_geometric_descriptor(semantic_map_object)
 
             # Semantic feature = to be decided
             semantic_features[semantic_map_object.get_object_id()] = \
-                get_semantic_feature(semantic_map_object)
+                get_semantic_descriptor(
+                    args.semantic_descriptor, semantic_map_object)
 
-            # print(object_id, len(geometric_features[object_id]), len(semantic_features[object_id]))
+        # Convert features into numpy arrays
+        # Shape: (num_objects, geometric_dim)
+        geometric_descriptor_matrix = np.array(
+            list(geometric_features.values()))
 
-        geometric_best_k, geometric_clusters = apply_clustering(
-            geometric_features, 'Geometric Features')
-        print("Geometric clusters")
-        print(f"k = {geometric_best_k}")
-        for cluster_id, cluster_list in geometric_clusters.items():
-            print(f"Cluster {cluster_id}")
-            for object_id in cluster_list:
-                semantic_map_object = semantic_map.find_object(object_id)
-                print(
-                    f"\t{object_id} -> {semantic_map_object.get_most_probable_class()}")
+        # Shape: (num_objects, semantic_dim)
+        semantic_descriptor_matrix = np.array(list(semantic_features.values()))
 
-        semantic_best_k, semantic_clusters = apply_clustering(
-            semantic_features, 'Semantic Features', k=geometric_best_k)
-        print("Semantic clusters")
-        print(f"k = {geometric_best_k}")
-        for cluster_id, cluster_list in semantic_clusters.items():
-            print(f"Cluster {cluster_id}")
-            for object_id in cluster_list:
-                semantic_map_object = semantic_map.find_object(object_id)
-                print(
-                    f"\t{object_id} -> {semantic_map_object.get_most_probable_class()}")
+        # Perform dimensionality reduction for semantic_features
+        # target_dim = 3  # Define target dimensionality
+        # if semantic_descriptor_matrix.shape[1] > target_dim:
+        #     pca = PCA(n_components=target_dim)
+        #     reduced_semantic_descriptor = pca.fit_transform(
+        #         semantic_descriptor_matrix)
+        # else:
+        #     raise ValueError(
+        #         f"Semantic descriptor size is lower than target dim {target_dim}")
+        reduced_semantic_descriptor = semantic_descriptor_matrix
 
-        print(f"Saving Geometric Clusters plot {semantic_map_id}")
-        visualize_clusters(semantic_map_objects, geometric_clusters,
-                           "Geometric Clustering", f"{semantic_map_id}_geometric.png")
+        # Normalize both descriptors separately
+        normalized_geometric = StandardScaler().fit_transform(
+            geometric_descriptor_matrix)
+        print("normalized_geometric_shape", normalized_geometric.shape)
+        normalized_semantic = StandardScaler().fit_transform(
+            reduced_semantic_descriptor)
+        print("normalized_semantic_shape", normalized_semantic.shape)
 
-        print("Saving Semantic Clusters plot")
-        visualize_clusters(semantic_map_objects, semantic_clusters,
-                           "Semantic Clustering", f"{semantic_map_id}_semantic.png")
+        # Create mixed descriptor
+        mixed_descriptor_matrix = np.hstack(
+            (normalized_geometric, normalized_semantic))
+        print("mixed_descriptor_matrix", mixed_descriptor_matrix.shape)
+
+        # Convert back to dictionary format
+        mixed_descriptors = {obj_id: mixed_descriptor_matrix[i] for i, obj_id in enumerate(
+            geometric_features.keys())}
+
+        # Perform clustering
+        eps = 1
+        for min_samples in range(1, 3):
+            mixed_clustering_result: ClusteringResult = apply_clustering(
+                mixed_descriptors, eps=1, min_samples=min_samples, semantic_weight=args.semantic_weight)
+            # Visualize using visualize_clusters
+            print("Saving clustering result...")
+
+            json_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                          args.semantic_descriptor,
+                                          f"{semantic_map.get_semantic_map_id()}_mixed_e{eps}_m{min_samples}_w{args.semantic_weight}",
+                                          "clustering.json")
+            plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                          args.semantic_descriptor,
+                                          f"{semantic_map.get_semantic_map_id()}_mixed_e{eps}_m{min_samples}_w{args.semantic_weight}",
+                                          "plot.png")
+            file_utils.create_directories_for_file(json_file_path)
+            file_utils.create_directories_for_file(plot_file_path)
+            mixed_clustering_result.save_to_json(json_file_path)
+            mixed_clustering_result.visualize(semantic_map.get_objects(),
+                                              f"Mixed Clustering eps={eps}, min_samples={min_samples}, semantic_weight={args.semantic_weight}", plot_file_path)
 
 
-def get_geometric_feature(semantic_map_object: SemanticMapObject):
+def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
     return semantic_map_object.get_bbox_center()
 
 
-def get_semantic_feature(semantic_map_object: SemanticMapObject):
+def get_semantic_descriptor(semantic_descriptor: str, semantic_map_object: SemanticMapObject, verbose: bool = False):
 
-    # Get sentence from object
-    
-
-    return openai_embedder.embed_text(
-        semantic_map_object.get_most_probable_class())
+    if semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_BERT:
+        # Generate embedding
+        return bert_embedder.embed_text(semantic_map_object.get_most_probable_class())
+    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_OPENAI:
+        # Generate embedding
+        return openai_embedder.embed_text(semantic_map_object.get_most_probable_class())
+    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT:
+        # Generate sentence
+        sentence_generator_prompt = SentenceGeneratorPrompt(
+            word=semantic_map_object.get_most_probable_class())
+        sentence = deepseek_llm.generate_json_retrying(
+            sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)["description"]
+        if verbose:
+            print(
+                f"Sentence for {semantic_map_object.get_most_probable_class()} -> {sentence}")
+        # Generate embedding
+        return sbert_embedder.embed_text(sentence)
+    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI:
+        # Generate sentence
+        sentence_generator_prompt = SentenceGeneratorPrompt(
+            word=semantic_map_object.get_most_probable_class())
+        sentence = deepseek_llm.generate_json_retrying(
+            sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)["description"]
+        if verbose:
+            print(
+                f"Sentence for {semantic_map_object.get_most_probable_class()} -> {sentence}")
+        # Generate embedding
+        return openai_embedder.embed_text(sentence)
+    else:
+        raise NotImplementedError(
+            f"Not implemented semantic descriptor {semantic_descriptor}")
 
 
 if __name__ == "__main__":
@@ -253,6 +235,17 @@ if __name__ == "__main__":
                         help="Number of semantic map to which place categorization will be applied.",
                         type=int,
                         default=10)
+
+    parser.add_argument("-s", "--semantic-descriptor",
+                        help="How to compute the semantic descriptor.",
+                        choices=[constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
+                                 constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI],
+                        default=constants.SEMANTIC_DESCRIPTOR_BERT)
+
+    parser.add_argument("-w", "--semantic-weight",
+                        help="Semantic weight in DBSCAN distance.",
+                        type=float,
+                        default=0.005)
 
     args = parser.parse_args()
 

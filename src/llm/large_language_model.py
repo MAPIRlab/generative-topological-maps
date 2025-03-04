@@ -15,7 +15,7 @@ class LargeLanguageModel():
         """Returns the model identifier."""
         return self._model_id
 
-    def generate_text(self, prompt: str, params: dict):
+    def generate_text(self, prompt: str, params: dict = {}):
         """Generates text based on the given prompt and parameters."""
         inputs = self._tokenizer(prompt, return_tensors="pt")
         output = self._model.generate(
@@ -30,13 +30,13 @@ class LargeLanguageModel():
         )
         return self._tokenizer.decode(output[0], skip_special_tokens=True)
 
-    def generate_text_filtered(self, prompt: str, params: dict):
+    def generate_text_filtered(self, prompt: str, params: dict = {}):
         """Generates text and removes the input prompt from the response."""
         response = self.generate_text(prompt, params)
         filtered_response = response.replace(prompt, "").strip()
         return filtered_response
 
-    def generate_json(self, prompt: str, params: dict):
+    def generate_json(self, prompt: str, params: dict = {}):
         """Generates text and extracts JSON content as a Python dictionary."""
         response = self.generate_text_filtered(prompt, params)
         start = response.rfind("{")
@@ -49,10 +49,12 @@ class LargeLanguageModel():
                 return None
         return None
 
-    def generate_json_retrying(self, prompt: str, params: dict, retries: int = 3):
+    def generate_json_retrying(self, prompt: str, params: dict = {}, retries: int = 3, verbose: bool = False):
         """Generates JSON with retries if the response does not contain valid JSON."""
-        for _ in range(retries):
+        for i in range(retries):
             json_response = self.generate_json(prompt, params)
+            if verbose:
+                print(f"Response {i+1}/{retries}: {json_response}")
             if json_response is not None:
                 return json_response
         return None
