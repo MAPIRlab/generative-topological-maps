@@ -1,6 +1,7 @@
 
 from functools import partial
 from sklearn.cluster import DBSCAN
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import argparse
 import os
@@ -94,12 +95,13 @@ def main(args):
 
     # Load and pre-process semantic map
     semantic_maps: List[SemanticMap] = list()
-    for semantic_map_file in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
+    for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
 
-        semantic_map_basename = file_utils.get_file_basename(semantic_map_file)
+        semantic_map_basename = file_utils.get_file_basename(
+            semantic_map_file_name)
         # Load semantic map
         semantic_map_obj = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                             semantic_map_file))
+                                                             semantic_map_file_name))
         # Create SemanticMap object
         semantic_maps.append(SemanticMap(semantic_map_basename,
                                          [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_obj["instances"].items()]))
@@ -137,15 +139,16 @@ def main(args):
         semantic_descriptor_matrix = np.array(list(semantic_features.values()))
 
         # Perform dimensionality reduction for semantic_features
-        # target_dim = 3  # Define target dimensionality
-        # if semantic_descriptor_matrix.shape[1] > target_dim:
-        #     pca = PCA(n_components=target_dim)
-        #     reduced_semantic_descriptor = pca.fit_transform(
-        #         semantic_descriptor_matrix)
-        # else:
-        #     raise ValueError(
-        #         f"Semantic descriptor size is lower than target dim {target_dim}")
-        reduced_semantic_descriptor = semantic_descriptor_matrix
+        if args.semantic_dimension is not None:
+            if semantic_descriptor_matrix.shape[1] > args.semantic_dimension:
+                pca = PCA(n_components=args.semantic_dimension)
+                reduced_semantic_descriptor = pca.fit_transform(
+                    semantic_descriptor_matrix)
+            else:
+                raise ValueError(
+                    f"Semantic descriptor size is lower than target dim {args.semantic_dimension}")
+        else:
+            reduced_semantic_descriptor = semantic_descriptor_matrix
 
         # Normalize both descriptors separately
         normalized_geometric = StandardScaler().fit_transform(
@@ -165,26 +168,25 @@ def main(args):
             geometric_features.keys())}
 
         # Perform clustering
-        eps = 1
-        for min_samples in range(1, 3):
-            mixed_clustering_result: ClusteringResult = apply_clustering(
-                mixed_descriptors, eps=1, min_samples=min_samples, semantic_weight=args.semantic_weight)
-            # Visualize using visualize_clusters
-            print("Saving clustering result...")
+        mixed_clustering_result: ClusteringResult = apply_clustering(
+            mixed_descriptors, eps=1, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
+        # Visualize using visualize_clusters
+        print("Saving clustering result...")
 
-            json_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                          args.semantic_descriptor,
-                                          f"{semantic_map.get_semantic_map_id()}_mixed_e{eps}_m{min_samples}_w{args.semantic_weight}",
-                                          "clustering.json")
-            plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                          args.semantic_descriptor,
-                                          f"{semantic_map.get_semantic_map_id()}_mixed_e{eps}_m{min_samples}_w{args.semantic_weight}",
-                                          "plot.png")
-            file_utils.create_directories_for_file(json_file_path)
-            file_utils.create_directories_for_file(plot_file_path)
-            mixed_clustering_result.save_to_json(json_file_path)
-            mixed_clustering_result.visualize(semantic_map.get_objects(),
-                                              f"Mixed Clustering eps={eps}, min_samples={min_samples}, semantic_weight={args.semantic_weight}", plot_file_path)
+        json_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                      f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}",
+                                      semantic_map.get_semantic_map_id(),
+                                      "clustering.json")
+        plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                      f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}",
+                                      semantic_map.get_semantic_map_id(),
+                                      "plot.png")
+        file_utils.create_directories_for_file(json_file_path)
+        file_utils.create_directories_for_file(plot_file_path)
+        mixed_clustering_result.save_to_json(json_file_path)
+        mixed_clustering_result.visualize(semantic_map.get_objects(),
+                                          f"s_d={args.semantic_descriptor} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}",
+                                          plot_file_path)
 
 
 def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
@@ -236,6 +238,7 @@ if __name__ == "__main__":
                         type=int,
                         default=10)
 
+    # SEMANTIC DESCRIPTOR parameters
     parser.add_argument("-s", "--semantic-descriptor",
                         help="How to compute the semantic descriptor.",
                         choices=[constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
@@ -246,6 +249,22 @@ if __name__ == "__main__":
                         help="Semantic weight in DBSCAN distance.",
                         type=float,
                         default=0.005)
+
+    parser.add_argument("-d", "--semantic-dimension",
+                        help="Dimensions to which reduce the semantic descriptor using PCA",
+                        type=int,
+                        default=None)
+
+    # DBSCAN parameters
+    parser.add_argument("-e", "--eps",
+                        help="eps parameter in the DBSCAN algorithm",
+                        type=int,
+                        default=1)
+
+    parser.add_argument("-m", "--min-samples",
+                        help="min_samples parameter in the DBSCAN algorithm",
+                        type=int,
+                        default=2)
 
     args = parser.parse_args()
 

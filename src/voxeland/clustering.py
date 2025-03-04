@@ -1,6 +1,7 @@
-from typing import List
+from typing import Dict, List
 
 from matplotlib import pyplot as plt
+from sklearn.metrics import adjusted_rand_score, fowlkes_mallows_score, normalized_mutual_info_score, v_measure_score
 
 from utils import file_utils
 from voxeland.semantic_map_object import SemanticMapObject
@@ -108,6 +109,49 @@ class ClusteringResult:
         plt.savefig(file_path)
         plt.close()
 
+    from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score, fowlkes_mallows_score
+
+    def evaluate_against_ground_truth(self, ground_truth_cr: "ClusteringResult") -> Dict[str, float]:
+        """
+        Evaluates this clustering result against a ground truth ClusteringResult.
+
+        :param ground_truth_cr: The ground truth ClusteringResult to compare against.
+        :return: Dictionary with evaluation metrics (ARI, NMI, V-Measure, FMI).
+        """
+        predicted_labels = []
+        ground_truth_labels = []
+
+        # Create mapping of object labels to their cluster IDs in the predicted result
+        predicted_cluster_map = {obj: cluster.cluster_id for cluster in self.get_all_clusters(
+        ) for obj in cluster.object_labels}
+        # print(predicted_cluster_map)
+
+        # Create mapping of object labels to their cluster IDs in the ground truth result
+        ground_truth_cluster_map = {obj: cluster.cluster_id for cluster in ground_truth_cr.get_all_clusters(
+        ) for obj in cluster.object_labels}
+        # print(ground_truth_cluster_map)
+
+        # Align ground truth and predicted labels
+        for obj in ground_truth_cluster_map:
+            if obj in predicted_cluster_map:
+                predicted_labels.append(predicted_cluster_map[obj])
+                ground_truth_labels.append(ground_truth_cluster_map[obj])
+
+        if not predicted_labels:
+            return {
+                "ARI": 0,
+                "NMI": 0,
+                "V-Measure": 0,
+                "FMI": 0,
+            }
+
+        return {
+            "ARI": adjusted_rand_score(ground_truth_labels, predicted_labels),
+            "NMI": normalized_mutual_info_score(ground_truth_labels, predicted_labels),
+            "V-Measure": v_measure_score(ground_truth_labels, predicted_labels),
+            "FMI": fowlkes_mallows_score(ground_truth_labels, predicted_labels),
+        }
+
     def save_to_json(self, file_path: str):
         """
         Saves the clustering result in a JSON file with the structure:
@@ -122,6 +166,26 @@ class ClusteringResult:
             str(cluster.cluster_id): cluster.object_labels for cluster in self.clusters}}
 
         file_utils.save_dict_to_json_file(clustering_data, file_path)
+
+    @staticmethod
+    def load_from_json(file_path: str) -> "ClusteringResult":
+        """
+        Loads a ClusteringResult object from a JSON file with the structure:
+        {
+            "clusters": {
+                "0": ["obj1", "obj2", "obj3"],
+                "1": ["obj4", "obj5"]
+            }
+        }
+        """
+        clustering_data = file_utils.load_json(file_path)
+
+        clusters = [
+            ObjectCluster(int(cluster_id), object_labels)
+            for cluster_id, object_labels in clustering_data["clusters"].items()
+        ]
+
+        return ClusteringResult(clusters)
 
     def __repr__(self):
         return f"Clustering(num_clusters={self.get_cluster_count()}, total_objects={self.get_total_object_count()})"
