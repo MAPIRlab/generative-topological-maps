@@ -1,5 +1,6 @@
 
 from functools import partial
+import sys
 from sklearn.cluster import DBSCAN
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
@@ -76,6 +77,11 @@ def apply_clustering(object_label_descriptor_dict, eps, min_samples, semantic_we
     return ClusteringResult(object_clusters)
 
 
+def get_results_path_for_method(args):
+    return os.path.join(constants.RESULTS_FOLDER_PATH,
+                        f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}")
+
+
 # Models
 bert_embedder = None
 openai_embedder = None
@@ -114,58 +120,68 @@ def main(args):
         print("#"*40)
 
         # Compute object semantic and geometric features
-        semantic_features = dict()
-        geometric_features = dict()
+        semantic_descriptors = dict()
+        geometric_descriptors = dict()
 
         # For each object
-        for semantic_map_object in tqdm(semantic_map.get_objects(),
+        for semantic_map_object in tqdm(semantic_map.get_all_objects(),
                                         desc=f"Generating features for {semantic_map.get_semantic_map_id()}..."):
 
             # Geometric feature = bounding box
-            geometric_features[semantic_map_object.get_object_id()] = \
+            geometric_descriptors[semantic_map_object.get_object_id()] = \
                 get_geometric_descriptor(semantic_map_object)
 
             # Semantic feature = to be decided
-            semantic_features[semantic_map_object.get_object_id()] = \
+            semantic_descriptors[semantic_map_object.get_object_id()] = \
                 get_semantic_descriptor(
-                    args.semantic_descriptor, semantic_map_object)
+                    args.semantic_descriptor, semantic_map, semantic_map_object, verbose=True)
 
         # Convert features into numpy arrays
         # Shape: (num_objects, geometric_dim)
         geometric_descriptor_matrix = np.array(
-            list(geometric_features.values()))
+            list(geometric_descriptors.values()))
 
         # Shape: (num_objects, semantic_dim)
-        semantic_descriptor_matrix = np.array(list(semantic_features.values()))
+        semantic_descriptor_matrix = np.array(
+            list(semantic_descriptors.values()))
+        print("semantic_descriptor_matrix", semantic_descriptor_matrix.shape)
 
         # Perform dimensionality reduction for semantic_features
-        if args.semantic_dimension is not None:
+        if args.semantic_descriptor != constants.SEMANTIC_DESCRIPTOR_NONE and args.semantic_dimension is not None:
             if semantic_descriptor_matrix.shape[1] > args.semantic_dimension:
                 pca = PCA(n_components=args.semantic_dimension)
-                reduced_semantic_descriptor = pca.fit_transform(
+                reduced_semantic_descriptor_matrix = pca.fit_transform(
                     semantic_descriptor_matrix)
             else:
                 raise ValueError(
                     f"Semantic descriptor size is lower than target dim {args.semantic_dimension}")
         else:
-            reduced_semantic_descriptor = semantic_descriptor_matrix
+            reduced_semantic_descriptor_matrix = semantic_descriptor_matrix
 
         # Normalize both descriptors separately
-        normalized_geometric = StandardScaler().fit_transform(
+        normalized_geometric_descriptor_matrix = StandardScaler().fit_transform(
             geometric_descriptor_matrix)
-        print("normalized_geometric_shape", normalized_geometric.shape)
-        normalized_semantic = StandardScaler().fit_transform(
-            reduced_semantic_descriptor)
-        print("normalized_semantic_shape", normalized_semantic.shape)
+        print("normalized_geometric_shape",
+              normalized_geometric_descriptor_matrix.shape)
+        if args.semantic_descriptor != constants.SEMANTIC_DESCRIPTOR_NONE:
+            normalized_semantic_descriptor_matrix = StandardScaler().fit_transform(
+                reduced_semantic_descriptor_matrix)
+            print("normalized_semantic_shape",
+                  normalized_semantic_descriptor_matrix.shape)
+        else:
+            normalized_semantic_descriptor_matrix = reduced_semantic_descriptor_matrix
 
         # Create mixed descriptor
-        mixed_descriptor_matrix = np.hstack(
-            (normalized_geometric, normalized_semantic))
+        if args.semantic_descriptor != constants.SEMANTIC_DESCRIPTOR_NONE:
+            mixed_descriptor_matrix = np.hstack(
+                (normalized_geometric_descriptor_matrix, normalized_semantic_descriptor_matrix))
+        else:
+            mixed_descriptor_matrix = normalized_geometric_descriptor_matrix
         print("mixed_descriptor_matrix", mixed_descriptor_matrix.shape)
 
         # Convert back to dictionary format
         mixed_descriptors = {obj_id: mixed_descriptor_matrix[i] for i, obj_id in enumerate(
-            geometric_features.keys())}
+            geometric_descriptors.keys())}
 
         # Perform clustering
         mixed_clustering_result: ClusteringResult = apply_clustering(
@@ -173,18 +189,16 @@ def main(args):
         # Visualize using visualize_clusters
         print("Saving clustering result...")
 
-        json_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                      f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}",
+        json_file_path = os.path.join(get_results_path_for_method(args),
                                       semantic_map.get_semantic_map_id(),
                                       "clustering.json")
-        plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                      f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}",
+        plot_file_path = os.path.join(get_results_path_for_method(args),
                                       semantic_map.get_semantic_map_id(),
                                       "plot.png")
         file_utils.create_directories_for_file(json_file_path)
         file_utils.create_directories_for_file(plot_file_path)
         mixed_clustering_result.save_to_json(json_file_path)
-        mixed_clustering_result.visualize(semantic_map.get_objects(),
+        mixed_clustering_result.visualize(semantic_map.get_all_objects(),
                                           f"s_d={args.semantic_descriptor} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}",
                                           plot_file_path)
 
@@ -193,36 +207,40 @@ def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
     return semantic_map_object.get_bbox_center()
 
 
-def get_semantic_descriptor(semantic_descriptor: str, semantic_map_object: SemanticMapObject, verbose: bool = False):
+def get_semantic_descriptor(semantic_descriptor: str, semantic_map: SemanticMap, semantic_map_object: SemanticMapObject, verbose: bool = False):
 
-    if semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_BERT:
-        # Generate embedding
+    if semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_NONE:
+        return []
+    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_BERT:
         return bert_embedder.embed_text(semantic_map_object.get_most_probable_class())
     elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_OPENAI:
-        # Generate embedding
         return openai_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT:
+    elif semantic_descriptor in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
         # Generate sentence
-        sentence_generator_prompt = SentenceGeneratorPrompt(
-            word=semantic_map_object.get_most_probable_class())
-        sentence = deepseek_llm.generate_json_retrying(
-            sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)["description"]
+        llm_response_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                              "llm_responses",
+                                              semantic_map.get_semantic_map_id(),
+                                              f"{semantic_map_object.get_object_id()}.json")
+        if os.path.exists(llm_response_file_path):
+            response = file_utils.load_json(llm_response_file_path)
+        else:
+            sentence_generator_prompt = SentenceGeneratorPrompt(
+                word=semantic_map_object.get_most_probable_class())
+            response = deepseek_llm.generate_json_retrying(
+                sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)
+            file_utils.create_directories_for_file(llm_response_file_path)
+            file_utils.save_dict_to_json_file(response, llm_response_file_path)
+
+        sentence = response["description"]
         if verbose:
             print(
-                f"Sentence for {semantic_map_object.get_most_probable_class()} -> {sentence}")
+                f"Sentence for {semantic_map_object.get_object_id()} ({semantic_map_object.get_most_probable_class()}) -> {sentence}")
+
         # Generate embedding
-        return sbert_embedder.embed_text(sentence)
-    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI:
-        # Generate sentence
-        sentence_generator_prompt = SentenceGeneratorPrompt(
-            word=semantic_map_object.get_most_probable_class())
-        sentence = deepseek_llm.generate_json_retrying(
-            sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)["description"]
-        if verbose:
-            print(
-                f"Sentence for {semantic_map_object.get_most_probable_class()} -> {sentence}")
-        # Generate embedding
-        return openai_embedder.embed_text(sentence)
+        if semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT:
+            return sbert_embedder.embed_text(sentence)
+        elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI:
+            return openai_embedder.embed_text(response)
     else:
         raise NotImplementedError(
             f"Not implemented semantic descriptor {semantic_descriptor}")
@@ -233,6 +251,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Performs place categorization on a set of semantic map")
 
+    parser.add_argument("-p", "--persist-log",
+                        help="Redirect output to a log file instead of printing to the terminal.",
+                        action="store_true")
+
     parser.add_argument("-n", "--number-maps",
                         help="Number of semantic map to which place categorization will be applied.",
                         type=int,
@@ -241,7 +263,8 @@ if __name__ == "__main__":
     # SEMANTIC DESCRIPTOR parameters
     parser.add_argument("-s", "--semantic-descriptor",
                         help="How to compute the semantic descriptor.",
-                        choices=[constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
+                        choices=[constants.SEMANTIC_DESCRIPTOR_NONE,
+                                 constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
                                  constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI],
                         default=constants.SEMANTIC_DESCRIPTOR_BERT)
 
@@ -258,7 +281,7 @@ if __name__ == "__main__":
     # DBSCAN parameters
     parser.add_argument("-e", "--eps",
                         help="eps parameter in the DBSCAN algorithm",
-                        type=int,
+                        type=float,
                         default=1)
 
     parser.add_argument("-m", "--min-samples",
@@ -267,5 +290,14 @@ if __name__ == "__main__":
                         default=2)
 
     args = parser.parse_args()
+
+    # Redirect output to a
+    if args.persist_log:
+        log_file_path = os.path.join(
+            get_results_path_for_method(args), "log.txt")
+        file_utils.create_directories_for_file(log_file_path)
+
+        sys.stdout = open(log_file_path, "w")
+        sys.stderr = sys.stdout
 
     main(args)

@@ -1,22 +1,23 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from matplotlib import pyplot as plt
 from sklearn.metrics import adjusted_rand_score, fowlkes_mallows_score, normalized_mutual_info_score, v_measure_score
-
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score, fowlkes_mallows_score
 from utils import file_utils
 from voxeland.semantic_map_object import SemanticMapObject
 
 
 class ObjectCluster:
-    """Represents a cluster containing objects."""
+    """Represents a cluster containing objects with an optional description or tag."""
 
-    def __init__(self, cluster_id, object_labels):
+    def __init__(self, cluster_id: int, object_labels: List[str], description: Optional[str] = None):
         # Cluster identifier (DBSCAN assigns -1 to noise)
         self.cluster_id = cluster_id
         self.object_labels = object_labels  # List of objects in the cluster
+        self.description = description  # Optional description or tag for the cluster
 
     def __repr__(self):
-        return f"ObjectCluster(cluster_id={self.cluster_id}, objects={self.object_labels})"
+        return f"ObjectCluster(cluster_id={self.cluster_id}, description={self.description}, objects={self.object_labels})"
 
 
 class ClusteringResult:
@@ -109,8 +110,6 @@ class ClusteringResult:
         plt.savefig(file_path)
         plt.close()
 
-    from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score, fowlkes_mallows_score
-
     def evaluate_against_ground_truth(self, ground_truth_cr: "ClusteringResult") -> Dict[str, float]:
         """
         Evaluates this clustering result against a ground truth ClusteringResult.
@@ -154,35 +153,42 @@ class ClusteringResult:
 
     def save_to_json(self, file_path: str):
         """
-        Saves the clustering result in a JSON file with the structure:
+        Saves the clustering result in a JSON file with the updated structure:
         {
             "clusters": {
-                "0": ["obj1", "obj2", "obj3"],
-                "1": ["obj4", "obj5"]
+                "0": {
+                    "description": "sleeping and working area, with a bed and desk",
+                    "objects": ["obj1", "obj10", ...]
+                },
+                "1": {
+                    "tag": "leisure area with sofas",
+                    "objects": ["obj101", "obj67", ...]
+                }
             }
         }
         """
-        clustering_data = {"clusters": {
-            str(cluster.cluster_id): cluster.object_labels for cluster in self.clusters}}
-
+        clustering_data = {
+            "clusters": {
+                str(cluster.cluster_id): {
+                    "description": cluster.description,
+                    "objects": cluster.object_labels
+                }
+                for cluster in self.clusters
+            }
+        }
         file_utils.save_dict_to_json_file(clustering_data, file_path)
 
     @staticmethod
     def load_from_json(file_path: str) -> "ClusteringResult":
         """
-        Loads a ClusteringResult object from a JSON file with the structure:
-        {
-            "clusters": {
-                "0": ["obj1", "obj2", "obj3"],
-                "1": ["obj4", "obj5"]
-            }
-        }
+        Loads a ClusteringResult object from a JSON file with the updated structure.
         """
         clustering_data = file_utils.load_json(file_path)
 
         clusters = [
-            ObjectCluster(int(cluster_id), object_labels)
-            for cluster_id, object_labels in clustering_data["clusters"].items()
+            ObjectCluster(int(cluster_id),
+                          data["objects"], data.get("description"))
+            for cluster_id, data in clustering_data["clusters"].items()
         ]
 
         return ClusteringResult(clusters)

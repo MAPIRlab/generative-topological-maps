@@ -1,40 +1,54 @@
 {
     "clusters": {
-        "0": [
-            "obj1",
-            "obj101",
-            "obj102",
-            "obj104",
-            "obj117",
-            "obj124",
-            "obj125"
-        ],
-        "1": [
-            "obj100",
-            "obj81",
-            "obj94"
-        ],
-        "2": [
-            "obj11",
-            "obj13",
-            "obj139",
-            "obj19"
-        ],
-        "-1": [
-            "obj112",
-            "obj4"
-        ],
-        "3": [
-            "obj137",
-            "obj147"
-        ],
-        "4": [
-            "obj30",
-            "obj39",
-            "obj45",
-            "obj60",
-            "obj68",
-            "obj69"
-        ]
+        "0": {
+            "description": "kitchen area",
+            "objects": [
+                "obj101",
+                "obj102",
+                "obj104",
+                "obj117",
+                "obj124",
+                "obj125"
+            ]
+        },
+        "1": {
+            "description": "leisure area with a couch and some chairs",
+            "objects": [
+                "obj100",
+                "obj81",
+                "obj94"
+            ]
+        },
+        "2": {
+            "description": "sleeping area with a bed and some books",
+            "objects": [
+                "obj11",
+                "obj13",
+                "obj19",
+                "obj112",
+                "obj4",
+                "obj13"
+            ]
+        },
+        "3": {
+            "description": "working area with a desk and a chair",
+            "objects": [
+                "obj30",
+                "obj39",
+                "obj45",
+                "obj60",
+                "obj68",
+                "obj69"
+            ]
+        },
+        "4": {
+            "description": "bathroom",
+            "objects": [
+                "obj139",
+                "obj1",
+                "obj137",
+                "obj147"
+            ]
+        }
     }
 }

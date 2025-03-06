@@ -1,42 +1,55 @@
 {
     "clusters": {
-        "0": [
-            "obj1",
-            "obj10",
-            "obj114",
-            "obj16",
-            "obj18",
-            "obj49"
-        ],
-        "1": [
-            "obj101",
-            "obj138",
-            "obj142",
-            "obj64",
-            "obj67",
-            "obj71",
-            "obj93"
-        ],
-        "2": [
-            "obj102",
-            "obj105",
-            "obj80",
-            "obj82"
-        ],
-        "3": [
-            "obj117",
-            "obj55"
-        ],
-        "4": [
-            "obj127",
-            "obj131",
-            "obj57",
-            "obj62"
-        ],
-        "-1": [
-            "obj2",
-            "obj47",
-            "obj9"
-        ]
+        "0": {
+            "description": "sleeping area with a bed",
+            "objects": [
+                "obj114",
+                "obj18",
+                "obj49",
+                "obj47"
+            ]
+        },
+        "1": {
+            "description": "leisure area with two sofas, a table and some chairs",
+            "objects": [
+                "obj101",
+                "obj67",
+                "obj71",
+                "obj93",
+                "obj102",
+                "obj105",
+                "obj80",
+                "obj82",
+                "obj138",
+                "obj142",
+                "obj64"
+            ]
+        },
+        "2": {
+            "description": "working area with a chair",
+            "objects": [
+                "obj2",
+                "obj9",
+                "obj1",
+                "obj10",
+                "obj16"
+            ]
+        },
+        "3": {
+            "description": "bathroom",
+            "objects": [
+                "obj117",
+                "obj55"
+            ]
+        },
+        "4": {
+            "description": "kitchen area with chairs and a table",
+            "objects": [
+                "obj127",
+                "obj131",
+                "obj57",
+                "obj62"
+            ]
+        }
     }
 }

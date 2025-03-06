@@ -1,38 +1,31 @@
 {
     "clusters": {
-        "0": [
-            "obj1",
-            "obj14",
-            "obj2",
-            "obj3",
-            "obj5"
-        ],
-        "1": [
-            "obj102",
-            "obj69",
-            "obj78",
-            "obj81",
-            "obj97"
-        ],
-        "2": [
-            "obj105",
-            "obj96"
-        ],
-        "3": [
-            "obj12",
-            "obj28",
-            "obj30",
-            "obj36"
-        ],
-        "-1": [
-            "obj13",
-            "obj53",
-            "obj64",
-            "obj99"
-        ],
-        "4": [
-            "obj38",
-            "obj40"
-        ]
+        "0": {
+            "description": "working area, with a big table and some chairs",
+            "objects": [
+                "obj1",
+                "obj14",
+                "obj2",
+                "obj3",
+                "obj5",
+                "obj102",
+                "obj69",
+                "obj78",
+                "obj81",
+                "obj97",
+                "obj105",
+                "obj96",
+                "obj12",
+                "obj28",
+                "obj30",
+                "obj36",
+                "obj13",
+                "obj53",
+                "obj64",
+                "obj99",
+                "obj38",
+                "obj40"
+            ]
+        }
     }
 }

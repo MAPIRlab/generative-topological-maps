@@ -5,22 +5,33 @@ from prompt.prompt import Prompt
 class SentenceGeneratorPrompt(Prompt):
 
     SYSTEM_PROMPT = """
-I need descriptions of objects in JSON format. Follow a strict JSON format. Focus on indoor environments, specifying the rooms where the object is typically found. You can think, but your final answer should be JSON.
+Describe objects in JSON format. Keep sentences short. Mention where the object is usually found 
+and what you can do with it. Include keywords related to the activity associated with the object.
 
-Examples               
+Examples:
+
 For "refrigerator":
 {
     "word": "refrigerator",
-    "description": "A refrigerator is an appliance used for cooling and storing food. It is commonly found in the kitchen."
-},
+    "description": "Found in the kitchen. Used to store food and keep it cold. Helps preserve ingredients and drinks.",
+    "keywords": ["store", "cool", "preserve", "food", "drinks"]
+}
 
 For "toilet":
 {
     "word": "toilet",
-    "description": "A toilet is a plumbing fixture used for sanitation. It is typically located in the bathroom."
+    "description": "Located in the bathroom. Used for sanitation. Essential for hygiene and waste disposal.",
+    "keywords": ["sanitation", "hygiene", "waste", "clean"]
 }
 
-Now generate the JSON for the object "{{word}}".
+For "sofa":
+{
+    "word": "couch",
+    "description": "Placed in the living room. Used for sitting, relaxing, and watching TV. Can also be used for napping.",
+    "keywords": ["sit", "relax", "watch", "nap", "comfort"]
+}
+
+Now, generate the JSON for the object "{{word}}".
 """
 
     def get_system_prompt(self) -> str:

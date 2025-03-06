@@ -22,7 +22,7 @@ class SemanticMap:
         # TODO
         return self.semantic_map_id
 
-    def get_objects(self, unknown: bool = False) -> List[SemanticMapObject]:
+    def get_all_objects(self, unknown: bool = False) -> List[SemanticMapObject]:
         """Returns the list of SemanticMapObjects."""
         if not unknown:
             return list(filter(lambda smo: smo.get_most_probable_class() != "unknown", self.objects))
@@ -73,5 +73,5 @@ if __name__ == "__main__":
         print("Object not found.")
 
     # Testing get_objects
-    all_objects = semantic_map.get_objects()
+    all_objects = semantic_map.get_all_objects()
     print("Total objects in the map:", len(all_objects))
