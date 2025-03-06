@@ -3,6 +3,7 @@ import argparse
 import os
 
 import constants
+from show.metrics_table import MetricsTable
 from utils import file_utils
 from voxeland.clustering import ClusteringResult
 
@@ -21,20 +22,26 @@ def main(args):
 
     # Load method clustering results
     methods_clustering_results = dict()
-    for method in file_utils.list_subdirectories(constants.RESULTS_FOLDER_PATH):
+    for method in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
+                                                              "method_results")):
         methods_clustering_results[method] = dict()
         for semantic_map in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
+                                                                        "method_results",
                                                                         method)):
             methods_clustering_results[method][semantic_map] = ClusteringResult.load_from_json(
                 os.path.join(constants.RESULTS_FOLDER_PATH,
+                             "method_results",
                              method,
                              semantic_map,
                              "clustering.json"))
 
     # Evaluate clustering results
+    methods_metrics = dict()
     for method in sorted(methods_clustering_results):
+        methods_metrics[method] = dict()
+
         for semantic_map in sorted(methods_clustering_results[method]):
-            print("evaluating", method, semantic_map)
+            methods_metrics[method][semantic_map] = dict()
 
             ground_truth_cr: ClusteringResult = ground_truth_clustering_results[semantic_map]
             method_cr: ClusteringResult = methods_clustering_results[method][semantic_map]
@@ -53,6 +60,28 @@ def main(args):
             print(
                 f"\tFowlkes-Mallows Index (FMI): {evaluation_metrics['FMI']:.4f}")
             print("-" * 60)
+
+            # Save results
+            methods_metrics[method][semantic_map] = {
+                "ARI": evaluation_metrics['ARI'],
+                "NMI": evaluation_metrics['NMI'],
+                "V-Measure": evaluation_metrics['V-Measure'],
+                "FMI": evaluation_metrics['FMI'],
+            }
+
+    # RESULT 1: Metrics Table
+    metrics_table = MetricsTable(methods_metrics)
+    metrics_table.display_best(10, "V-Measure")
+    metrics_table.display_best(10, "ARI", ["Method"])
+    metrics_table.display_best(10, "NMI", ["Method"])
+    metrics_table.display_best(10, "V-Measure", ["Method"])
+    metrics_table.display_best(10, "FMI", ["Method"])
+    metrics_table.display_best(10, "ARI", ["Method", "Dataset"])
+    metrics_table.display_best(10, "NMI", ["Method", "Dataset"])
+    metrics_table.display_best(10, "V-Measure", ["Method", "Dataset"])
+    metrics_table.display_best(10, "FMI", ["Method", "Dataset"])
+    metrics_table.filter_methods("none_", ["Method"])
+    metrics_table.filter_methods("none_")
 
 
 if __name__ == "__main__":

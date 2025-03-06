@@ -11,6 +11,7 @@ from typing import List
 
 from embedding.bert_embedder import BERTEmbedder
 from embedding.openai_embedder import OpenAIEmbedder
+from embedding.roberta_embedder import RoBERTaEmbedder
 from embedding.sentence_embedder import SentenceEmbedder
 from llm.large_language_model import LargeLanguageModel
 from prompt.sentence_generator_prompt import SentenceGeneratorPrompt
@@ -32,23 +33,36 @@ load_dotenv()
 def geometric_semantic_distance(A, B, semantic_weight: float = 0.005):
     """
     Custom distance:
-    - Euclidean distance for the first three dimensions
-    - + 0.001 * Euclidean distance for all remaining dimensions
+    - Euclidean distance for the first three dimensions (geometric)
+    - Plus a weighted, dimension-normalized Euclidean distance for the rest (semantic).
     """
-    # print(A.shape)
-    # print(B.shape)
+    print("[geometric_semantic_distance] Computing distance between A and B")
     A, B = np.array(A), np.array(B)
+    print(f"[geometric_semantic_distance] A.shape: {A.shape}")
+    print(f"[geometric_semantic_distance] B.shape: {B.shape}")
 
-    # Euclidean distance for the first three dimensions
-    dist_first_3 = np.sqrt(np.sum((A[:3] - B[:3]) ** 2))
-    print("first3", dist_first_3)
+    # Geometric distance
+    geometric_dist = np.sqrt(np.sum((A[:3] - B[:3]) ** 2))
+    print(
+        f"[geometric_semantic_distance] Geometric distance: {geometric_dist}")
 
-    # Euclidean distance for remaining dimensions (if any)
-    dist_rest = (np.sqrt(np.sum((A[3:] - B[3:]) ** 2))
-                 if len(A) > 3 else 0.0) * semantic_weight
-    print("rest", dist_rest)
+    # Semantic distance
+    semantic_dim = max(0, len(A) - 3)
+    if semantic_dim > 0:
+        print(
+            f"[geometric_semantic_distance] Normalizing semantic distance for {semantic_dim} dimensions")
+        raw_semantic_dist = np.sqrt(np.sum((A[3:] - B[3:]) ** 2))
+        norm_semantic_dist = raw_semantic_dist / np.sqrt(semantic_dim)
+        semantic_dist = norm_semantic_dist * semantic_weight
+    else:
+        semantic_dist = 0.0
+    print(f"[geometric_semantic_distance] Semantic distance: {semantic_dist}")
 
-    return dist_first_3 + dist_rest
+    # Global distance
+    global_dist = geometric_dist + semantic_dist
+    print(f"[geometric_semantic_distance] Global distance: {global_dist}")
+
+    return global_dist
 
 
 def apply_clustering(object_label_descriptor_dict, eps, min_samples, semantic_weight) -> ClusteringResult:
@@ -79,11 +93,13 @@ def apply_clustering(object_label_descriptor_dict, eps, min_samples, semantic_we
 
 def get_results_path_for_method(args):
     return os.path.join(constants.RESULTS_FOLDER_PATH,
+                        "method_results",
                         f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}")
 
 
 # Models
 bert_embedder = None
+roberta_embedder = None
 openai_embedder = None
 sbert_embedder = None
 deepseek_llm = None
@@ -91,13 +107,11 @@ deepseek_llm = None
 
 def main(args):
     # Instantiate models
-    global bert_embedder, openai_embedder, sbert_embedder, deepseek_llm
+    global bert_embedder, roberta_embedder, openai_embedder, sbert_embedder
     bert_embedder = BERTEmbedder()
+    roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
     sbert_embedder = SentenceEmbedder()
-    if args.semantic_descriptor in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
-        _, deepseek_llm = LargeLanguageModel.create_from_huggingface(
-            "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
 
     # Load and pre-process semantic map
     semantic_maps: List[SemanticMap] = list()
@@ -185,7 +199,7 @@ def main(args):
 
         # Perform clustering
         mixed_clustering_result: ClusteringResult = apply_clustering(
-            mixed_descriptors, eps=1, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
+            mixed_descriptors, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
         # Visualize using visualize_clusters
         print("Saving clustering result...")
 
@@ -213,9 +227,18 @@ def get_semantic_descriptor(semantic_descriptor: str, semantic_map: SemanticMap,
         return []
     elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_BERT:
         return bert_embedder.embed_text(semantic_map_object.get_most_probable_class())
+    elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_ROBERTA:
+        return roberta_embedder.embed_text(semantic_map_object.get_most_probable_class())
     elif semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_OPENAI:
         return openai_embedder.embed_text(semantic_map_object.get_most_probable_class())
     elif semantic_descriptor in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
+
+        # If LLM not instantiated, instantiate! SLOW PROCESS
+        global deepseek_llm
+        if deepseek_llm:
+            _, deepseek_llm = LargeLanguageModel.create_from_huggingface(
+                "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
+
         # Generate sentence
         llm_response_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
                                               "llm_responses",
@@ -264,7 +287,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--semantic-descriptor",
                         help="How to compute the semantic descriptor.",
                         choices=[constants.SEMANTIC_DESCRIPTOR_NONE,
-                                 constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
+                                 constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI, constants.SEMANTIC_DESCRIPTOR_ROBERTA,
                                  constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI],
                         default=constants.SEMANTIC_DESCRIPTOR_BERT)
 
@@ -282,16 +305,16 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--eps",
                         help="eps parameter in the DBSCAN algorithm",
                         type=float,
-                        default=1)
+                        default=1.0)
 
     parser.add_argument("-m", "--min-samples",
                         help="min_samples parameter in the DBSCAN algorithm",
                         type=int,
-                        default=2)
+                        default=1)
 
     args = parser.parse_args()
 
-    # Redirect output to a
+    # Redirect output to a log file (args.persist_log)
     if args.persist_log:
         log_file_path = os.path.join(
             get_results_path_for_method(args), "log.txt")

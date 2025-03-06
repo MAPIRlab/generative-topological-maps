@@ -9,7 +9,8 @@
         "1": {
             "description": "sleeping area with a bed",
             "objects": [
-                "obj3"
+                "obj3",
+                "obj32"
             ]
         },
         "2": {
