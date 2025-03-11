@@ -7,7 +7,7 @@ from typing import List
 from utils import file_utils
 import constants
 
-from voxeland.clustering import ClusteringResult
+from voxeland.clustering import Clustering
 from voxeland.semantic_map import SemanticMap
 from voxeland.semantic_map_object import SemanticMapObject
 
@@ -37,7 +37,7 @@ def main(args):
         # Load ground truth clustering result
         ground_truth_cr_file_path = os.path.join(constants.CLUSTERINGS_FOLDER_PATH,
                                                  f"{semantic_map.get_semantic_map_id()}.json")
-        ground_truth_cr = ClusteringResult.load_from_json(
+        ground_truth_cr = Clustering.load_from_json(
             ground_truth_cr_file_path)
 
         # TODO: check that all objects are present
@@ -45,8 +45,10 @@ def main(args):
                                                       "ground_truth",
                                                       f"{semantic_map.get_semantic_map_id()}.png")
         file_utils.create_directories_for_file(ground_truth_cr_plot_file_path)
-        ground_truth_cr.visualize(semantic_map.get_all_objects(
-        ), f"Ground truth for {semantic_map.get_semantic_map_id()}", ground_truth_cr_plot_file_path)
+        ground_truth_cr.visualize(
+            f"Ground truth for {semantic_map.get_semantic_map_id()}",
+            ground_truth_cr_plot_file_path,
+            semantic_map)
 
 
 if __name__ == "__main__":
@@ -62,9 +64,9 @@ if __name__ == "__main__":
     # SEMANTIC DESCRIPTOR parameters
     parser.add_argument("-s", "--semantic-descriptor",
                         help="How to compute the semantic descriptor.",
-                        choices=[constants.SEMANTIC_DESCRIPTOR_BERT, constants.SEMANTIC_DESCRIPTOR_OPENAI,
-                                 constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI],
-                        default=constants.SEMANTIC_DESCRIPTOR_BERT)
+                        choices=[constants.METHOD_BERT, constants.METHOD_OPENAI,
+                                 constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_OPENAI],
+                        default=constants.METHOD_BERT)
 
     parser.add_argument("-w", "--semantic-weight",
                         help="Semantic weight in DBSCAN distance.",

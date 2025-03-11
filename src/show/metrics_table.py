@@ -7,6 +7,8 @@ class MetricsTable:
         Initializes the MetricsTable with clustering evaluation results.
         :param methods_metrics: Dictionary containing evaluation metrics per method and semantic map.
         """
+        pd.set_option("display.max_colwidth", None)
+        pd.set_option("display.expand_frame_repr", False)
         self.methods_metrics = methods_metrics
         self.df = self._create_dataframe()
 

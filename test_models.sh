@@ -1,53 +1,88 @@
 #!/bin/bash
 
-# none
-python src/main.py -p -n 10 -s none -e 1 -m 1
-python src/main.py -p -n 10 -s none -e 1.1 -m 1
-python src/main.py -p -n 10 -s none -e 1.2 -m 1
-python src/main.py -p -n 10 -s none -e 1.3 -m 1
+# # geometric
+# python src/main.py -p -n 10 -s geometric -e 1.0 -m 1 -w 0
 
 # # bert
-python src/main.py -p -n 10 -s bert -w 0.005 -d 3 -e 1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 5 -e 1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 8 -e 1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -e 1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 3 -e 1.1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 5 -e 1.1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 8 -e 1.1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -e 1.1 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 3 -e 1.2 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 5 -e 1.2 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -d 8 -e 1.2 -m 1
-python src/main.py -p -n 10 -s bert -w 0.005 -e 1.2 -m 1
+# python src/main.py -p -n 10 -s bert -e 1.0 -m 1 -w 0.009 -d 3 
 
 # # roberta
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 3 -e 1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 5 -e 1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 8 -e 1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -e 1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 3 -e 1.1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 5 -e 1.1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 8 -e 1.1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -e 1.1 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 3 -e 1.2 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 5 -e 1.2 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -d 8 -e 1.2 -m 1
-python src/main.py -p -n 10 -s roberta -w 0.005 -e 1.2 -m 1
+# python src/main.py -p -n 10 -s roberta -e 1.0 -m 1 -w 0.009 -d 3
 
 # # deepseek+bert
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 3 -e 1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 5 -e 1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 8 -e 1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -e 1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 3 -e 1.1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 5 -e 1.1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 8 -e 1.1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -e 1.1 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 3 -e 1.2 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 5 -e 1.2 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 8 -e 1.2 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -e 1.2 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 3 -e 1.3 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 5 -e 1.3 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -d 8 -e 1.3 -m 1
-python src/main.py -p -n 10 -s deepseek+sbert -w 0.005 -e 1.3 -m 1
+# python src/main.py -p -n 10 -s deepseek+sbert -e 1.0 -m 1 -w 0.009 -d 3
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.97
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.98
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 2.0 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.5 --merge-semantic-threshold 0.99
+
+# python src/main.py -p -n 10 -s bert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+#     --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.99
+
+python src/main.py -p -n 10 -s deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
+    --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.97

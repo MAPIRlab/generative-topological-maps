@@ -5,7 +5,7 @@ import os
 import constants
 from show.metrics_table import MetricsTable
 from utils import file_utils
-from voxeland.clustering import ClusteringResult
+from voxeland.clustering import Clustering
 
 
 def main(args):
@@ -16,7 +16,7 @@ def main(args):
         semantic_map_basename = file_utils.get_file_basename(
             semantic_map_clustering_file_name)
 
-        ground_truth_clustering_results[semantic_map_basename] = ClusteringResult.load_from_json(
+        ground_truth_clustering_results[semantic_map_basename] = Clustering.load_from_json(
             os.path.join(constants.CLUSTERINGS_FOLDER_PATH,
                          semantic_map_clustering_file_name))
 
@@ -28,7 +28,7 @@ def main(args):
         for semantic_map in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
                                                                         "method_results",
                                                                         method)):
-            methods_clustering_results[method][semantic_map] = ClusteringResult.load_from_json(
+            methods_clustering_results[method][semantic_map] = Clustering.load_from_json(
                 os.path.join(constants.RESULTS_FOLDER_PATH,
                              "method_results",
                              method,
@@ -43,8 +43,8 @@ def main(args):
         for semantic_map in sorted(methods_clustering_results[method]):
             methods_metrics[method][semantic_map] = dict()
 
-            ground_truth_cr: ClusteringResult = ground_truth_clustering_results[semantic_map]
-            method_cr: ClusteringResult = methods_clustering_results[method][semantic_map]
+            ground_truth_cr: Clustering = ground_truth_clustering_results[semantic_map]
+            method_cr: Clustering = methods_clustering_results[method][semantic_map]
 
             # Evaluate the clustering result against the ground truth
             evaluation_metrics = method_cr.evaluate_against_ground_truth(
@@ -71,17 +71,17 @@ def main(args):
 
     # RESULT 1: Metrics Table
     metrics_table = MetricsTable(methods_metrics)
-    metrics_table.display_best(10, "V-Measure")
+    # metrics_table.display_best(10, "V-Measure")
     metrics_table.display_best(10, "ARI", ["Method"])
     metrics_table.display_best(10, "NMI", ["Method"])
     metrics_table.display_best(10, "V-Measure", ["Method"])
     metrics_table.display_best(10, "FMI", ["Method"])
-    metrics_table.display_best(10, "ARI", ["Method", "Dataset"])
-    metrics_table.display_best(10, "NMI", ["Method", "Dataset"])
-    metrics_table.display_best(10, "V-Measure", ["Method", "Dataset"])
-    metrics_table.display_best(10, "FMI", ["Method", "Dataset"])
-    metrics_table.filter_methods("none_", ["Method"])
-    metrics_table.filter_methods("none_")
+    # metrics_table.display_best(10, "ARI", ["Method", "Dataset"])
+    # metrics_table.display_best(10, "NMI", ["Method", "Dataset"])
+    # metrics_table.display_best(10, "V-Measure", ["Method", "Dataset"])
+    # metrics_table.display_best(10, "FMI", ["Method", "Dataset"])
+    # metrics_table.filter_methods("none_", ["Method"])
+    # metrics_table.filter_methods("none_")
 
 
 if __name__ == "__main__":

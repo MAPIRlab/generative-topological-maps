@@ -3,12 +3,26 @@ from nltk.corpus import wordnet
 
 
 class SemanticMapObject:
+
     def __init__(self, object_id: str, data: Dict):
         self.object_id = object_id
-        self.bbox_center = data["bbox"]["center"]
-        self.bbox_size = data["bbox"]["size"]
-        self.n_observations = data["n_observations"]
-        self.results = data.get("results", {})
+        if data is not None:
+            self.bbox_center = data["bbox"]["center"]
+            self.bbox_size = data["bbox"]["size"]
+            self.n_observations = data["n_observations"]
+            self.results = data.get("results", {})
+            self.geometric_descriptor = None
+            self.semantic_descriptor = None
+            self.global_descriptor = None
+        else:
+            self.object_id = object_id
+            self.bbox_center = None
+            self.bbox_size = None
+            self.n_observations = None
+            self.results = None
+            self.geometric_descriptor = None
+            self.semantic_descriptor = None
+            self.global_descriptor = None
 
     def get_object_id(self) -> str:
         """Returns the object ID."""
