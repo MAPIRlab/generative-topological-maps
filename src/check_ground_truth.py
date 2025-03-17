@@ -45,7 +45,7 @@ def main(args):
                                                       "ground_truth",
                                                       f"{semantic_map.get_semantic_map_id()}.png")
         file_utils.create_directories_for_file(ground_truth_cr_plot_file_path)
-        ground_truth_cr.visualize(
+        ground_truth_cr.visualize_2D(
             f"Ground truth for {semantic_map.get_semantic_map_id()}",
             ground_truth_cr_plot_file_path,
             semantic_map)

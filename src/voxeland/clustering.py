@@ -34,7 +34,7 @@ class Clustering:
         """Returns the total number of objects across all clusters."""
         return sum(len(cluster.objects) for cluster in self.clusters)
 
-    def visualize(self, title: str, file_path: str, semantic_map: Optional[SemanticMap] = None):
+    def visualize_2D(self, title: str, file_path: str, semantic_map: Optional[SemanticMap] = None):
         """
         Visualizes the clustered objects from a top-down view and saves the plot.
         """

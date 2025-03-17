@@ -180,42 +180,42 @@ def split_clusters(clustering: Clustering) -> Clustering:
 
 
 def get_results_path_for_method(args):
-    if args.semantic_descriptor != constants.METHOD_GEOMETRIC:
-        if args.semantic_descriptor in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
+    if args.method != constants.METHOD_GEOMETRIC:
+        if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
             return os.path.join(constants.RESULTS_FOLDER_PATH,
                                 "method_results",
-                                f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}")
+                                f"{args.method}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}")
         else:
             return os.path.join(constants.RESULTS_FOLDER_PATH,
                                 "method_results",
-                                f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}")
+                                f"{args.method}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}")
     else:
         return os.path.join(constants.RESULTS_FOLDER_PATH,
                             "method_results",
-                            f"{args.semantic_descriptor}_e{args.eps}_m{args.min_samples}")
+                            f"{args.method}_e{args.eps}_m{args.min_samples}")
 
 
 def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
     return semantic_map_object.get_bbox_center()
 
 
-def get_semantic_descriptor(semantic_descriptor: str, semantic_map: SemanticMap, semantic_map_object: SemanticMapObject, verbose: bool = False):
+def get_semantic_descriptor(method_arg: str, semantic_map: SemanticMap, semantic_map_object: SemanticMapObject, verbose: bool = False):
 
-    if semantic_descriptor == constants.METHOD_GEOMETRIC:
+    if method_arg == constants.METHOD_GEOMETRIC:
         return []
-    elif semantic_descriptor in (constants.METHOD_BERT, constants.METHOD_BERT_POST):
+    elif method_arg in (constants.METHOD_BERT, constants.METHOD_BERT_POST):
         return bert_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif semantic_descriptor == constants.METHOD_ROBERTA:
+    elif method_arg == constants.METHOD_ROBERTA:
         return roberta_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif semantic_descriptor == constants.METHOD_OPENAI:
+    elif method_arg == constants.METHOD_OPENAI:
         return openai_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif semantic_descriptor in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_OPENAI, constants.METHOD_DEEPSEEK_SBERT_POST):
+    elif method_arg in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_OPENAI, constants.METHOD_DEEPSEEK_SBERT_POST):
 
         # If LLM not instantiated, instantiate! SLOW PROCESS
         global deepseek_llm
         if deepseek_llm:
-            _, deepseek_llm = LargeLanguageModel.create_from_huggingface(
-                "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
+            _, deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                                                                         cache_path=constants.LLM_CACHE_FILE_PATH)
 
         # Generate sentence
         llm_response_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
@@ -238,13 +238,13 @@ def get_semantic_descriptor(semantic_descriptor: str, semantic_map: SemanticMap,
                 f"Sentence for {semantic_map_object.get_object_id()} ({semantic_map_object.get_most_probable_class()}) -> {sentence}")
 
         # Generate embedding
-        if semantic_descriptor in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_SBERT_POST):
+        if method_arg in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_SBERT_POST):
             return sbert_embedder.embed_text(sentence)
-        elif semantic_descriptor == constants.METHOD_DEEPSEEK_OPENAI:
+        elif method_arg == constants.METHOD_DEEPSEEK_OPENAI:
             return openai_embedder.embed_text(response)
     else:
         raise NotImplementedError(
-            f"Not implemented semantic descriptor {semantic_descriptor}")
+            f"Not implemented semantic descriptor {method_arg}")
 
 
 # Models
@@ -297,7 +297,7 @@ def main(args):
 
             # Semantic feature = to be decided
             semantic_map_object.semantic_descriptor = get_semantic_descriptor(
-                args.semantic_descriptor, semantic_map, semantic_map_object, verbose=True)
+                args.method, semantic_map, semantic_map_object, verbose=True)
 
         # Convert features into numpy arrays
         # Shape: (num_objects, geometric_dim)
@@ -315,7 +315,7 @@ def main(args):
             f"[main] Semantic descriptor matrix shape: {semantic_descriptor_matrix.shape}")
 
         # Perform dimensionality reduction for semantic_features
-        if args.semantic_descriptor != constants.METHOD_GEOMETRIC and args.semantic_dimension is not None:
+        if args.method != constants.METHOD_GEOMETRIC and args.semantic_dimension is not None:
             if semantic_descriptor_matrix.shape[1] > args.semantic_dimension:
                 pca = PCA(n_components=args.semantic_dimension)
                 reduced_semantic_descriptor_matrix = pca.fit_transform(
@@ -331,7 +331,7 @@ def main(args):
             geometric_descriptor_matrix)
         print("normalized_geometric_shape",
               normalized_geometric_descriptor_matrix.shape)
-        if args.semantic_descriptor != constants.METHOD_GEOMETRIC:
+        if args.method != constants.METHOD_GEOMETRIC:
             normalized_semantic_descriptor_matrix = StandardScaler().fit_transform(
                 reduced_semantic_descriptor_matrix)
             print("normalized_semantic_shape",
@@ -340,7 +340,7 @@ def main(args):
             normalized_semantic_descriptor_matrix = reduced_semantic_descriptor_matrix
 
         # Create mixed descriptor
-        if args.semantic_descriptor != constants.METHOD_GEOMETRIC:
+        if args.method != constants.METHOD_GEOMETRIC:
             mixed_descriptor_matrix = np.hstack(
                 (normalized_geometric_descriptor_matrix, normalized_semantic_descriptor_matrix))
         else:
@@ -356,7 +356,7 @@ def main(args):
             semantic_map, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
 
         # Merge clusters
-        if args.semantic_descriptor in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
+        if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
             mixed_clustering = merge_clusters(
                 mixed_clustering, args.merge_geometric_threshold, args.merge_semantic_threshold)
             mixed_clustering = split_clusters(mixed_clustering)
@@ -373,8 +373,8 @@ def main(args):
         file_utils.create_directories_for_file(json_file_path)
         file_utils.create_directories_for_file(plot_file_path)
         mixed_clustering.save_to_json(json_file_path)
-        mixed_clustering.visualize(
-            f"{semantic_map.semantic_map_id}\n s_d={args.semantic_descriptor} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}", plot_file_path)
+        mixed_clustering.visualize_2D(
+            f"{semantic_map.semantic_map_id}\n s_d={args.method} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}", plot_file_path)
 
 
 if __name__ == "__main__":
@@ -392,7 +392,7 @@ if __name__ == "__main__":
                         default=10)
 
     # SEMANTIC DESCRIPTOR parameters
-    parser.add_argument("-s", "--semantic-descriptor",
+    parser.add_argument("--method",
                         help="How to compute the semantic descriptor.",
                         choices=[constants.METHOD_GEOMETRIC,
                                  constants.METHOD_BERT, constants.METHOD_OPENAI, constants.METHOD_ROBERTA,
