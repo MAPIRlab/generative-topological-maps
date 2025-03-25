@@ -37,6 +37,9 @@ class Cluster:
         of the most probable class of each object.
         """
         descriptors = [obj.semantic_descriptor for obj in self.objects]
+        if None in descriptors:
+            raise ValueError(
+                "Cannot compute semantic descriptor of cluster containing objects with None semantic descriptor")
         return np.mean(descriptors, axis=0) if descriptors else np.zeros_like(self.objects[0].semantic_descriptor)
 
     def compute_geometric_descriptor(self) -> np.ndarray:
@@ -45,6 +48,10 @@ class Cluster:
         of all objects within the cluster.
         """
         descriptors = [obj.geometric_descriptor for obj in self.objects]
+        if None in descriptors:
+            print(descriptors)
+            raise ValueError(
+                "Cannot compute geometric descriptor of cluster containing objects with None geometric descriptor")
         return np.mean(descriptors, axis=0) if descriptors else np.zeros_like(self.objects[0].geometric_descriptor)
 
     def compute_semantic_descriptor_variance(self) -> float:

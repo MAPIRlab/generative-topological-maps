@@ -22,6 +22,9 @@ METHOD_BERT_POST = "bert+post"
 # Contextualized sentence embeddings + Cluster post-processing
 METHOD_DEEPSEEK_SBERT_POST = "deepseek+sbert+post"
 
+# LLM only
+METHOD_DEEPSEEK = "deepseek"
+
 # SEMANTIC DESCRIPTORS
 SEMANTIC_DESCRIPTOR_ALL = "all"
 SEMANTIC_DESCRIPTOR_BERT = "bert"

@@ -2,13 +2,16 @@
 from prompt.prompt import Prompt
 
 
-class PlaceClassifierPrompt(Prompt):
+class PlaceSegmenterPrompt(Prompt):
 
     SYSTEM_PROMPT = """
 Classify objects into places based on their class and their location. Objects that are close and are (more or less) of the same class should be grouped in the same place. A place is not necessarily a room but a meaningful area where objects are commonly found together.
+Objects should be grouped into places based on both their semantics (e.g., "chair" is often found in an "eating area") and spatial proximity (objects close together likely belong to the same place).
 
-Input format:
-
+<INPUT_FORMAT>
+- Objects are represented with bounding boxes (bbox), containing their center position (x, y, z) and size (width, depth, height).
+- Class: the most probable class of the object, given by an object detector.
+The semantic map comes in JSON:
 {
     "instances": {
         "obj0": {
@@ -16,7 +19,6 @@ Input format:
                 "center": [x, y, z],
                 "size": [dx, dy, dz]
             },
-            "n_observations": N,
             "class": "object_class"
         },
         "obj1": { ... },
@@ -25,24 +27,21 @@ Input format:
         ...
     }
 }
+</INPUT_FORMAT>
 
-Output format:
-
+<OUTPUT_FORMAT>
+The output format should be the following:
 {
     "places": {
-        "0": ["obj0", "obj1", "obj2"],
-        "1": ["obj5", "obj8"],
-        ...
+        "eating area": ["obj1", "obj2", "obj3"],
+        "bathroom": ["obj32", "obj89"],
+        "workspace": ["obj10", "obj15"]
     }
 }
+}
+</OUTPUT_FORMAT>
 
-Rules:
-- Group objects that are together and have a similar functionality in the same place.
-- Consider the function and common co-occurrence of objects.
-- A place may contain multiple object types (e.g., "table" and "chair" in a dining area).
-- Use spatial information first, but take into account semantic meaning too.
-
-Now, classify the following semantic map:
+Now, classify the following semantic map, thinking step by step:
 {{semantic_map}}
 """
 
@@ -56,5 +55,5 @@ Now, classify the following semantic map:
 
 
 if __name__ == "__main__":
-    sentence_generator_prompt = PlaceClassifierPrompt(word="hola")
+    sentence_generator_prompt = PlaceSegmenterPrompt(word="hola")
     print(sentence_generator_prompt.get_prompt_text())

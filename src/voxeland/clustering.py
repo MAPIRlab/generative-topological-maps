@@ -15,7 +15,7 @@ from typing import List, Optional
 class Clustering:
     """Represents a set of object clusters."""
 
-    def __init__(self, clusters: List[Cluster]):
+    def __init__(self, clusters: List[Cluster] = []):
         self.clusters = clusters  # List of ObjectCluster instances
 
     def append_cluster(self, cluster: Cluster):
@@ -83,7 +83,8 @@ class Clustering:
                 plt.text(x_center, y_center, object_label_text,
                          fontsize=8, ha='center', va='center', color='black')
 
-            cluster_label_text = f"cluster{cluster.cluster_id}\n{cluster.compute_semantic_descriptor_variance():.5f}"
+            # cluster_label_text = f"cluster{cluster.cluster_id}\n{cluster.compute_semantic_descriptor_variance():.5f}"
+            cluster_label_text = f"cluster{cluster.cluster_id}"
             plt.text(cluster.compute_geometric_descriptor()[0], cluster.compute_geometric_descriptor()[1], cluster_label_text,
                      fontsize=16, ha='center', va='center', color='black')
 

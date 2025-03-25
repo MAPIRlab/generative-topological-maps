@@ -31,22 +31,22 @@ def main(args):
     for semantic_map in semantic_maps[:args.number_maps]:
 
         print("#"*40)
-        print(f"Processing {semantic_map.get_semantic_map_id()}...")
+        print(f"Processing {semantic_map.semantic_map_id}...")
         print("#"*40)
 
         # Load ground truth clustering result
         ground_truth_cr_file_path = os.path.join(constants.CLUSTERINGS_FOLDER_PATH,
-                                                 f"{semantic_map.get_semantic_map_id()}.json")
+                                                 f"{semantic_map.semantic_map_id}.json")
         ground_truth_cr = Clustering.load_from_json(
             ground_truth_cr_file_path)
 
         # TODO: check that all objects are present
         ground_truth_cr_plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
                                                       "ground_truth",
-                                                      f"{semantic_map.get_semantic_map_id()}.png")
+                                                      f"{semantic_map.semantic_map_id}.png")
         file_utils.create_directories_for_file(ground_truth_cr_plot_file_path)
         ground_truth_cr.visualize_2D(
-            f"Ground truth for {semantic_map.get_semantic_map_id()}",
+            f"Ground truth for {semantic_map.semantic_map_id}",
             ground_truth_cr_plot_file_path,
             semantic_map)
 

@@ -1,3 +1,4 @@
+import json
 from typing import List, Optional
 from voxeland.semantic_map_object import SemanticMapObject
 
@@ -9,25 +10,33 @@ class SemanticMap:
 
     def __init__(self, semantic_map_id: str, objects: List[SemanticMapObject]):
         self.semantic_map_id = semantic_map_id
-        self.objects: List[SemanticMapObject] = objects
+        self._objects: List[SemanticMapObject] = objects
 
     def find_object(self, object_id: str) -> Optional[SemanticMapObject]:
         """Finds and returns an object by its ID."""
-        for obj in self.objects:
+        for obj in self._objects:
             if obj.get_object_id() == object_id:
                 return obj
         return None
 
-    def get_semantic_map_id(self):
-        # TODO
-        return self.semantic_map_id
-
-    def get_all_objects(self, unknown: bool = False) -> List[SemanticMapObject]:
+    def get_all_objects(self, include_unknown: bool = False) -> List[SemanticMapObject]:
         """Returns the list of SemanticMapObjects."""
-        if not unknown:
-            return list(filter(lambda smo: smo.get_most_probable_class() != "unknown", self.objects))
+        if not include_unknown:
+            return list(filter(lambda smo: smo.get_most_probable_class() != "unknown", self._objects))
         else:
-            return self.objects
+            return self._objects
+
+    def get_json_representation(self) -> str:
+        repr_dict = {"instances": {}}
+        for object in self.get_all_objects():
+            repr_dict["instances"][object.object_id] = {
+                "bbox": {
+                    "center": [round(coord, 2) for coord in object.bbox_center],
+                    "size": [round(coord, 2) for coord in object.bbox_size]
+                },
+                "class": object.get_most_probable_class()
+            }
+        return json.dumps(repr_dict)
 
 
 if __name__ == "__main__":

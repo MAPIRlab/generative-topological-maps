@@ -27,7 +27,7 @@ class LargeLanguageModel():
         """Generates text based on the given prompt and parameters."""
         cached_response = self.read_cache_entry(prompt)
         if cached_response is not None:
-            print("Cached response!")
+            # print("Cached response!", cached_response)
             return cached_response
 
         inputs = self._tokenizer(prompt, return_tensors="pt")
@@ -44,7 +44,7 @@ class LargeLanguageModel():
         response = self._tokenizer.decode(output[0], skip_special_tokens=True)
 
         self.write_cache_entry(prompt, response)
-        print("Updated cache!")
+        # print("Updated cache!")
         return response
 
     def generate_text_filtered(self, prompt: str, params: dict = {}):
@@ -53,18 +53,35 @@ class LargeLanguageModel():
         filtered_response = response.replace(prompt, "").strip()
         return filtered_response
 
-    def generate_json(self, prompt: str, params: dict = {}):
+    import json
+
+    def generate_json(self, prompt: str, params: dict = {}) -> dict:
         """Generates text and extracts JSON content as a Python dictionary."""
         response = self.generate_text_filtered(prompt, params)
-        start = response.rfind("{")
-        end = response.rfind("}")
-        if start != -1 and end != -1:
-            json_str = response[start:end+1]
-            try:
-                return json.loads(json_str)
-            except json.JSONDecodeError:
-                self.clear_cache_entry(prompt)
-                return None
+        print("La respuesta fue:\n" + "#"*40)
+        print(response)
+
+        # Find the first complete JSON object using brace balancing
+        start = None
+        brace_count = 0
+        for i, char in enumerate(response):
+            if char == '{':
+                if start is None:
+                    start = i
+                brace_count += 1
+            elif char == '}':
+                brace_count -= 1
+                if brace_count == 0 and start is not None:
+                    json_str = response[start:i+1]
+                    try:
+                        result = json.loads(json_str)
+                        return result
+                    except json.JSONDecodeError:
+                        print("Error al codificar a JSON!")
+                        break  # Try no more once a balanced but invalid block was found
+
+        print(f"Error al codificar a JSON!")
+        self.clear_cache_entry(prompt)
         return None
 
     def generate_json_retrying(self, prompt: str, params: dict = {}, retries: int = 3, verbose: bool = False):
@@ -96,6 +113,7 @@ class LargeLanguageModel():
     def clear_cache_entry(self, prompt: str):
         cache = file_utils.load_json(self._cache_path)
         del cache[prompt]
+        # print("Cleared cache!")
         file_utils.save_dict_to_json_file(cache, self._cache_path)
 
     @staticmethod
