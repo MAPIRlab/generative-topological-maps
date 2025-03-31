@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 
 
-class SentenceEmbedder:
+class SentenceBERTEmbedder:
     def __init__(self, model_name='sentence-transformers/all-MiniLM-L6-v2', device=None):
         """
         Initializes the sentence embedding model and tokenizer.
@@ -67,7 +67,7 @@ class SentenceEmbedder:
 
 # Example usage:
 if __name__ == "__main__":
-    embedder = SentenceEmbedder()
+    embedder = SentenceBERTEmbedder()
     embeddings = embedder.embed_text("Sentence embeddings are useful.")
     print("Embedding shape:", len(embeddings))
     print("Sentence embedding:", embeddings)

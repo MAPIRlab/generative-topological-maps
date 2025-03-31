@@ -82,6 +82,9 @@ def main(args):
     # metrics_table.display_best(10, "FMI", ["Method", "Dataset"])
     # metrics_table.filter_methods("none_", ["Method"])
     # metrics_table.filter_methods("none_")
+    metrics_table.filter_dataset("scannet", group_by=["Method"])
+    metrics_table.filter_dataset("scenenn", group_by=["Method"])
+    metrics_table.semantic_map_vs_method_pivot_table("ARI")
 
 
 if __name__ == "__main__":

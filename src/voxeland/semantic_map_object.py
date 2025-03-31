@@ -58,6 +58,17 @@ class SemanticMapObject:
                 synonyms.add(lemma.name())
         return list(synonyms)
 
+    def __repr__(self) -> str:
+        """Returns a string representation of the SemanticMapObject."""
+        return (f"SemanticMapObject(object_id={self.object_id!r}, "
+                f"bbox_center={self.bbox_center}, "
+                f"bbox_size={self.bbox_size}, "
+                f"n_observations={self.n_observations}, "
+                f"results={self.results}, "
+                f"geometric_descriptor={self.geometric_descriptor}, "
+                f"semantic_descriptor={self.semantic_descriptor}, "
+                f"global_descriptor={self.global_descriptor})")
+
 
 if __name__ == "__main__":
     # Example usage

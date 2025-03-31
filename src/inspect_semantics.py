@@ -2,60 +2,37 @@ from scipy.spatial.distance import cdist
 import argparse
 import constants
 import numpy as np
-from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 from embedding.bert_embedder import BERTEmbedder
 from embedding.openai_embedder import OpenAIEmbedder
 from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceEmbedder
-from llm.large_language_model import LargeLanguageModel
-from prompt.sentence_generator_prompt import SentenceGeneratorPrompt
+from embedding.sentence_embedder import SentenceBERTEmbedder
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 from dotenv import load_dotenv
+
+from semantic.semantic_descriptor_engine import SemanticDescriptorEngine
+from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
 load_dotenv()
 
 
-def get_semantic_descriptor(semantic_descriptor_arg: str, word: str, verbose: bool = False):
-
-    if semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_BERT:
-        return bert_embedder.embed_text(word)
-    elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_ROBERTA:
-        return roberta_embedder.embed_text(word)
-    elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_OPENAI:
-        return openai_embedder.embed_text(word)
-    elif semantic_descriptor_arg in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
-
-        # If LLM not instantiated, instantiate! SLOW PROCESS
-        global deepseek_llm
-        if deepseek_llm is None:
-            _, deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                                                         cache_path=constants.LLM_CACHE_FILE_PATH)
-
-        # Generate sentence
-        sentence_generator_prompt = SentenceGeneratorPrompt(word=word)
-        response = deepseek_llm.generate_json_retrying(
-            sentence_generator_prompt.get_prompt_text(),
-            params={"max_length": 1000},
-            retries=10,
-        )
-
-        sentence = response["description"]
-
-        # Generate embedding
-        if semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT:
-            return sbert_embedder.embed_text(sentence)
-        elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI:
-            return openai_embedder.embed_text(sentence)
-    else:
-        raise NotImplementedError(
-            f"Not implemented semantic descriptor {semantic_descriptor_arg}"
-        )
+# Models
+bert_embedder = None
+roberta_embedder = None
+openai_embedder = None
+sbert_embedder = None
+deepseek_llm = None
 
 
-def main():
+def main(args):
+    semantic_descriptor_engine = SemanticDescriptorEngine(
+        bert_embedder, roberta_embedder, openai_embedder, sbert_embedder, deepseek_llm)
+
+    # Instantiate dimensionality reduction engine
+    dim_reduction_engine = DimensionalityReductionEngine()
+
     semantic_descriptors = []
     if args.semantic_descriptor == constants.SEMANTIC_DESCRIPTOR_ALL:
         semantic_descriptors = [
@@ -74,15 +51,16 @@ def main():
         # Get embeddings for each word
         embeddings = []
         for word in args.word_set:
-            emb = get_semantic_descriptor(semantic_descriptor, word)
+            emb = semantic_descriptor_engine.get_semantic_descriptor(
+                semantic_descriptor, word)
             embeddings.append(emb)
 
         # Convert to NumPy array (assuming each emb is 1D or can be flattened to 1D)
         embeddings = np.array(embeddings)
 
-        # Apply PCA to reduce to 3 dimensions
-        pca = PCA(n_components=3)
-        embeddings_3d = pca.fit_transform(embeddings)
+        # Apply dimensionality reduction
+        embeddings_3d = dim_reduction_engine.reduce(
+            embeddings, target_dimension=3, method=args.dimensionality_reductor)
 
         # Compute pairwise distances and find the closest neighbor for each point
         # Compute all pairwise distances
@@ -141,26 +119,15 @@ def main():
             x, y, z = embeddings_3d[i]
             ax.text(x, y, z, word)
 
-        plt.title(f"3D PCA for {semantic_descriptor}")
+        plt.title(
+            f"semantic_descriptor={semantic_descriptor}, dim_reductor={args.dimensionality_reductor}")
         plt.show()
 
 
-# Models
-bert_embedder = None
-roberta_embedder = None
-openai_embedder = None
-sbert_embedder = None
-deepseek_llm = None
-
 if __name__ == "__main__":
-    # Instantiate models
-    bert_embedder = BERTEmbedder()
-    roberta_embedder = RoBERTaEmbedder()
-    openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceEmbedder()
 
     parser = argparse.ArgumentParser(
-        description="Performs place categorization on a set of semantic map"
+        description="Inspects the semantic descriptors of a set of words."
     )
 
     # SEMANTIC DESCRIPTOR parameters
@@ -179,15 +146,32 @@ if __name__ == "__main__":
         required=True,
     )
 
-    # Set of words argument
+    parser.add_argument("-d", "--semantic-dimension",
+                        help="Dimensions to which reduce the semantic descriptor using PCA",
+                        type=int,
+                        choices=[2, 3],
+                        default=3)
+
+    parser.add_argument("-r", "--dimensionality-reductor",
+                        help="Dimensionality reduction method to apply to the semantic descriptor.",
+                        choices=[constants.DIM_REDUCTOR_PCA,
+                                 constants.DIM_REDUCTOR_UMAP],
+                        default=constants.DIM_REDUCTOR_PCA)
+
     parser.add_argument(
         "-w",
         "--word-set",
         help="A set of words for processing.",
-        nargs="+",  # Accepts one or more words
+        nargs="+",
         required=True,
     )
 
     args = parser.parse_args()
 
-    main()
+    # Initialize fast models (embedders)
+    bert_embedder = BERTEmbedder()
+    roberta_embedder = RoBERTaEmbedder()
+    openai_embedder = OpenAIEmbedder()
+    sbert_embedder = SentenceBERTEmbedder()
+
+    main(args)

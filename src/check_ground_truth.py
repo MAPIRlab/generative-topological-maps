@@ -18,14 +18,23 @@ def main(args):
     semantic_maps: List[SemanticMap] = list()
     for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
 
+        # Load semantic map
         semantic_map_basename = file_utils.get_file_basename(
             semantic_map_file_name)
-        # Load semantic map
-        semantic_map_obj = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                             semantic_map_file_name))
+        semantic_map_objects_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
+                                                                      semantic_map_file_name))
         # Create SemanticMap object
+        semantic_map_objects: List[SemanticMapObject] = []
+        for obj_id, obj_data in semantic_map_objects_dict["instances"].items():
+            # Create SemanticMapObject object
+            semantic_map_object = SemanticMapObject(obj_id, obj_data)
+
+            # Set each object geometric descriptor to its bounding box center
+            semantic_map_object.geometric_descriptor = semantic_map_object.bbox_center
+
+            semantic_map_objects.append(semantic_map_object)
         semantic_maps.append(SemanticMap(semantic_map_basename,
-                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_obj["instances"].items()]))
+                                         semantic_map_objects))
 
     # For each semantic map
     for semantic_map in semantic_maps[:args.number_maps]:

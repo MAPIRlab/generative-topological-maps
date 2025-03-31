@@ -1,19 +1,24 @@
 #!/bin/bash
 
-# # geometric
-python src/main.py -p -n 10 --method geometric -e 1.0 -m 1 -w 0
+# geometric
+python src/main.py -p -n 10 --method geometric -c dbscan -e 1.0 -m 2 -w 0 -r umap
 
-# # bert
-python src/main.py -p -n 10 --method bert -e 1.0 -m 1 -w 0.009 -d 3 
+# bert
+python src/main.py -p -n 10 --method bert -c dbscan -e 1.0 -m 2 -w 0.009 -d 3 -r umap
 
-# # roberta
-python src/main.py -p -n 10 --method roberta -e 1.0 -m 1 -w 0.009 -d 3
+# roberta
+python src/main.py -p -n 10 --method roberta -c dbscan -e 1.0 -m 2 -w 0.009 -d 3 -r umap
 
-# # deepseek+bert
-python src/main.py -p -n 10 --method deepseek+sbert -e 1.0 -m 1 -w 0.009 -d 3
+# deepseek+bert
+python src/main.py -p -n 10 --method deepseek+sbert -c dbscan -e 1.0 -m 2 -w 0.009 -d 3 -r umap
 
-# # deepseek+sbert+post
-python src/main.py -p -n 10 --method deepseek+sbert+post -e 1.0 -m 1 -w 0.009 -d 3 \
-    --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.97
+# bert+post
+python src/main.py -p -n 10 --method bert+post -c dbscan -e 1.0 -m 2 -w 0.009 -d 3 \
+    --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.99 -r umap
 
-python src/main.py -p -n 10 --method deepseek
+# deepseek+sbert+post
+python src/main.py -p -n 10 --method deepseek+sbert+post -c dbscan -e 1.0 -m 2 -w 0.009 -d 3 \
+    --merge-geometric-threshold 2.5 --merge-semantic-threshold 0.99 -r umap
+
+# deepseek
+python src/main.py -p -n 10 --method deepseek -r umap

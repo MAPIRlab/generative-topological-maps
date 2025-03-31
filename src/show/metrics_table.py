@@ -1,4 +1,5 @@
 import pandas as pd
+from tabulate import tabulate
 
 
 class MetricsTable:
@@ -165,3 +166,63 @@ class MetricsTable:
             filtered_df = filtered_df.sort_values(
                 by="Mean Score", ascending=False)
             print(filtered_df.drop(columns=["Mean Score"]))
+
+    def filter_dataset(self, search_str, group_by=None):
+        """
+        Filters and displays the rows (or grouped rows) where the 'Dataset' column 
+        contains the given search string, ordering the results from best to worst 
+        based on the mean of the metrics.
+
+        :param search_str: Substring to search for in the 'Dataset' column.
+        :param group_by: (Optional) List of column names to group by before sorting.
+        """
+        print("*" * 100)
+        print(f"Datasets containing '{search_str}'" +
+              (f" (grouped by {group_by})" if group_by else ""))
+
+        # First, filter rows that match the search string
+        filtered_df = self.df[
+            self.df["Dataset"].str.contains(search_str, case=False, na=False)
+        ].copy()
+
+        # If group_by is not None, group and compute averages
+        if group_by:
+            numeric_cols = ["ARI", "NMI", "V-Measure", "FMI"]
+            grouped_df = (
+                filtered_df.groupby(group_by, as_index=False)[numeric_cols]
+                           .mean()
+            )
+            # Calculate mean of metrics for sorting
+            grouped_df["Mean Score"] = grouped_df[numeric_cols].mean(axis=1)
+            # Sort descending by Mean Score
+            grouped_df = grouped_df.sort_values(
+                by="Mean Score", ascending=False)
+            print(grouped_df.drop(columns=["Mean Score"]))
+        else:
+            # If no grouping, just compute a per-row Mean Score and sort
+            filtered_df["Mean Score"] = filtered_df[[
+                "ARI", "NMI", "V-Measure", "FMI"]].mean(axis=1)
+            filtered_df = filtered_df.sort_values(
+                by="Mean Score", ascending=False)
+            print(filtered_df.drop(columns=["Mean Score"]))
+
+    def semantic_map_vs_method_pivot_table(self, metric):
+        """
+        Creates and displays a pivot table with methods as rows,
+        semantic maps as columns, and the specified metric as cell values.
+
+        :param metric: Metric to display in the pivot table ("ARI", "NMI", "V-Measure", "FMI").
+        """
+
+        if metric not in ["ARI", "NMI", "V-Measure", "FMI"]:
+            raise ValueError(
+                "Invalid metric. Choose from 'ARI', 'NMI', 'V-Measure', 'FMI'."
+            )
+
+        pivot_table = self.df.pivot_table(
+            index="Method", columns="Semantic Map", values=metric, aggfunc="mean"
+        )
+
+        print("*" * 100)
+        print(f"Pivot table for metric '{metric}':")
+        print(tabulate(pivot_table, headers="keys", tablefmt="grid"))

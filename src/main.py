@@ -1,9 +1,7 @@
-
-from functools import partial
+from semantic.clustering_engine import ClusteringEngine
+from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
 from itertools import combinations
 import sys
-from sklearn.cluster import DBSCAN
-from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import argparse
 import os
@@ -13,14 +11,13 @@ from typing import List
 from embedding.bert_embedder import BERTEmbedder
 from embedding.openai_embedder import OpenAIEmbedder
 from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceEmbedder
+from embedding.sentence_embedder import SentenceBERTEmbedder
 from llm.large_language_model import LargeLanguageModel
 from prompt.place_classifier_prompt import PlaceSegmenterPrompt
-from prompt.sentence_generator_prompt import SentenceGeneratorPrompt
+from semantic.semantic_descriptor_engine import SemanticDescriptorEngine
 from utils import file_utils
 import constants
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
 
 from voxeland.clustering import Clustering
 from voxeland.cluster import Cluster
@@ -29,68 +26,9 @@ from voxeland.semantic_map_object import SemanticMapObject
 
 from tqdm import tqdm
 
+
 from dotenv import load_dotenv
 load_dotenv()
-
-
-def geometric_semantic_distance(A, B, semantic_weight: float = 0.005):
-    """
-    Custom distance:
-    - Euclidean distance for the first three dimensions (geometric)
-    - Plus a weighted, dimension-normalized Euclidean distance for the rest (semantic).
-    """
-    # print("[geometric_semantic_distance] Computing distance between A and B")
-    A, B = np.array(A), np.array(B)
-    # print(f"[geometric_semantic_distance] A.shape: {A.shape}")
-    # print(f"[geometric_semantic_distance] B.shape: {B.shape}")
-
-    # Geometric distance
-    geometric_dist = np.sqrt(np.sum((A[:3] - B[:3]) ** 2))
-    # print(
-    #     f"[geometric_semantic_distance] Geometric distance: {geometric_dist}")
-
-    # Semantic distance
-    semantic_dim = max(0, len(A) - 3)
-    if semantic_dim > 0:
-        # print(
-        #     f"[geometric_semantic_distance] Normalizing semantic distance for {semantic_dim} dimensions")
-        raw_semantic_dist = np.sqrt(np.sum((A[3:] - B[3:]) ** 2))
-        norm_semantic_dist = raw_semantic_dist / np.sqrt(semantic_dim)
-        semantic_dist = norm_semantic_dist * semantic_weight
-    else:
-        semantic_dist = 0.0
-    # print(f"[geometric_semantic_distance] Semantic distance: {semantic_dist}")
-
-    # Global distance
-    global_dist = geometric_dist + semantic_dist
-    # print(f"[geometric_semantic_distance] Global distance: {global_dist}")
-
-    return global_dist
-
-
-def apply_clustering(semantic_map: SemanticMap, eps: float, min_samples: int, semantic_weight: float) -> Clustering:
-    """Performs DBSCAN clustering using a custom distance metric and returns a Clustering instance."""
-
-    object_labels = list(map(lambda obj: obj.object_id,
-                         semantic_map.get_all_objects()))
-    object_descriptors = list(
-        map(lambda obj: obj.global_descriptor, semantic_map.get_all_objects()))
-
-    # Apply DBSCAN with custom distance matrix
-    distance_matrix = squareform(
-        pdist(object_descriptors, metric=partial(geometric_semantic_distance, semantic_weight=semantic_weight)))
-    clustering = DBSCAN(eps=eps, min_samples=min_samples, metric="precomputed")
-    labels = clustering.fit_predict(distance_matrix)
-
-    # Create a Clustering object
-    clustering = Clustering([])
-    for object_label, object_cluster in zip(object_labels, labels):
-        cluster = clustering.find_cluster_by_id(object_cluster)
-        if cluster is None:  # new cluster
-            clustering.append_cluster(Cluster(object_cluster, [], ""))
-            cluster = clustering.find_cluster_by_id(object_cluster)
-        cluster.append_object(semantic_map.find_object(object_label))
-    return clustering
 
 
 def merge_clusters(clustering: Clustering, merge_geometric_threshold: float, merge_semantic_threshold: float) -> Clustering:
@@ -170,82 +108,39 @@ def merge_clusters(clustering: Clustering, merge_geometric_threshold: float, mer
 
 
 def get_results_path_for_method(args):
-    if args.method == constants.METHOD_GEOMETRIC:
-        return os.path.join(constants.RESULTS_FOLDER_PATH,
-                            "method_results",
-                            f"{args.method}_e{args.eps}_m{args.min_samples}")
-    elif args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
-        return os.path.join(constants.RESULTS_FOLDER_PATH,
-                            "method_results",
-                            f"{args.method}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}")
-    elif args.method == constants.METHOD_DEEPSEEK:
-        return os.path.join(constants.RESULTS_FOLDER_PATH,
-                            "method_results",
-                            f"{args.method}")
-    else:
-        return os.path.join(constants.RESULTS_FOLDER_PATH,
-                            "method_results",
-                            f"{args.method}_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}")
+    base_path = os.path.join(constants.RESULTS_FOLDER_PATH, "method_results")
+    method_specific_path = f"{args.method}"
+
+    if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
+        method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
+    elif args.method == constants.METHOD_GEOMETRIC:
+        method_specific_path += f"_e{args.eps}_m{args.min_samples}"
+    elif args.method != constants.METHOD_DEEPSEEK:
+        method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
+
+    return os.path.join(base_path, method_specific_path)
 
 
 def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
     return semantic_map_object.get_bbox_center()
 
 
-def get_semantic_descriptor(method_arg: str, semantic_map: SemanticMap, semantic_map_object: SemanticMapObject, verbose: bool = False):
-
-    if method_arg == constants.METHOD_GEOMETRIC:
-        return []
-    elif method_arg in (constants.METHOD_BERT, constants.METHOD_BERT_POST):
-        return bert_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif method_arg == constants.METHOD_ROBERTA:
-        return roberta_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif method_arg == constants.METHOD_OPENAI:
-        return openai_embedder.embed_text(semantic_map_object.get_most_probable_class())
-    elif method_arg in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_OPENAI, constants.METHOD_DEEPSEEK_SBERT_POST):
-
-        # If LLM not instantiated, instantiate! SLOW PROCESS
-        global deepseek_llm
-        if deepseek_llm is None:
-            _, deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                                                         cache_path=constants.LLM_CACHE_FILE_PATH)
-
-        # Generate sentence
-        sentence_generator_prompt = SentenceGeneratorPrompt(
-            word=semantic_map_object.get_most_probable_class())
-        response = deepseek_llm.generate_json_retrying(
-            sentence_generator_prompt.get_prompt_text(), params={"max_length": 1000}, retries=10)
-
-        sentence = response["description"]
-        if verbose:
-            print(
-                f"Sentence for {semantic_map_object.get_object_id()} ({semantic_map_object.get_most_probable_class()}) -> {sentence}")
-
-        # Generate embedding
-        if method_arg in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_SBERT_POST):
-            return sbert_embedder.embed_text(sentence)
-        elif method_arg == constants.METHOD_DEEPSEEK_OPENAI:
-            return openai_embedder.embed_text(response)
-    else:
-        raise NotImplementedError(
-            f"Not implemented semantic descriptor {method_arg}")
-
-
-# Models
-bert_embedder = None
-roberta_embedder = None
-openai_embedder = None
-sbert_embedder = None
-deepseek_llm = None
-
-
 def main(args):
+
     # Instantiate models
-    global bert_embedder, roberta_embedder, openai_embedder, sbert_embedder
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceEmbedder()
+    sbert_embedder = SentenceBERTEmbedder()
+    deepseek_llm = None
+
+    # Instantiate semantic descriptor engine
+    semantic_descriptor_engine = SemanticDescriptorEngine(
+        bert_embedder, roberta_embedder, openai_embedder, sbert_embedder, deepseek_llm
+    )
+
+    # Instantiate dimensionality reduction engine
+    dim_reduction_engine = DimensionalityReductionEngine()
 
     # Load and pre-process semantic map
     semantic_maps: List[SemanticMap] = list()
@@ -278,7 +173,6 @@ def main(args):
         if args.method == constants.METHOD_DEEPSEEK:
 
             # Instantiate deepseek
-            global deepseek_llm
             if deepseek_llm is None:
                 _, deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
                                                                              cache_path=constants.LLM_CACHE_FILE_PATH)
@@ -307,13 +201,14 @@ def main(args):
                 mixed_clustering.append_cluster(cluster)
 
         else:
+            print("hola")
             # Assign semantic descriptor
             for semantic_map_object in tqdm(semantic_map.get_all_objects(),
                                             desc=f"Generating features for {semantic_map.semantic_map_id}..."):
-
-                # Semantic feature = to be decided
-                semantic_map_object.semantic_descriptor = get_semantic_descriptor(
-                    args.method, semantic_map, semantic_map_object, verbose=True)
+                # Use SemanticDescriptorEngine to generate semantic descriptor
+                semantic_map_object.semantic_descriptor = semantic_descriptor_engine.get_semantic_descriptor_from_method(
+                    args.method, semantic_map_object.get_most_probable_class()
+                )
 
             # Convert features into numpy arrays
             # Shape: (num_objects, geometric_dim)
@@ -332,13 +227,11 @@ def main(args):
 
             # Perform dimensionality reduction for semantic_features
             if args.method != constants.METHOD_GEOMETRIC and args.semantic_dimension is not None:
-                if semantic_descriptor_matrix.shape[1] > args.semantic_dimension:
-                    pca = PCA(n_components=args.semantic_dimension)
-                    reduced_semantic_descriptor_matrix = pca.fit_transform(
-                        semantic_descriptor_matrix)
-                else:
-                    raise ValueError(
-                        f"Semantic descriptor size is lower than target dim {args.semantic_dimension}")
+                reduced_semantic_descriptor_matrix = dim_reduction_engine.reduce(
+                    semantic_descriptor_matrix,
+                    args.semantic_dimension,
+                    args.dimensionality_reductor
+                )
             else:
                 reduced_semantic_descriptor_matrix = semantic_descriptor_matrix
 
@@ -368,8 +261,9 @@ def main(args):
                 object.global_descriptor = mixed_descriptor_matrix[i]
 
             # Perform clustering
-            mixed_clustering = apply_clustering(
-                semantic_map, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
+            clustering_engine = ClusteringEngine()
+            mixed_clustering = clustering_engine.apply_clustering(
+                semantic_map, args.clustering_algorithm, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
 
             # Merge clusters
             if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
@@ -431,6 +325,12 @@ if __name__ == "__main__":
                         type=int,
                         default=None)
 
+    parser.add_argument("-r", "--dimensionality_reductor",
+                        help="Dimensionality reduction method to apply to the semantic descriptor.",
+                        choices=[constants.DIM_REDUCTOR_PCA,
+                                 constants.DIM_REDUCTOR_UMAP],
+                        default=constants.DIM_REDUCTOR_PCA)
+
     # DBSCAN parameters
     parser.add_argument("-e", "--eps",
                         help="eps parameter in the DBSCAN algorithm",
@@ -458,6 +358,12 @@ if __name__ == "__main__":
                         type=float,
                         default=0.99)
 
+    parser.add_argument("-c", "--clustering-algorithm",
+                        help="Clustering algorithm to use.",
+                        choices=[constants.CLUSTERING_ALGORITHM_DBSCAN,
+                                 constants.CLUSTERING_ALGORITHM_HDBSCAN],
+                        default=constants.CLUSTERING_ALGORITHM_DBSCAN)
+
     args = parser.parse_args()
 
     # Redirect output to a log file (args.persist_log)
@@ -469,4 +375,5 @@ if __name__ == "__main__":
         sys.stdout = open(log_file_path, "w")
         sys.stderr = sys.stdout
 
+    print("hola")
     main(args)
