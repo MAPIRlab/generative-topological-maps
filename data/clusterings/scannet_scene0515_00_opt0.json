@@ -1,0 +1,41 @@
+{
+    "clusters": {
+        "0": {
+            "description": "working area with desk and chair",
+            "objects": [
+                "obj14",
+                "obj20",
+                "obj21",
+                "obj1"
+            ]
+        },
+        "1": {
+            "description": "bathroom",
+            "objects": [
+                "obj0",
+                "obj13",
+                "obj19"
+            ]
+        },
+        "2": {
+            "description": "kitchen area",
+            "objects": [
+                "obj15",
+                "obj16",
+                "obj17"
+            ]
+        },
+        "3": {
+            "description": "leisure area with a couch",
+            "objects": [
+                "obj18"
+            ]
+        },
+        "4": {
+            "description": "sleeping area with a bed",
+            "objects": [
+                "obj10"
+            ]
+        }
+    }
+}

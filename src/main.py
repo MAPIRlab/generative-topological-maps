@@ -122,7 +122,7 @@ def get_results_path_for_method(args):
 
 
 def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
-    return semantic_map_object.get_bbox_center()
+    return semantic_map_object.bbox_center
 
 
 def main(args):
@@ -201,7 +201,6 @@ def main(args):
                 mixed_clustering.append_cluster(cluster)
 
         else:
-            print("hola")
             # Assign semantic descriptor
             for semantic_map_object in tqdm(semantic_map.get_all_objects(),
                                             desc=f"Generating features for {semantic_map.semantic_map_id}..."):

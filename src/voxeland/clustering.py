@@ -60,12 +60,12 @@ class Clustering:
 
                 if obj.bbox_center is None:
                     complete_obj = semantic_map.find_object(
-                        obj.get_object_id())
+                        obj.object_id)
                 else:
                     complete_obj = obj
 
-                x_center, y_center = complete_obj.get_bbox_center()[:2]
-                w, h = complete_obj.get_bbox_size()[:2]
+                x_center, y_center = complete_obj.bbox_center[:2]
+                w, h = complete_obj.bbox_size[:2]
                 half_w, half_h = w / 2, h / 2
 
                 x_min = min(x_min, x_center - half_w)
@@ -77,7 +77,7 @@ class Clustering:
                                      edgecolor=color, facecolor=color, alpha=0.5)
                 plt.gca().add_patch(rect)
 
-                object_label_text = f"{complete_obj.get_object_id()}-{complete_obj.get_most_probable_class()}"
+                object_label_text = f"{complete_obj.object_id}-{complete_obj.get_most_probable_class()}"
                 if cluster.cluster_id == -1:
                     object_label_text = f"({object_label_text})"
                 plt.text(x_center, y_center, object_label_text,
@@ -87,6 +87,9 @@ class Clustering:
             cluster_label_text = f"cluster{cluster.cluster_id}"
             plt.text(cluster.compute_geometric_descriptor()[0], cluster.compute_geometric_descriptor()[1], cluster_label_text,
                      fontsize=16, ha='center', va='center', color='black')
+            if cluster.description:
+                plt.text(cluster.compute_geometric_descriptor()[0], cluster.compute_geometric_descriptor()[1]-0.25, cluster.description,
+                         fontsize=11, ha='center', va='center', color='black')
 
         # Adjust plot limits
         margin = 1
@@ -177,13 +180,13 @@ class Clustering:
                 for cluster in self.clusters
             }
         }
-        print(clustering_data)
         file_utils.save_dict_to_json_file(clustering_data, file_path)
 
     @staticmethod
-    def load_from_json(file_path: str) -> "Clustering":
+    def load_from_json(file_path: str, semantic_map: Optional[SemanticMap] = None) -> "Clustering":
         """
-        Loads a ClusteringResult object from a JSON file with the updated structure.
+        Loads a ClusteringResult object from a JSON file with the updated structure. If a semantic map is provided,
+        it will be used to find the objects in the clusters.
         """
         clustering_data = file_utils.load_json(file_path)
 
@@ -191,7 +194,12 @@ class Clustering:
         for cluster_id, data in clustering_data["clusters"].items():
             objects = list()
             for object_id in data["objects"]:
-                objects.append(SemanticMapObject(object_id, None))
+                if semantic_map is not None and object is not None:
+                    object = semantic_map.find_object(object_id)
+                    objects.append(object)
+                else:
+                    objects.append(SemanticMapObject(object_id, None))
+
             clusters.append(Cluster(int(cluster_id),
                                     objects,
                                     data.get("description")))

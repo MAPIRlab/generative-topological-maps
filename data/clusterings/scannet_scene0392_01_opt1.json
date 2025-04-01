@@ -1,0 +1,56 @@
+{
+    "clusters": {
+        "0": {
+            "description": "closet and closet area",
+            "objects": [
+                "obj8",
+                "obj9",
+                "obj30",
+                "obj28",
+                "obj22"
+            ]
+        },
+        "1": {
+            "description": "personal area with a desk, a chair and a bed",
+            "objects": [
+                "obj10",
+                "obj15",
+                "obj16",
+                "obj31",
+                "obj19",
+                "obj20",
+                "obj29"
+            ]
+        },
+        "2": {
+            "description": "relaxation and leisure area, with a sofa",
+            "objects": [
+                "obj7"
+            ]
+        },
+        "3": {
+            "description": "bathroom",
+            "objects": [
+                "obj17",
+                "obj24",
+                "obj32"
+            ]
+        },
+        "4": {
+            "description": "kitchen area with cooking-related utensils",
+            "objects": [
+                "obj23",
+                "obj33",
+                "obj35",
+                "obj25",
+                "obj26",
+                "obj12",
+                "obj11",
+                "obj21",
+                "obj34",
+                "obj14",
+                "obj27"
+            ]
+        }
+    }
+}

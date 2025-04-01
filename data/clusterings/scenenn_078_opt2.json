@@ -1,0 +1,38 @@
+{
+    "clusters": {
+        "0": {
+            "description": "working area with a table, some chairs and a bookcase containing books",
+            "objects": [
+                "obj4",
+                "obj17",
+                "obj21",
+                "obj24",
+                "obj25",
+                "obj26",
+                "obj7",
+                "obj11",
+                "obj6",
+                "obj13",
+                "obj14",
+                "obj15",
+                "obj16",
+                "obj18",
+                "obj5",
+                "obj20",
+                "obj22",
+                "obj23",
+                "obj8",
+                "obj9",
+                "obj12",
+                "obj3"
+            ]
+        },
+        "1": {
+            "description": "small eating area with just a fridge and a toaster",
+            "objects": [
+                "obj10",
+                "obj19"
+            ]
+        }
+    }
+}

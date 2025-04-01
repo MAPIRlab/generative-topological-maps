@@ -1,0 +1,41 @@
+{
+    "clusters": {
+        "0": {
+            "description": "work area with a large table, some chairs and office supplies",
+            "objects": [
+                "obj3",
+                "obj5",
+                "obj10",
+                "obj11",
+                "obj18",
+                "obj25",
+                "obj29",
+                "obj33",
+                "obj34",
+                "obj7",
+                "obj9",
+                "obj14",
+                "obj15",
+                "obj19",
+                "obj21",
+                "obj8",
+                "obj12",
+                "obj20",
+                "obj30",
+                "obj16",
+                "obj22",
+                "obj24",
+                "obj31",
+                "obj17",
+                "obj23",
+                "obj36",
+                "obj26",
+                "obj27",
+                "obj35",
+                "obj28",
+                "obj32",
+                "obj13"
+            ]
+        }
+    }
+}

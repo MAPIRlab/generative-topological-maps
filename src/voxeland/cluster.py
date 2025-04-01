@@ -27,7 +27,7 @@ class Cluster:
     def find_object(self, object_id: str) -> Optional[SemanticMapObject]:
         """Finds and returns an object by its ID."""
         for obj in self.objects:
-            if obj.get_object_id() == object_id:
+            if obj.object_id == object_id:
                 return obj
         return None
 

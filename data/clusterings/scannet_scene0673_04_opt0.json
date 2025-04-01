@@ -1,0 +1,39 @@
+{
+    "clusters": {
+        "0": {
+            "description": "kitchen area with appliances and furniture",
+            "objects": [
+                "obj9",
+                "obj24",
+                "obj28",
+                "obj11",
+                "obj10",
+                "obj16",
+                "obj23"
+            ]
+        },
+        "1": {
+            "description": "leisure area with a couch and a bicycle",
+            "objects": [
+                "obj20",
+                "obj27",
+                "obj31",
+                "obj30"
+            ]
+        },
+        "2": {
+            "description": "leisure area with a sofa and a TV",
+            "objects": [
+                "obj12",
+                "obj17",
+                "obj18",
+                "obj19",
+                "obj26",
+                "obj29",
+                "obj0",
+                "obj8",
+                "obj25"
+            ]
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "clusters": {
+        "0": {
+            "description": "eating area with some chairs and a table",
+            "objects": [
+                "obj2",
+                "obj28",
+                "obj29",
+                "obj30",
+                "obj31",
+                "obj42",
+                "obj0"
+            ]
+        },
+        "1": {
+            "description": "sleeping area, with a bed",
+            "objects": [
+                "obj16",
+                "obj37",
+                "obj44",
+                "obj46",
+                "obj47",
+                "obj50",
+                "obj41"
+            ]
+        },
+        "2": {
+            "description": "work area with a desk and chairs",
+            "objects": [
+                "obj6",
+                "obj17",
+                "obj39",
+                "obj48",
+                "obj49",
+                "obj14",
+                "obj7",
+                "obj35"
+            ]
+        },
+        "3": {
+            "description": "leisure area with a sofa",
+            "objects": [
+                "obj8",
+                "obj15",
+                "obj5",
+                "obj32",
+                "obj18",
+                "obj34"
+            ]
+        },
+        "4": {
+            "description": "bathroom",
+            "objects": [
+                "obj4",
+                "obj10",
+                "obj36",
+                "obj1",
+                "obj11"
+            ]
+        },
+        "5": {
+            "description": "kitchen area with cooking utensils and cupboards",
+            "objects": [
+                "obj40",
+                "obj43",
+                "obj52",
+                "obj3",
+                "obj33",
+                "obj45",
+                "obj51",
+                "obj53",
+                "obj12",
+                "obj13",
+                "obj38"
+            ]
+        }
+    }
+}
