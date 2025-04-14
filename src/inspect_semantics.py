@@ -1,3 +1,5 @@
+import os
+from typing import List
 from scipy.spatial.distance import cdist
 import argparse
 import constants
@@ -5,16 +7,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
-from embedding.bert_embedder import BERTEmbedder
-from embedding.openai_embedder import OpenAIEmbedder
-from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceBERTEmbedder
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 from dotenv import load_dotenv
 
+from embedding.bert_embedder import BERTEmbedder
+from embedding.openai_embedder import OpenAIEmbedder
+from embedding.roberta_embedder import RoBERTaEmbedder
+from embedding.sentence_embedder import SentenceBERTEmbedder
+from llm.large_language_model import LargeLanguageModel
 from semantic.semantic_descriptor_engine import SemanticDescriptorEngine
 from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
+from utils import file_utils
+from voxeland.semantic_map import SemanticMap
+from voxeland.semantic_map_object import SemanticMapObject
 load_dotenv()
 
 
@@ -26,7 +32,82 @@ sbert_embedder = None
 deepseek_llm = None
 
 
-def main(args):
+def plot_2d(object_set, embeddings_2d, closest_neighbors, colors, semantic_descriptor, dim_reductor):
+    fig, ax = plt.subplots()
+
+    for i in range(len(object_set)):
+        ax.scatter(embeddings_2d[i, 0], embeddings_2d[i, 1],
+                   color=colors[i], label=object_set[i])
+
+    for i, neighbor_idx in enumerate(closest_neighbors):
+        distance = np.linalg.norm(
+            embeddings_2d[i] - embeddings_2d[neighbor_idx])
+        num_segments = min(5 + i, 20)
+        if distance > 1.0:
+            num_segments += 5
+
+        x_values = np.linspace(
+            embeddings_2d[i, 0], embeddings_2d[neighbor_idx, 0], num=num_segments)
+        y_values = np.linspace(
+            embeddings_2d[i, 1], embeddings_2d[neighbor_idx, 1], num=num_segments)
+
+        for j in range(0, len(x_values) - 1, 2):
+            ax.plot([x_values[j], x_values[j + 1]],
+                    [y_values[j], y_values[j + 1]],
+                    linestyle='dashed', linewidth=1.5, color=colors[i], alpha=0.7)
+
+    for i, obj in enumerate(object_set):
+        x, y = embeddings_2d[i]
+        ax.text(x, y, obj)
+
+    plt.title(
+        f"semantic_descriptor={semantic_descriptor}, dim_reductor={dim_reductor}")
+    plt.show()
+
+
+def plot_3d(object_set, embeddings_3d, closest_neighbors, colors, semantic_descriptor, dim_reductor):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    for i in range(len(object_set)):
+        ax.scatter(embeddings_3d[i, 0], embeddings_3d[i, 1], embeddings_3d[i, 2],
+                   color=colors[i], label=object_set[i])
+
+    segments = []
+    segment_colors = []
+    for i, neighbor_idx in enumerate(closest_neighbors):
+        distance = np.linalg.norm(
+            embeddings_3d[i] - embeddings_3d[neighbor_idx])
+        num_segments = min(5 + i, 20)
+        if distance > 1.0:
+            num_segments += 5
+
+        x_values = np.linspace(
+            embeddings_3d[i, 0], embeddings_3d[neighbor_idx, 0], num=num_segments)
+        y_values = np.linspace(
+            embeddings_3d[i, 1], embeddings_3d[neighbor_idx, 1], num=num_segments)
+        z_values = np.linspace(
+            embeddings_3d[i, 2], embeddings_3d[neighbor_idx, 2], num=num_segments)
+
+        for j in range(0, len(x_values) - 1, 2):
+            segments.append([(x_values[j], y_values[j], z_values[j]),
+                             (x_values[j + 1], y_values[j + 1], z_values[j + 1])])
+            segment_colors.append(colors[i])
+
+    line_collection = Line3DCollection(
+        segments, colors=segment_colors, linewidths=1.5, alpha=0.7)
+    ax.add_collection3d(line_collection)
+
+    for i, obj in enumerate(object_set):
+        x, y, z = embeddings_3d[i]
+        ax.text(x, y, z, obj)
+
+    plt.title(
+        f"semantic_descriptor={semantic_descriptor}, dim_reductor={dim_reductor}")
+    plt.show()
+
+
+def main(args, object_set: List[str]):
     semantic_descriptor_engine = SemanticDescriptorEngine(
         bert_embedder, roberta_embedder, openai_embedder, sbert_embedder, deepseek_llm)
 
@@ -48,86 +129,46 @@ def main(args):
         print(
             f"Showing word embeddings for semantic descriptor {semantic_descriptor}")
 
-        # Get embeddings for each word
+        # Get embeddings for each object
         embeddings = []
-        for word in args.word_set:
+        for obj in object_set:
             emb = semantic_descriptor_engine.get_semantic_descriptor(
-                semantic_descriptor, word)
+                semantic_descriptor, obj)
             embeddings.append(emb)
 
         # Convert to NumPy array (assuming each emb is 1D or can be flattened to 1D)
         embeddings = np.array(embeddings)
 
         # Apply dimensionality reduction
-        embeddings_3d = dim_reduction_engine.reduce(
-            embeddings, target_dimension=3, method=args.dimensionality_reductor)
+        embeddings_2_or_3d = dim_reduction_engine.reduce(
+            embeddings, target_dimension=args.semantic_dimension, method=args.dimensionality_reductor)
 
         # Compute pairwise distances and find the closest neighbor for each point
         # Compute all pairwise distances
-        distances = cdist(embeddings_3d, embeddings_3d)
+        distances = cdist(embeddings_2_or_3d, embeddings_2_or_3d)
         np.fill_diagonal(distances, np.inf)  # Avoid self-matching
         # Get the index of the closest neighbor
         closest_neighbors = np.argmin(distances, axis=1)
 
         # Generate unique colors for each point using a colormap
-        norm = mcolors.Normalize(vmin=0, vmax=len(args.word_set) - 1)
+        norm = mcolors.Normalize(vmin=0, vmax=len(object_set) - 1)
         # Using 'tab10' for distinct colors
-        colormap = cm.get_cmap('tab10', len(args.word_set))
-        colors = [colormap(norm(i)) for i in range(len(args.word_set))]
+        colormap = cm.get_cmap('tab10', len(object_set))
+        colors = [colormap(norm(i)) for i in range(len(object_set))]
 
-        # Plot the results in 3D
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-
-        # Plot points with assigned colors
-        for i in range(len(args.word_set)):
-            ax.scatter(embeddings_3d[i, 0], embeddings_3d[i, 1], embeddings_3d[i, 2],
-                       color=colors[i], label=args.word_set[i])
-
-        # Create dashed lines with variable segment lengths
-        segments = []
-        segment_colors = []
-        for i, neighbor_idx in enumerate(closest_neighbors):
-            # Determine number of segments dynamically (e.g., based on index or distance)
-            distance = np.linalg.norm(
-                embeddings_3d[i] - embeddings_3d[neighbor_idx])
-            num_segments = min(5 + i, 20)  # Vary segment count per object
-            if distance > 1.0:  # More segments for longer distances
-                num_segments += 5
-
-            # Generate evenly spaced points
-            x_values = np.linspace(
-                embeddings_3d[i, 0], embeddings_3d[neighbor_idx, 0], num=num_segments)
-            y_values = np.linspace(
-                embeddings_3d[i, 1], embeddings_3d[neighbor_idx, 1], num=num_segments)
-            z_values = np.linspace(
-                embeddings_3d[i, 2], embeddings_3d[neighbor_idx, 2], num=num_segments)
-
-            # Create segments with gaps by skipping some points
-            for j in range(0, len(x_values) - 1, 2):  # Skip every other segment
-                segments.append([(x_values[j], y_values[j], z_values[j]),
-                                 (x_values[j + 1], y_values[j + 1], z_values[j + 1])])
-                segment_colors.append(colors[i])
-
-        # Add dashed segments to the plot
-        line_collection = Line3DCollection(
-            segments, colors=segment_colors, linewidths=1.5, alpha=0.7)
-        ax.add_collection3d(line_collection)
-
-        # Label each point with its corresponding word
-        for i, word in enumerate(args.word_set):
-            x, y, z = embeddings_3d[i]
-            ax.text(x, y, z, word)
-
-        plt.title(
-            f"semantic_descriptor={semantic_descriptor}, dim_reductor={args.dimensionality_reductor}")
-        plt.show()
+        # PLOT
+        if args.semantic_dimension == 2:
+            plot_2d(object_set, embeddings_2_or_3d, closest_neighbors, colors,
+                    semantic_descriptor, args.dimensionality_reductor)
+        else:
+            plot_3d(object_set, embeddings_2_or_3d, closest_neighbors, colors,
+                    semantic_descriptor, args.dimensionality_reductor)
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Inspects the semantic descriptors of a set of words."
+        description="Inspects the semantic descriptors of a set of objects."
     )
 
     # SEMANTIC DESCRIPTOR parameters
@@ -158,20 +199,52 @@ if __name__ == "__main__":
                                  constants.DIM_REDUCTOR_UMAP],
                         default=constants.DIM_REDUCTOR_PCA)
 
-    parser.add_argument(
-        "-w",
-        "--word-set",
-        help="A set of words for processing.",
-        nargs="+",
-        required=True,
-    )
+    parser.add_argument("-o",
+                        "--object-set",
+                        help="A set of objects for processing, where each object contains one word or two words enclosed in double quotes.",
+                        nargs="+",
+                        required=False)
+
+    parser.add_argument("--semantic-map",
+                        help="Path to the semantic map file to process objects",
+                        required=False)
 
     args = parser.parse_args()
 
-    # Initialize fast models (embedders)
+    # Ensure either object_set or semantic_map is provided, but not both
+    if (args.object_set and args.semantic_map) or (not args.object_set and not args.semantic_map):
+        raise ValueError(
+            "You must provide either --object-set or --semantic-map, but not both.")
+
+    object_set = []
+    # If OBJECT_SET
+    if args.object_set:
+        if args.object_set:
+            for obj in args.object_set:
+                if obj.startswith('"') and obj.endswith('"'):
+                    object_set.append(obj.strip('"'))
+                else:
+                    object_set.append(obj)
+
+    # If SEMANTIC_MAP
+    # Load and pre-process semantic map
+    elif args.semantic_map:
+        semantic_map_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
+                                                              f"{args.semantic_map}.json"))
+        semantic_map = SemanticMap(args.semantic_map,
+                                   [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()])
+        object_set = list(map(
+            lambda object: object.get_most_probable_class(), semantic_map.get_all_objects()))
+
+    print(f"Object set: {args.object_set}")
+
+    # Initialize fast models
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceBERTEmbedder()
+    sbert_embedder = SentenceBERTEmbedder(
+        model_id="sentence-transformers/all-mpnet-base-v2")
+    deepseek_llm = LargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                                      cache_path=constants.LLM_CACHE_FILE_PATH)
 
-    main(args)
+    main(args, object_set)

@@ -84,11 +84,6 @@ class SemanticDescriptorEngine:
             return self.openai_embedder.embed_text(text)
         elif semantic_descriptor_arg in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
 
-            # If LLM not instantiated, instantiate! SLOW PROCESS
-            if self.deepseek_llm is None:
-                _, self.deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                                                                  cache_path=constants.LLM_CACHE_FILE_PATH)
-
             # Generate sentence
             sentence_generator_prompt = SentenceGeneratorPrompt(word=text)
             response = self.deepseek_llm.generate_json_retrying(

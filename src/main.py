@@ -1,6 +1,5 @@
 from semantic.clustering_engine import ClusteringEngine
 from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
-from itertools import combinations
 import sys
 from sklearn.preprocessing import StandardScaler
 import argparse
@@ -31,90 +30,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def merge_clusters(clustering: Clustering, merge_geometric_threshold: float, merge_semantic_threshold: float) -> Clustering:
-
-    # Decide clusters to be merged
-    clusters_to_be_merged = []
-    for cluster_1, cluster_2 in combinations(clustering.clusters, 2):
-        if cluster_1.compute_geometric_distance_to(cluster_2) <= merge_geometric_threshold:
-            print(
-                f"cluster {cluster_1} and cluster {cluster_2} could be merged")
-            if cluster_1.compute_semantic_similarity_to(cluster_2) <= merge_semantic_threshold:
-                print(
-                    f"cluster {cluster_1} and cluster {cluster_2} will be merged")
-                clusters_to_be_merged.append(
-                    (cluster_1.cluster_id, cluster_2.cluster_id))
-
-    while len(clusters_to_be_merged) != 0:
-
-        # Merge clusters
-        for cluster_1_id, cluster_2_id in clusters_to_be_merged:
-            if clustering.find_cluster_by_id(cluster_1_id) is not None and clustering.find_cluster_by_id(cluster_2_id) is not None:
-                clustering.merge_clusters(cluster_1_id, cluster_2_id)
-
-        print(clustering)
-
-        # Decide clusters to be merged
-        clusters_to_be_merged = []
-        for cluster_1, cluster_2 in combinations(clustering.clusters, 2):
-            if cluster_1.compute_geometric_distance_to(cluster_2) <= merge_geometric_threshold:
-                print(
-                    f"cluster {cluster_1} and cluster {cluster_2} could be merged")
-                if cluster_1.compute_semantic_similarity_to(cluster_2) <= merge_semantic_threshold:
-                    print(
-                        f"cluster {cluster_1} and cluster {cluster_2} will be merged")
-                    clusters_to_be_merged.append(
-                        (cluster_1.cluster_id, cluster_2.cluster_id))
-
-    return clustering
-
-
-def merge_clusters(clustering: Clustering, merge_geometric_threshold: float, merge_semantic_threshold: float) -> Clustering:
-
-    # Decide clusters to be merged
-    clusters_to_be_merged = []
-    for cluster_1, cluster_2 in combinations(clustering.clusters, 2):
-        if cluster_1.compute_geometric_distance_to(cluster_2) <= merge_geometric_threshold:
-            print(
-                f"cluster {cluster_1} and cluster {cluster_2} could be merged")
-            if cluster_1.compute_semantic_similarity_to(cluster_2) <= merge_semantic_threshold:
-                print(
-                    f"cluster {cluster_1} and cluster {cluster_2} will be merged")
-                clusters_to_be_merged.append(
-                    (cluster_1.cluster_id, cluster_2.cluster_id))
-
-    while len(clusters_to_be_merged) != 0:
-
-        # Merge clusters
-        for cluster_1_id, cluster_2_id in clusters_to_be_merged:
-            if clustering.find_cluster_by_id(cluster_1_id) is not None and clustering.find_cluster_by_id(cluster_2_id) is not None:
-                clustering.merge_clusters(cluster_1_id, cluster_2_id)
-
-        print(clustering)
-
-        # Decide clusters to be merged
-        clusters_to_be_merged = []
-        for cluster_1, cluster_2 in combinations(clustering.clusters, 2):
-            if cluster_1.compute_geometric_distance_to(cluster_2) <= merge_geometric_threshold:
-                print(
-                    f"cluster {cluster_1} and cluster {cluster_2} could be merged")
-                if cluster_1.compute_semantic_similarity_to(cluster_2) <= merge_semantic_threshold:
-                    print(
-                        f"cluster {cluster_1} and cluster {cluster_2} will be merged")
-                    clusters_to_be_merged.append(
-                        (cluster_1.cluster_id, cluster_2.cluster_id))
-
-    return clustering
-
-
 def get_results_path_for_method(args):
     base_path = os.path.join(constants.RESULTS_FOLDER_PATH, "method_results")
     method_specific_path = f"{args.method}"
 
     if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
-        method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
+        method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}_sst_{args.split_semantic_threshold}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
     elif args.method == constants.METHOD_GEOMETRIC:
-        method_specific_path += f"_e{args.eps}_m{args.min_samples}"
+        method_specific_path += f"_e{args.eps}_m{args.min_samples}_ca{args.clustering_algorithm}"
     elif args.method != constants.METHOD_DEEPSEEK:
         method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
 
@@ -131,8 +54,10 @@ def main(args):
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceBERTEmbedder()
-    deepseek_llm = None
+    sbert_embedder = SentenceBERTEmbedder(
+        model_id="sentence-transformers/all-mpnet-base-v2")
+    deepseek_llm = LargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                                      cache_path=constants.LLM_CACHE_FILE_PATH)
 
     # Instantiate semantic descriptor engine
     semantic_descriptor_engine = SemanticDescriptorEngine(
@@ -149,14 +74,22 @@ def main(args):
         semantic_map_basename = file_utils.get_file_basename(
             semantic_map_file_name)
         # Load semantic map
-        semantic_map_obj = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                             semantic_map_file_name))
+        semantic_map_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
+                                                              semantic_map_file_name))
         # Create SemanticMap object
         semantic_maps.append(SemanticMap(semantic_map_basename,
-                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_obj["instances"].items()]))
+                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()]))
 
     # For each semantic map
     for semantic_map in semantic_maps[:args.number_maps]:
+
+        # Files to save clusterings
+        json_file_path = os.path.join(get_results_path_for_method(args),
+                                      semantic_map.semantic_map_id,
+                                      "clustering.json")
+        plot_file_path = os.path.join(get_results_path_for_method(args),
+                                      semantic_map.semantic_map_id,
+                                      "plot.png")
 
         print("#"*40)
         print(f"Processing {semantic_map.semantic_map_id}...")
@@ -172,10 +105,6 @@ def main(args):
 
         if args.method == constants.METHOD_DEEPSEEK:
 
-            # Instantiate deepseek
-            if deepseek_llm is None:
-                _, deepseek_llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                                                             cache_path=constants.LLM_CACHE_FILE_PATH)
             place_classifier_prompt = PlaceSegmenterPrompt(
                 semantic_map=semantic_map.get_json_representation())
             response = deepseek_llm.generate_json_retrying(prompt=place_classifier_prompt.get_prompt_text(),
@@ -237,13 +166,13 @@ def main(args):
             # Normalize both descriptors separately
             normalized_geometric_descriptor_matrix = StandardScaler().fit_transform(
                 geometric_descriptor_matrix)
-            print("normalized_geometric_shape",
-                  normalized_geometric_descriptor_matrix.shape)
+            print(
+                f"[main] Normalized geometric descriptor matrix shape: {normalized_geometric_descriptor_matrix.shape}")
             if args.method != constants.METHOD_GEOMETRIC:
                 normalized_semantic_descriptor_matrix = StandardScaler().fit_transform(
                     reduced_semantic_descriptor_matrix)
-                print("normalized_semantic_shape",
-                      normalized_semantic_descriptor_matrix.shape)
+                print(
+                    f"[main] Normalized semantic descriptor matrix shape: {normalized_semantic_descriptor_matrix.shape}")
             else:
                 normalized_semantic_descriptor_matrix = reduced_semantic_descriptor_matrix
 
@@ -253,37 +182,38 @@ def main(args):
                     (normalized_geometric_descriptor_matrix, normalized_semantic_descriptor_matrix))
             else:
                 mixed_descriptor_matrix = normalized_geometric_descriptor_matrix
-            print("mixed_descriptor_matrix", mixed_descriptor_matrix.shape)
+            print(
+                f"[main] Normalized mixed descriptor matrix shape: {mixed_descriptor_matrix.shape}")
 
-            # Populate object global_descriptor
+            # Update object descriptors with normalized and reduced descriptors
             for i, object in enumerate(semantic_map.get_all_objects()):
-                object.global_descriptor = mixed_descriptor_matrix[i]
+                object.geometric_descriptor = list(
+                    normalized_geometric_descriptor_matrix[i])
+                object.semantic_descriptor = list(
+                    normalized_semantic_descriptor_matrix[i])
+                object.global_descriptor = list(mixed_descriptor_matrix[i])
 
             # Perform clustering
             clustering_engine = ClusteringEngine()
-            mixed_clustering = clustering_engine.apply_clustering(
-                semantic_map, args.clustering_algorithm, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight)
+            mixed_clustering = clustering_engine.clusterize(
+                semantic_map, args.clustering_algorithm, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight, noise_objects_new_clusters=True)
 
             # Merge clusters
             if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
-                mixed_clustering = merge_clusters(
-                    mixed_clustering, args.merge_geometric_threshold, args.merge_semantic_threshold)
+                mixed_clustering = clustering_engine.post_process_clustering(
+                    semantic_map, mixed_clustering, args.merge_geometric_threshold, args.merge_semantic_threshold, args.split_semantic_threshold, json_file_path, plot_file_path)
 
         # Save clustering
-        print("Saving clustering result...")
-        json_file_path = os.path.join(get_results_path_for_method(args),
-                                      semantic_map.semantic_map_id,
-                                      "clustering.json")
-        plot_file_path = os.path.join(get_results_path_for_method(args),
-                                      semantic_map.semantic_map_id,
-                                      "plot.png")
         file_utils.create_directories_for_file(json_file_path)
         file_utils.create_directories_for_file(plot_file_path)
         mixed_clustering.save_to_json(json_file_path)
         mixed_clustering.visualize_2D(
             f"{semantic_map.semantic_map_id}\n s_d={args.method} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}",
-            plot_file_path,
-            semantic_map)
+            semantic_map,
+            geometric_threshold=args.merge_geometric_threshold,
+            file_path=plot_file_path)
+
+    print("[main] The main script finished successfully!")
 
 
 if __name__ == "__main__":
@@ -339,7 +269,7 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--min-samples",
                         help="min_samples parameter in the DBSCAN algorithm",
                         type=int,
-                        default=1)
+                        default=2)
 
     # POST-PROCESSING parameters
     parser.add_argument("--merge-geometric-threshold",
@@ -353,9 +283,9 @@ if __name__ == "__main__":
                         default=0.99)
 
     parser.add_argument("--split-semantic-threshold",
-                        help="Maximum ",
+                        help="Minimum semantic variance to split clusters",
                         type=float,
-                        default=0.99)
+                        default=0.5)
 
     parser.add_argument("-c", "--clustering-algorithm",
                         help="Clustering algorithm to use.",
@@ -374,5 +304,4 @@ if __name__ == "__main__":
         sys.stdout = open(log_file_path, "w")
         sys.stderr = sys.stdout
 
-    print("hola")
     main(args)

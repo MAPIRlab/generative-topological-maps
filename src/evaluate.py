@@ -4,6 +4,7 @@ import os
 from typing import Dict, List
 
 import numpy as np
+import tqdm
 
 import constants
 from show.metrics_table import MetricsTable
@@ -50,7 +51,8 @@ def main(args):
 
     # Evaluate clustering results
     methods_metrics = dict()
-    for method in sorted(methods_clustering_results):
+    for method in tqdm.tqdm(sorted(methods_clustering_results),
+                            desc="Evaluating clustering results", unit="method"):
         methods_metrics[method] = dict()
 
         for semantic_map in sorted(methods_clustering_results[method]):
@@ -74,19 +76,19 @@ def main(args):
                     ground_truth_cr)
 
                 if np.mean(list(evaluation_metrics.values())) > np.mean(list(best_evaluation_metrics.values())):
-                    print(f"La opción {option_id} es mejor!")
+                    # print(f"La opción {option_id} es mejor!")
                     best_evaluation_metrics = evaluation_metrics
 
             # Print results
-            print(f"Method: {method}, Semantic Map: {semantic_map}")
-            print(
-                f"\tAdjusted Rand Index (ARI): {best_evaluation_metrics['ARI']:.4f}")
-            print(
-                f"\tNormalized Mutual Information (NMI): {best_evaluation_metrics['NMI']:.4f}")
-            print(f"\tV-Measure: {best_evaluation_metrics['V-Measure']:.4f}")
-            print(
-                f"\tFowlkes-Mallows Index (FMI): {best_evaluation_metrics['FMI']:.4f}")
-            print("-" * 60)
+            # print(f"Method: {method}, Semantic Map: {semantic_map}")
+            # print(
+            #     f"\tAdjusted Rand Index (ARI): {best_evaluation_metrics['ARI']:.4f}")
+            # print(
+            #     f"\tNormalized Mutual Information (NMI): {best_evaluation_metrics['NMI']:.4f}")
+            # print(f"\tV-Measure: {best_evaluation_metrics['V-Measure']:.4f}")
+            # print(
+            #     f"\tFowlkes-Mallows Index (FMI): {best_evaluation_metrics['FMI']:.4f}")
+            # print("-" * 60)
 
             # Save results
             methods_metrics[method][semantic_map] = {

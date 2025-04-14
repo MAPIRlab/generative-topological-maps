@@ -23,9 +23,9 @@ class SemanticMap:
                 return obj
         return None
 
-    def get_all_objects(self, exclude_classes: bool = False) -> List[SemanticMapObject]:
-        """Returns the list of semantic map objects. If exclude_classes, it filters out certain object classes."""
-        if not exclude_classes:
+    def get_all_objects(self, include_all_classes: bool = False) -> List[SemanticMapObject]:
+        """Returns the list of semantic map objects. If not include_all_classes, it filters out certain object classes."""
+        if not include_all_classes:
             return list(filter(lambda smo: smo.get_most_probable_class() not in self.EXCLUDED_CLASSES, self._objects))
         else:
             return self._objects

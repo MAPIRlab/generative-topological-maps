@@ -209,7 +209,7 @@ class MetricsTable:
     def semantic_map_vs_method_pivot_table(self, metric):
         """
         Creates and displays a pivot table with methods as rows,
-        semantic maps as columns, and the specified metric as cell values.
+        semantic maps as columns (represented by indices), and the specified metric as cell values.
 
         :param metric: Metric to display in the pivot table ("ARI", "NMI", "V-Measure", "FMI").
         """
@@ -219,8 +219,11 @@ class MetricsTable:
                 "Invalid metric. Choose from 'ARI', 'NMI', 'V-Measure', 'FMI'."
             )
 
+        # Assign an index to each unique semantic map
+        self.df["Semantic Map Index"] = self.df["Semantic Map"].factorize()[0]
+
         pivot_table = self.df.pivot_table(
-            index="Method", columns="Semantic Map", values=metric, aggfunc="mean"
+            index="Method", columns="Semantic Map Index", values=metric, aggfunc="mean"
         )
 
         print("*" * 100)

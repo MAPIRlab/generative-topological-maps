@@ -37,35 +37,38 @@ class Cluster:
         of the most probable class of each object.
         """
         descriptors = [obj.semantic_descriptor for obj in self.objects]
+        # print("lista de descriptores", len(descriptors))
+        # print("cada descriptor", len(descriptors[0]))
         if None in descriptors:
             raise ValueError(
                 "Cannot compute semantic descriptor of cluster containing objects with None semantic descriptor")
+        # print("su media", np.mean(descriptors, axis=0) if descriptors else np.zeros_like(
+        #     self.objects[0].semantic_descriptor))
         return np.mean(descriptors, axis=0) if descriptors else np.zeros_like(self.objects[0].semantic_descriptor)
 
-    def compute_geometric_descriptor(self) -> np.ndarray:
-        """
-        Computes the geometric descriptor of the cluster by averaging the geometric descriptors
-        of all objects within the cluster.
-        """
-        descriptors = [obj.geometric_descriptor for obj in self.objects]
-        if None in descriptors:
-            print(descriptors)
+    def compute_center(self) -> np.ndarray:
+        """Computes the cluster center from objects bounding box centers."""
+        bbox_centers = [object.bbox_center for object in self.objects]
+        if None in bbox_centers:
             raise ValueError(
-                "Cannot compute geometric descriptor of cluster containing objects with None geometric descriptor")
-        return np.mean(descriptors, axis=0) if descriptors else np.zeros_like(self.objects[0].geometric_descriptor)
+                "Cannot compute center of a cluster containing objects with None bounding box center")
+        return np.mean(bbox_centers, axis=0) if bbox_centers else np.zeros_like(self.objects[0].bbox_center)
 
     def compute_semantic_descriptor_variance(self) -> float:
         """
-        Computes the semantic variance of the cluster, based on the dispersion
-        of object embeddings relative to the cluster centroid.
+        Computes a normalized semantic variance, independent of the number of objects.
+        It is defined as the average squared distance to the centroid,
+        divided by the maximum squared distance observed.
         """
-        if len(self.objects) < 2:
-            print("hay menos de dos objetos")
+        if len(self.objects) == 1:
             return 0.0
+
         cluster_descriptor = self.compute_semantic_descriptor()
-        distances = [np.linalg.norm(
-            obj.semantic_descriptor - cluster_descriptor) for obj in self.objects]
-        return np.var(distances)
+        squared_distances = [
+            (obj.semantic_descriptor - cluster_descriptor) ** 2
+            for obj in self.objects
+        ]
+        return np.sum(squared_distances) / (len(self.objects)-1)
 
     def compute_semantic_similarity_to(self, other_cluster: "Cluster") -> float:
         """
@@ -74,9 +77,10 @@ class Cluster:
         self_descriptor = self.compute_semantic_descriptor()
         other_descriptor = other_cluster.compute_semantic_descriptor()
 
-        norm1, norm2 = np.linalg.norm(
-            self_descriptor), np.linalg.norm(other_descriptor)
-        return np.dot(self_descriptor, other_descriptor) / (norm1 * norm2) if norm1 and norm2 else 0.0
+        self_norm = np.linalg.norm(self_descriptor)
+        other_norm = np.linalg.norm(other_descriptor)
+
+        return np.dot(self_descriptor, other_descriptor) / (self_norm * other_norm) if self_norm and other_norm else 0.0
 
     def _boxes_overlap(self, center1, size1, center2, size2) -> bool:
         """Helper function to check if two bounding boxes overlap in 3D from above, i.e., in the X and Y axis."""
@@ -95,13 +99,38 @@ class Cluster:
             for obj1 in self.objects for obj2 in other_cluster.objects
         )
 
-    def compute_geometric_distance_to(self, other_cluster: "Cluster") -> float:
+    def compute_geometric_euclidean_distance_to(self, other_cluster: "Cluster") -> float:
         """
         Computes the Euclidean distance between the geometric descriptors of two clusters.
         """
-        self_geometric_descriptor = self.compute_geometric_descriptor()
-        other_geometric_descriptor = other_cluster.compute_geometric_descriptor()
+        self_geometric_descriptor = self.compute_center()
+        other_geometric_descriptor = other_cluster.compute_center()
         return np.linalg.norm(self_geometric_descriptor - other_geometric_descriptor)
+
+    def compute_splitting_score(self) -> float:
+        """
+        Computes a splitting score for the cluster. The score is influenced by the semantic descriptor variance
+        and the average pairwise geometric distance between objects in the cluster.
+        A higher score indicates that the cluster is more likely to be split.
+        """
+        if len(self.objects) == 1:
+            return 0.0
+
+        semantic_variance = self.compute_semantic_descriptor_variance()
+
+        pairwise_distances = [
+            np.linalg.norm(np.array(obj1.bbox_center) -
+                           np.array(obj2.bbox_center))
+            for i, obj1 in enumerate(self.objects)
+            for j, obj2 in enumerate(self.objects)
+            if i < j
+        ]
+        avg_pairwise_distance = np.mean(pairwise_distances)
+
+        # Combine semantic variance and average pairwise distance into the splitting score
+        splitting_score = 0.6 * semantic_variance + 0.4 * avg_pairwise_distance
+
+        return splitting_score
 
     def __repr__(self):
         return (f"Cluster(cluster_id={self.cluster_id}, description={self.description}, "
@@ -138,9 +167,9 @@ if __name__ == "__main__":
     print(cluster1)
     print(cluster2)
     print("Geometric Descriptor Cluster 1:",
-          cluster1.compute_geometric_descriptor())
+          cluster1.compute_center())
     print("Geometric Descriptor Cluster 2:",
-          cluster2.compute_geometric_descriptor())
+          cluster2.compute_center())
     print("Semantic Descriptor Variance Cluster 1:",
           cluster1.compute_semantic_descriptor_variance())
     print("Semantic Descriptor Variance Cluster 2:",
@@ -148,5 +177,5 @@ if __name__ == "__main__":
     print("Semantic similarity between clusters:",
           cluster1.compute_semantic_similarity_to(cluster2))
     print("Geometric distance between clusters:",
-          cluster1.compute_geometric_distance_to(cluster2))
+          cluster1.compute_geometric_euclidean_distance_to(cluster2))
     print("Clusters overlapping:", cluster1.compute_overlapping_to(cluster2))

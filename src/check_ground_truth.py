@@ -39,7 +39,8 @@ def main(args):
         # Get basename and split semantic map and possibility
         clustering_basename = file_utils.get_file_basename(
             clustering_file_name)
-        semantic_map_basename, option_id = clustering_basename.rsplit("_opt", 1)
+        semantic_map_basename, option_id = clustering_basename.rsplit(
+            "_opt", 1)
         option_id = int(option_id)
 
         # Save clustering into dictionary
@@ -85,8 +86,8 @@ def main(args):
                 ground_truth_cr_plot_file_path)
             ground_truth_cr.visualize_2D(
                 f"Ground truth for {semantic_map.semantic_map_id} (option {option_id})",
-                ground_truth_cr_plot_file_path,
-                semantic_map)
+                semantic_map,
+                file_path=ground_truth_cr_plot_file_path)
 
 
 if __name__ == "__main__":

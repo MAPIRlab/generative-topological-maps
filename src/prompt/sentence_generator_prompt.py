@@ -4,31 +4,45 @@ from prompt.prompt import Prompt
 
 class SentenceGeneratorPrompt(Prompt):
 
-    SYSTEM_PROMPT = """
-Describe objects in JSON format. Keep sentences short. Mention where the object is usually found 
-and what you can do with it. Include keywords related to the activity associated with the object.
+    SYSTEM_PROMPT = """Describe what the object is used for in one sentence using the format: 
+"Used to [action] [common targets] in the [room or context]." 
+Focus on the object's functionality. Use verbs and targets that are shared with similar objects. 
+Return the result in the following JSON format:
+
+{
+    "word": "<object_name>",
+    "description": "Used to <action> <targets> in the <context>.",
+    "keywords": ["<verb1>", "<verb2>", "<target1>", "<context>"]
+}
 
 Examples:
 
 For "refrigerator":
 {
     "word": "refrigerator",
-    "description": "Found in the kitchen. Used to store food and keep it cold. Helps preserve ingredients and drinks.",
-    "keywords": ["store", "cool", "preserve", "food", "drinks"]
+    "description": "Used to store and cool food and drinks in the kitchen.",
+    "keywords": ["store", "cool", "food", "kitchen"]
 }
 
-For "toilet":
+For "toilet"
 {
     "word": "toilet",
-    "description": "Located in the bathroom. Used for sanitation. Essential for hygiene and waste disposal.",
-    "keywords": ["sanitation", "hygiene", "waste", "clean"]
+    "description": "Used to dispose of human waste and maintain hygiene in the bathroom.",
+    "keywords": ["dispose", "hygiene", "waste", "bathroom"]
 }
 
-For "sofa":
+For "couch"
 {
     "word": "couch",
-    "description": "Placed in the living room. Used for sitting, relaxing, and watching TV. Can also be used for napping.",
-    "keywords": ["sit", "relax", "watch", "nap", "comfort"]
+    "description": "Used to sit, rest, and socialize in the living room.",
+    "keywords": ["sit", "rest", "socialize", "living room"]
+}
+
+For "chair":
+{
+    "word": "couch",
+    "description": "Used to sit and support the body while performing tasks in the living room.",
+    "keywords": ["sit", "relax", "furniture", "living room"]
 }
 
 Now, generate the JSON for the object "{{word}}".
@@ -41,8 +55,3 @@ Now, generate the JSON for the object "{{word}}".
         prompt_text = self.replace_prompt_data_dict(
             self.prompt_data_dict, prompt_text)
         return prompt_text
-
-
-if __name__ == "__main__":
-    sentence_generator_prompt = SentenceGeneratorPrompt(word="hola")
-    print(sentence_generator_prompt.get_prompt_text())

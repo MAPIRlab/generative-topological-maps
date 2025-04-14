@@ -1,0 +1,1265 @@
+Running model: deepseek+sbert+post with e=1.0, m=2, w=0.55
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Running model: geometric with c=dbscan, e=1.0, m=2
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.45
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.45
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.55
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.55
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.65
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.65
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert with c=hdbscan, w=0.45
+Running model: roberta with c=hdbscan, w=0.45
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.45
+Running model: bert with c=hdbscan, w=0.55
+Running model: roberta with c=hdbscan, w=0.55
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.55
+Running model: bert with c=hdbscan, w=0.65
+Running model: roberta with c=hdbscan, w=0.65
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.65
+Running model: geometric with c=hdbscan
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.45
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.45
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.55
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.55
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert with c=dbscan, e=1.0, m=2, w=0.65
+Running model: roberta with c=dbscan, e=1.0, m=2, w=0.65
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert with c=hdbscan, w=0.45
+Running model: roberta with c=hdbscan, w=0.45
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.45
+Running model: bert with c=hdbscan, w=0.55
+Running model: roberta with c=hdbscan, w=0.55
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.55
+Running model: bert with c=hdbscan, w=0.65
+Running model: roberta with c=hdbscan, w=0.65
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-base and are newly initialized: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Running model: deepseek+sbert with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.45
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.55
+Running model: bert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: deepseek+sbert+post with c=dbscan, e=1.0, m=2, w=0.65
+Running model: bert+post with c=hdbscan, w=0.45
+Running model: deepseek+sbert+post with c=hdbscan, w=0.45
+Running model: bert+post with c=hdbscan, w=0.55
+Running model: deepseek+sbert+post with c=hdbscan, w=0.55
+Running model: bert+post with c=hdbscan, w=0.65
+Running model: deepseek+sbert+post with c=hdbscan, w=0.65

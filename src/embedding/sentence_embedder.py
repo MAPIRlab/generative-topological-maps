@@ -4,9 +4,9 @@ import torch.nn.functional as F
 
 
 class SentenceBERTEmbedder:
-    def __init__(self, model_name='sentence-transformers/all-MiniLM-L6-v2', device=None):
+    def __init__(self, model_id="sentence-transformers/all-mpnet-base-v2", device=None):
         """
-        Initializes the sentence embedding model and tokenizer.
+        Initializes the SentenceBERTEmbedder with lazy loading for the model and tokenizer.
 
         Args:
             model_name (str): Name of the pretrained Sentence-BERT model.
@@ -14,9 +14,18 @@ class SentenceBERTEmbedder:
         """
         self.device = device if device else (
             'cuda' if torch.cuda.is_available() else 'cpu')
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name).to(self.device)
-        self.model.eval()
+        self.model_id = model_id
+        self.tokenizer = None
+        self.model = None
+
+    def _initialize_model_and_tokenizer(self):
+        """Lazy initialization of the tokenizer and model."""
+        if self.tokenizer is None:
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
+        if self.model is None:
+            self.model = AutoModel.from_pretrained(
+                self.model_id).to(self.device)
+            self.model.eval()
 
     def mean_pooling(self, model_output, attention_mask):
         """
@@ -45,6 +54,7 @@ class SentenceBERTEmbedder:
         Returns:
             list: A list of sentence embeddings.
         """
+        self._initialize_model_and_tokenizer()
 
         # Tokenize input
         encoded_input = self.tokenizer(
@@ -63,11 +73,3 @@ class SentenceBERTEmbedder:
             sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
 
         return sentence_embeddings.cpu().numpy().tolist()[0]
-
-
-# Example usage:
-if __name__ == "__main__":
-    embedder = SentenceBERTEmbedder()
-    embeddings = embedder.embed_text("Sentence embeddings are useful.")
-    print("Embedding shape:", len(embeddings))
-    print("Sentence embedding:", embeddings)
