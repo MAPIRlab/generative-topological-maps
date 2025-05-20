@@ -296,6 +296,9 @@ class Clustering:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
 
+        # Keep track of min/max values to preserve the natural scale
+        all_x, all_y, all_z = [], [], []
+
         for cluster, color in zip(self.clusters, colors):
             for obj in cluster.objects:
                 # Use the semantic map to find the complete object if available
@@ -303,9 +306,16 @@ class Clustering:
                     obj.object_id) if semantic_map else obj
                 center = complete_obj.bbox_center
                 size = complete_obj.bbox_size
+
                 x = [center[0] - size[0] / 2, center[0] + size[0] / 2]
                 y = [center[1] - size[1] / 2, center[1] + size[1] / 2]
                 z = [center[2] - size[2] / 2, center[2] + size[2] / 2]
+
+                # Accumulate all bounding box corners for min/max tracking
+                all_x.extend(x)
+                all_y.extend(y)
+                all_z.extend(z)
+
                 vertices = [
                     [x[0], y[0], z[0]],
                     [x[1], y[0], z[0]],
@@ -316,6 +326,7 @@ class Clustering:
                     [x[1], y[1], z[1]],
                     [x[0], y[1], z[1]],
                 ]
+
                 faces = [
                     [vertices[j] for j in [0, 1, 5, 4]],
                     [vertices[j] for j in [1, 2, 6, 5]],
@@ -328,19 +339,39 @@ class Clustering:
                     faces, alpha=0.5, facecolors=color, edgecolors="black"
                 )
                 ax.add_collection3d(poly3d)
+
                 ax.text(center[0], center[1], center[2],
                         complete_obj.object_id, fontsize=8, color="black")
 
+        # Set axis labels
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
         plt.title(title)
 
+        # -------------------------------------------------------------
+        # 1) Determine the data range in each dimension
+        min_x, max_x = min(all_x), max(all_x)
+        min_y, max_y = min(all_y), max(all_y)
+        min_z, max_z = min(all_z), max(all_z)
+
+        # 2) Set the axis limits to exactly match the data extents
+        ax.set_xlim(min_x, max_x)
+        ax.set_ylim(min_y, max_y)
+        ax.set_zlim(min_z, max_z)
+
+        # 3) Preserve the native dimension ratio of the data
+        #    Requires Matplotlib 3.3 or higher
+        range_x = max_x - min_x
+        range_y = max_y - min_y
+        range_z = max_z - min_z
+        ax.set_box_aspect((range_x, range_y, range_z))
+        # -------------------------------------------------------------
+
         if file_path:
             plt.savefig(file_path, bbox_inches="tight")
             plt.close()
         else:
-            print("showing")
             plt.show()
 
     def __repr__(self):

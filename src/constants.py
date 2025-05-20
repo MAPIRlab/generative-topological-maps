@@ -4,6 +4,10 @@ RESULTS_FOLDER_PATH = "results/"
 CLUSTERINGS_FOLDER_PATH = "data/clusterings/"
 LLM_CACHE_FILE_PATH = "results/llm_cache.json"
 
+# STAGES
+STAGE_SEGMENTATION = "segmentation"
+STAGE_CATEGORIZATION = "categorization"
+
 # METHODS
 # Word embeddings
 METHOD_GEOMETRIC = "geometric"

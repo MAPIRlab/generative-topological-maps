@@ -1,8 +1,8 @@
 #!/bin/bash
 
-e=1.2
+e=1.5
 m=2
-w=0.40
+w=0.55
 
 # geometric
 echo "Running model: geometric"

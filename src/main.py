@@ -1,3 +1,4 @@
+from prompt.place_categorizer_prompt import PlaceCategorizerPrompt
 from semantic.clustering_engine import ClusteringEngine
 from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
 import sys
@@ -48,7 +49,7 @@ def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
     return semantic_map_object.bbox_center
 
 
-def main(args):
+def main_segmentation(args):
 
     # Instantiate models
     bert_embedder = BERTEmbedder()
@@ -216,6 +217,55 @@ def main(args):
     print("[main] The main script finished successfully!")
 
 
+def main_categorization(args):
+
+    # Load and pre-process semantic map
+    semantic_maps: List[SemanticMap] = list()
+    for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
+
+        semantic_map_basename = file_utils.get_file_basename(
+            semantic_map_file_name)
+        # Load semantic map
+        semantic_map_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
+                                                              semantic_map_file_name))
+        # Create SemanticMap object
+        semantic_maps.append(SemanticMap(semantic_map_basename,
+                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()]))
+
+    for method in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
+                                                              "method_results")):  # TODO: pasar a constants, igual que en evaluate.py
+        for semantic_map in semantic_maps[:args.number_maps]:
+            # Load clustering
+            clustering_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                                "method_results",
+                                                method,
+                                                semantic_map.semantic_map_id,
+                                                "clustering.json")
+            clustering = Clustering.load_from_json(clustering_file_path)
+
+            # Iterate over clusters
+            for cluster in clustering.clusters:
+
+                place_categorizer_prompt = PlaceCategorizerPrompt(
+                    [semantic_map.find_object(cluster_object.object_id) for cluster_object in cluster.objects])
+
+                # Save prompt
+                prompt_text_path = os.path.join(constants.RESULTS_FOLDER_PATH,
+                                                "method_results",
+                                                method,
+                                                semantic_map.semantic_map_id,
+                                                "categorization_prompts",
+                                                f"cluster_{cluster.cluster_id}.txt")
+                file_utils.create_directories_for_file(prompt_text_path)
+                
+                file_utils.save_text_to_file(
+                    place_categorizer_prompt.get_prompt_text(), prompt_text_path)
+
+                # Perform LLM request
+                if args.llm_request:
+                    raise NotImplementedError("Not implemented yet!")
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -230,6 +280,13 @@ if __name__ == "__main__":
                         type=int,
                         default=10)
 
+    parser.add_argument("--stage",
+                        help="Stage of the pipeline to run.",
+                        choices=[constants.STAGE_SEGMENTATION,
+                                 constants.STAGE_CATEGORIZATION],
+                        default="semantic_descriptor")
+
+    # SEGMENTATION STAGE parameters
     # SEMANTIC DESCRIPTOR parameters
     parser.add_argument("--method",
                         help="How to compute the semantic descriptor.",
@@ -293,6 +350,11 @@ if __name__ == "__main__":
                                  constants.CLUSTERING_ALGORITHM_HDBSCAN],
                         default=constants.CLUSTERING_ALGORITHM_DBSCAN)
 
+    # CATEGORIZATION STAGE parameters
+    parser.add_argument("--llm-request",
+                        help="Whether to perform the LLM request to caracterize a place, or just generate the prompt.",
+                        action="store_true")
+
     args = parser.parse_args()
 
     # Redirect output to a log file (args.persist_log)
@@ -304,4 +366,7 @@ if __name__ == "__main__":
         sys.stdout = open(log_file_path, "w")
         sys.stderr = sys.stdout
 
-    main(args)
+    if args.stage == constants.STAGE_SEGMENTATION:
+        main_segmentation(args)
+    elif args.stage == constants.STAGE_CATEGORIZATION:
+        main_categorization(args)
