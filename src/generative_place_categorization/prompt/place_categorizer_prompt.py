@@ -1,5 +1,9 @@
-from prompt.prompt import Prompt
-from voxeland.semantic_map_object import SemanticMapObject
+
+
+from generative_place_categorization.prompt.prompt import Prompt
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 class PlaceCategorizerPrompt(Prompt):

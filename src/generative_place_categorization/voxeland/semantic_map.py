@@ -1,6 +1,9 @@
 import json
 from typing import List, Optional
-from voxeland.semantic_map_object import SemanticMapObject
+
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 class SemanticMap:

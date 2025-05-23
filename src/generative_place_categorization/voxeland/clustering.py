@@ -1,19 +1,23 @@
 from typing import Dict, List, Optional
 
-from matplotlib import pyplot as plt
-from sklearn.metrics import adjusted_rand_score, fowlkes_mallows_score, normalized_mutual_info_score, v_measure_score
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, v_measure_score, fowlkes_mallows_score
-from utils import file_utils
-from voxeland.cluster import Cluster
-from voxeland.semantic_map import SemanticMap
-from voxeland.semantic_map_object import SemanticMapObject
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-import matplotlib.colors as mcolors
 import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from sklearn.metrics import (
+    adjusted_rand_score,
+    fowlkes_mallows_score,
+    normalized_mutual_info_score,
+    v_measure_score,
+)
 
-
-from typing import List, Optional
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.cluster import Cluster
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 class Clustering:

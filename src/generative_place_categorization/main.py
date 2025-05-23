@@ -8,7 +8,6 @@ import numpy as np
 from dotenv import load_dotenv
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
-from utils import file_utils
 
 from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
 from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
@@ -30,6 +29,7 @@ from generative_place_categorization.semantic.dimensionality_reduction_engine im
 from generative_place_categorization.semantic.semantic_descriptor_engine import (
     SemanticDescriptorEngine,
 )
+from generative_place_categorization.utils import file_utils
 from generative_place_categorization.voxeland.cluster import Cluster
 from generative_place_categorization.voxeland.clustering import Clustering
 from generative_place_categorization.voxeland.semantic_map import SemanticMap

@@ -1,6 +1,6 @@
-from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
+from transformers import AutoModel, AutoTokenizer
 
 
 class SentenceBERTEmbedder:

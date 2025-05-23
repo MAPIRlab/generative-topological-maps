@@ -1,11 +1,16 @@
 
-import constants
-from embedding.bert_embedder import BERTEmbedder
-from embedding.openai_embedder import OpenAIEmbedder
-from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceBERTEmbedder
-from llm.large_language_model import LargeLanguageModel
-from prompt.sentence_generator_prompt import SentenceGeneratorPrompt
+
+from generative_place_categorization import constants
+from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
+from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
+from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
+from generative_place_categorization.embedding.sentence_embedder import (
+    SentenceBERTEmbedder,
+)
+from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.prompt.sentence_generator_prompt import (
+    SentenceGeneratorPrompt,
+)
 
 
 class SemanticDescriptorEngine:
@@ -18,7 +23,7 @@ class SemanticDescriptorEngine:
                  roberta_embedder: RoBERTaEmbedder,
                  openai_embedder: OpenAIEmbedder,
                  sbert_embedder: SentenceBERTEmbedder,
-                 deepseek_llm: "LargeLanguageModel" = None):
+                 deepseek_llm: LargeLanguageModel = None):
         """
         Initialize the SemanticDescriptorEngine with embedding models.
 

@@ -1,26 +1,35 @@
+import argparse
 import os
 from typing import List
-from scipy.spatial.distance import cdist
-import argparse
-import constants
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
+
 import matplotlib.cm as cm
-from mpl_toolkits.mplot3d.art3d import Line3DCollection
-
+import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
+import numpy as np
 from dotenv import load_dotenv
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
+from scipy.spatial.distance import cdist
 
-from embedding.bert_embedder import BERTEmbedder
-from embedding.openai_embedder import OpenAIEmbedder
-from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceBERTEmbedder
-from llm.large_language_model import LargeLanguageModel
-from semantic.semantic_descriptor_engine import SemanticDescriptorEngine
-from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
-from utils import file_utils
-from voxeland.semantic_map import SemanticMap
-from voxeland.semantic_map_object import SemanticMapObject
+from generative_place_categorization import constants
+from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
+from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
+from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
+from generative_place_categorization.embedding.sentence_embedder import (
+    SentenceBERTEmbedder,
+)
+from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.semantic.dimensionality_reduction_engine import (
+    DimensionalityReductionEngine,
+)
+from generative_place_categorization.semantic.semantic_descriptor_engine import (
+    SemanticDescriptorEngine,
+)
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
+
 load_dotenv()
 
 

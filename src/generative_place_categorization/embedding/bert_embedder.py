@@ -1,5 +1,5 @@
-from transformers import BertTokenizer, BertModel
 import torch
+from transformers import BertModel, BertTokenizer
 
 
 class BERTEmbedder:

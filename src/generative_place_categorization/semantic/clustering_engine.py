@@ -1,15 +1,17 @@
+from functools import partial
 from itertools import combinations
 from typing import Tuple
-from sklearn.cluster import DBSCAN, KMeans
+
+import numpy as np
 from hdbscan import HDBSCAN
 from scipy.spatial.distance import pdist, squareform
-from functools import partial
-import numpy as np
-import constants
-from utils import file_utils
-from voxeland.clustering import Clustering
-from voxeland.cluster import Cluster
-from voxeland.semantic_map import SemanticMap
+from sklearn.cluster import DBSCAN, KMeans
+
+from generative_place_categorization import constants
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.cluster import Cluster
+from generative_place_categorization.voxeland.clustering import Clustering
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
 
 
 def geometric_semantic_distance(A, B, semantic_weight: float = 0.005):

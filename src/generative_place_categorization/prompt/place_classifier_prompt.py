@@ -1,5 +1,6 @@
 
-from prompt.prompt import Prompt
+
+from generative_place_categorization.prompt.prompt import Prompt
 
 
 class PlaceSegmenterPrompt(Prompt):

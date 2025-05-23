@@ -1,12 +1,16 @@
-import os
 import argparse
-import matplotlib.colors as mcolors
+import os
+
 import matplotlib.cm as cm
-from utils import file_utils
-from voxeland.semantic_map import SemanticMap
-from voxeland.semantic_map_object import SemanticMapObject
-from voxeland.clustering import Clustering
-import constants
+import matplotlib.colors as mcolors
+
+from generative_place_categorization import constants
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.clustering import Clustering
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 def main(args):

@@ -1,7 +1,10 @@
 from typing import List, Optional
+
 import numpy as np
 
-from voxeland.semantic_map_object import SemanticMapObject
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 class Cluster:

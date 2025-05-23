@@ -1,6 +1,6 @@
+import numpy as np
 from sklearn.decomposition import PCA
 from umap import UMAP
-import numpy as np
 
 
 class DimensionalityReductionEngine:

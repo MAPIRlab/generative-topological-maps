@@ -1,5 +1,5 @@
-from transformers import RobertaTokenizer, RobertaModel
 import torch
+from transformers import RobertaModel, RobertaTokenizer
 
 
 class RoBERTaEmbedder:

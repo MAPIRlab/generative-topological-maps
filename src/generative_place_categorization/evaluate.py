@@ -6,10 +6,10 @@ from typing import Dict, List
 import numpy as np
 import tqdm
 
-import constants
-from show.metrics_table import MetricsTable
-from utils import file_utils
-from voxeland.clustering import Clustering
+from generative_place_categorization import constants
+from generative_place_categorization.show.metrics_table import MetricsTable
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.clustering import Clustering
 
 
 def main(args):

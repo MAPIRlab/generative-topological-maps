@@ -1,9 +1,10 @@
+import json
 import os
 from typing import Optional
-from transformers import AutoTokenizer, AutoModelForCausalLM, PreTrainedTokenizer
-import json
 
-from utils import file_utils
+from transformers import AutoModelForCausalLM, AutoTokenizer, PreTrainedTokenizer
+
+from generative_place_categorization.utils import file_utils
 
 
 class LargeLanguageModel():

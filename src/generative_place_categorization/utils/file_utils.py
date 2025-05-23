@@ -322,7 +322,8 @@ def copy_file_to_dir(src_file, dst_folder, new_name):
             f"The source file '{src_file}' does not exist.")
 
     if not os.path.isdir(dst_folder):
-        raise NotADirectoryError(f"The destination folder '{dst_folder}' does not exist.")
+        raise NotADirectoryError(
+            f"The destination folder '{dst_folder}' does not exist.")
 
     # Copy the file with the new name
     dst_file = os.path.join(dst_folder, new_name)

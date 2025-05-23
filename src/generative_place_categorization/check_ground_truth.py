@@ -3,13 +3,13 @@ import argparse
 import os
 from typing import Dict, List
 
-
-from utils import file_utils
-import constants
-
-from voxeland.clustering import Clustering
-from voxeland.semantic_map import SemanticMap
-from voxeland.semantic_map_object import SemanticMapObject
+from generative_place_categorization import constants
+from generative_place_categorization.utils import file_utils
+from generative_place_categorization.voxeland.clustering import Clustering
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
 
 
 def main(args):
