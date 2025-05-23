@@ -1,33 +1,42 @@
-from prompt.place_categorizer_prompt import PlaceCategorizerPrompt
-from semantic.clustering_engine import ClusteringEngine
-from semantic.dimensionality_reduction_engine import DimensionalityReductionEngine
-import sys
-from sklearn.preprocessing import StandardScaler
 import argparse
 import os
+import sys
 from typing import List
 
-
-from embedding.bert_embedder import BERTEmbedder
-from embedding.openai_embedder import OpenAIEmbedder
-from embedding.roberta_embedder import RoBERTaEmbedder
-from embedding.sentence_embedder import SentenceBERTEmbedder
-from llm.large_language_model import LargeLanguageModel
-from prompt.place_classifier_prompt import PlaceSegmenterPrompt
-from semantic.semantic_descriptor_engine import SemanticDescriptorEngine
-from utils import file_utils
 import constants
 import numpy as np
-
-from voxeland.clustering import Clustering
-from voxeland.cluster import Cluster
-from voxeland.semantic_map import SemanticMap
-from voxeland.semantic_map_object import SemanticMapObject
-
-from tqdm import tqdm
-
-
 from dotenv import load_dotenv
+from sklearn.preprocessing import StandardScaler
+from tqdm import tqdm
+from utils import file_utils
+
+from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
+from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
+from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
+from generative_place_categorization.embedding.sentence_embedder import (
+    SentenceBERTEmbedder,
+)
+from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.prompt.place_categorizer_prompt import (
+    PlaceCategorizerPrompt,
+)
+from generative_place_categorization.prompt.place_classifier_prompt import (
+    PlaceSegmenterPrompt,
+)
+from generative_place_categorization.semantic.clustering_engine import ClusteringEngine
+from generative_place_categorization.semantic.dimensionality_reduction_engine import (
+    DimensionalityReductionEngine,
+)
+from generative_place_categorization.semantic.semantic_descriptor_engine import (
+    SemanticDescriptorEngine,
+)
+from generative_place_categorization.voxeland.cluster import Cluster
+from generative_place_categorization.voxeland.clustering import Clustering
+from generative_place_categorization.voxeland.semantic_map import SemanticMap
+from generative_place_categorization.voxeland.semantic_map_object import (
+    SemanticMapObject,
+)
+
 load_dotenv()
 
 
@@ -257,7 +266,7 @@ def main_categorization(args):
                                                 "categorization_prompts",
                                                 f"cluster_{cluster.cluster_id}.txt")
                 file_utils.create_directories_for_file(prompt_text_path)
-                
+
                 file_utils.save_text_to_file(
                     place_categorizer_prompt.get_prompt_text(), prompt_text_path)
 
