@@ -4,10 +4,10 @@ import os
 import pickle
 import re
 import shutil
+from typing import Optional
 
-import PIL
-import PIL.Image
 import yaml
+from PIL import Image
 
 
 def is_pdf(file_path: str) -> bool:
@@ -95,7 +95,7 @@ def load_yaml(file_path):
         return yaml.safe_load(file)
 
 
-def save_png_image(image: PIL.Image, output_path: str):
+def save_png_image(image: Image, output_path: str):
     """
     Saves a PNG image to a file.
 
@@ -346,3 +346,35 @@ def pdf_to_base64(pdf_path) -> str:
         pdf_bytes = pdf_file.read()
         base64_string = base64.b64encode(pdf_bytes).decode("utf-8")
     return base64_string
+
+
+def open_image(folder: str, file_name: str, extension: Optional[str] = None) -> Image:
+    """
+    Opens an image file in `folder` with base name `name` and optional extension `ext`.
+
+    Args:
+        folder: Directory where to look for the image.
+        name:   Base filename (without extension), e.g. "123" or "frame_001".
+        ext:    If provided (e.g. ".png" or "jpg"), opens exactly that file.
+                Otherwise, searches for any common image extension.
+
+    Returns:
+        PIL.Image.Image
+
+    Raises:
+        FileNotFoundError: If no matching file is found.
+    """
+    valid_exts = ('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')
+    if extension:
+        # normalize extension
+        e = extension if extension.startswith('.') else f'.{extension}'
+        path = os.path.join(folder, f"{file_name}{e}")
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"No image {file_name}{e} in {folder}")
+        return Image.open(path)
+    # otherwise scan for any known extension
+    for fname in os.listdir(folder):
+        base, e = os.path.splitext(fname)
+        if base == file_name and e.lower() in valid_exts:
+            return Image.open(os.path.join(folder, fname))
+    raise FileNotFoundError(f"No image named '{file_name}' in {folder}")

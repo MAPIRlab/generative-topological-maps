@@ -1,6 +1,10 @@
 import json
-from typing import List, Optional
+import os
+from typing import List, Optional, Tuple
 
+from PIL import Image
+
+from generative_place_categorization.utils import file_utils
 from generative_place_categorization.voxeland.semantic_map_object import (
     SemanticMapObject,
 )
@@ -9,39 +13,110 @@ from generative_place_categorization.voxeland.semantic_map_object import (
 class SemanticMap:
     """
     Represents a semantic map containing multiple SemanticMapObjects.
+
+    Can be constructed directly with ID, object list, and an optional path:
+    - colors_path: directory of color images.
+
+    Or loaded from a JSON file via `from_json_path`.
     """
 
-    # Excluded not relevant classes
     EXCLUDED_CLASSES = ["unknown", "wall", "floor", "ceiling", "door"]
 
-    def __init__(self, semantic_map_id: str, objects: List[SemanticMapObject]):
-        """Initializes a semantic map with a list of sematic map objects."""
+    def __init__(
+        self,
+        semantic_map_id: str,
+        objects: List[SemanticMapObject],
+        colors_path: Optional[str] = None
+    ):
         self.semantic_map_id = semantic_map_id
-        self._objects: List[SemanticMapObject] = objects
+        self._objects = objects
+        self.colors_path = colors_path
+
+    @staticmethod
+    def from_json_path(
+        json_path: str,
+        colors_path: Optional[str] = None,
+    ) -> "SemanticMap":
+        """Load a SemanticMap from a JSON file."""
+        map_id = os.path.splitext(os.path.basename(json_path))[0]
+        data = file_utils.load_json(json_path)
+        objects: List[SemanticMapObject] = []
+        for obj_id, obj_data in data.get("instances", {}).items():
+            smo = SemanticMapObject(obj_id, obj_data)
+            objects.append(smo)
+        return SemanticMap(map_id, objects, colors_path)
 
     def find_object(self, object_id: str) -> Optional[SemanticMapObject]:
-        """Finds and returns an object by its ID, None if not found."""
         for obj in self._objects:
             if obj.object_id == object_id:
                 return obj
         return None
 
-    def get_all_objects(self, include_all_classes: bool = False) -> List[SemanticMapObject]:
-        """Returns the list of semantic map objects. If not include_all_classes, it filters out certain object classes."""
-        if not include_all_classes:
-            return list(filter(lambda smo: smo.get_most_probable_class() not in self.EXCLUDED_CLASSES, self._objects))
-        else:
-            return self._objects
+    def get_all_objects(
+        self,
+        include_all_classes: bool = False
+    ) -> List[SemanticMapObject]:
+        if include_all_classes:
+            return list(self._objects)
+        return [obj for obj in self._objects
+                if obj.get_most_probable_class() not in self.EXCLUDED_CLASSES]
+
+    def get_close_object_pairs(
+        self,
+        threshold_distance: float,
+        include_all_classes: bool = False
+    ) -> List[Tuple[SemanticMapObject, SemanticMapObject]]:
+        """
+        Returns a list of object pairs whose bbox-center distance is
+        less than or equal to the given threshold.
+        """
+        objects = self.get_all_objects(include_all_classes)
+        pairs: List[Tuple[SemanticMapObject, SemanticMapObject]] = []
+        for i in range(len(objects)):
+            for j in range(i + 1, len(objects)):
+                obj1 = objects[i]
+                obj2 = objects[j]
+                dist = obj1.distance_to(obj2)
+                if dist <= threshold_distance:
+                    pairs.append((obj1, obj2))
+        return pairs
+
+    def get_common_frames_by_pixel_count(
+        self,
+        object_id1: str,
+        object_id2: str
+    ) -> List[int]:
+        obj1 = self.find_object(object_id1)
+        obj2 = self.find_object(object_id2)
+        if not obj1 or not obj2:
+            return []
+        frames1 = obj1.frames
+        frames2 = obj2.frames
+        common = set(frames1) & set(frames2)
+        return sorted(common,
+                      key=lambda f: frames1[f] + frames2[f],
+                      reverse=True)
+
+    def get_frame_image(self, frame_id: int) -> Image.Image:
+        if not self.colors_path:
+            raise RuntimeError(
+                "colors_path is not defined for this SemanticMap")
+        return file_utils.open_image(self.colors_path, str(frame_id))
 
     def get_json_representation(self) -> str:
-        """Gets a JSON representation of the semantic map."""
         repr_dict = {"instances": {}}
-        for object in self.get_all_objects():
-            repr_dict["instances"][object.object_id] = {
-                "bbox": {
-                    "center": [round(coord, 2) for coord in object.bbox_center],
-                    "size": [round(coord, 2) for coord in object.bbox_size]
-                },
-                "class": object.get_most_probable_class()
+        for obj in self.get_all_objects():
+            obj_entry = {
+                "bbox": {"center": [round(c, 2) for c in obj.bbox_center],
+                         "size": [round(s, 2) for s in obj.bbox_size]},
+                "class": obj.get_most_probable_class(),
+                "frames": obj.frames
             }
+            repr_dict["instances"][obj.object_id] = obj_entry
         return json.dumps(repr_dict)
+
+    def __repr__(self) -> str:
+        return (
+            f"SemanticMap(id={self.semantic_map_id!r}, objects={len(self._objects)}, "
+            f"colors_path={self.colors_path!r})"
+        )

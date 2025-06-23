@@ -4,6 +4,10 @@ from typing import Optional
 
 from transformers import AutoModelForCausalLM, AutoTokenizer, PreTrainedTokenizer
 
+from generative_place_categorization import constants
+from generative_place_categorization.prompt.sentence_generator_prompt import (
+    SentenceGeneratorPrompt,
+)
 from generative_place_categorization.utils import file_utils
 
 
@@ -130,3 +134,11 @@ class LargeLanguageModel():
     def create_from_huggingface(model_id: str, cache_path: Optional[str] = None):
         """Creates a LargeLanguageModel instance with the specified model ID from Huggingface."""
         return True, LargeLanguageModel(model_id, cache_path=cache_path)
+
+
+if __name__ == "__main__":
+    _, llm = LargeLanguageModel.create_from_huggingface(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                                                        cache_path=constants.LLM_CACHE_FILE_PATH)
+    prompt = SentenceGeneratorPrompt(word="kitchenette")
+    resp = llm.generate_text(prompt.get_prompt_text(), {"max_length": 500})
+    print(resp)

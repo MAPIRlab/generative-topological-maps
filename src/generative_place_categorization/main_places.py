@@ -16,6 +16,7 @@ from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
 from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.llm.large_vision_language_model import LargeVisionLanguageModel
 from generative_place_categorization.prompt.place_categorizer_prompt import (
     PlaceCategorizerPrompt,
 )
@@ -37,11 +38,9 @@ from generative_place_categorization.voxeland.semantic_map_object import (
     SemanticMapObject,
 )
 
-load_dotenv()
-
 
 def get_results_path_for_method(args):
-    base_path = os.path.join(constants.RESULTS_FOLDER_PATH, "method_results")
+    base_path = os.path.join(constants.RESULTS_FOLDER_PATH, "places_results")
     method_specific_path = f"{args.method}"
 
     if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
@@ -60,35 +59,32 @@ def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
 
 def main_segmentation(args):
 
+    load_dotenv()
+
     # Instantiate models
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
     sbert_embedder = SentenceBERTEmbedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
-    deepseek_llm = LargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    llm = LargeLanguageModel.from_pretrained(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
                                       cache_path=constants.LLM_CACHE_FILE_PATH)
 
     # Instantiate semantic descriptor engine
     semantic_descriptor_engine = SemanticDescriptorEngine(
-        bert_embedder, roberta_embedder, openai_embedder, sbert_embedder, deepseek_llm
+        bert_embedder, roberta_embedder, openai_embedder, sbert_embedder, llm
     )
 
     # Instantiate dimensionality reduction engine
     dim_reduction_engine = DimensionalityReductionEngine()
 
-    # Load and pre-process semantic map
-    semantic_maps: List[SemanticMap] = list()
-    for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
+    # Load and pre-process semantic maps
+    semantic_maps: List[SemanticMap] = []
 
-        semantic_map_basename = file_utils.get_file_basename(
-            semantic_map_file_name)
-        # Load semantic map
-        semantic_map_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                              semantic_map_file_name))
-        # Create SemanticMap object
-        semantic_maps.append(SemanticMap(semantic_map_basename,
-                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()]))
+    for json_file in constants.SEMANTIC_MAPS_PATHS:
+        # Create a SemanticMap directly from its JSON file
+        sm = SemanticMap.from_json_path(str(json_file))
+        semantic_maps.append(sm)
 
     # For each semantic map
     for semantic_map in semantic_maps[:args.number_maps]:
@@ -117,10 +113,10 @@ def main_segmentation(args):
 
             place_classifier_prompt = PlaceSegmenterPrompt(
                 semantic_map=semantic_map.get_json_representation())
-            response = deepseek_llm.generate_json_retrying(prompt=place_classifier_prompt.get_prompt_text(),
-                                                           params={
-                                                               "max_length": 10000},
-                                                           retries=10)
+            response = llm.generate_json_retrying(prompt=place_classifier_prompt.get_prompt_text(),
+                                                  params={
+                "max_length": 10000},
+                retries=10)
 
             # Check and create clustering
             mixed_clustering = Clustering([])
@@ -228,6 +224,8 @@ def main_segmentation(args):
 
 def main_categorization(args):
 
+    load_dotenv()
+
     # Load and pre-process semantic map
     semantic_maps: List[SemanticMap] = list()
     for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
@@ -242,11 +240,11 @@ def main_categorization(args):
                                          [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()]))
 
     for method in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                              "method_results")):  # TODO: pasar a constants, igual que en evaluate.py
+                                                              "places_results")):  # TODO: pasar a constants, igual que en evaluate.py
         for semantic_map in semantic_maps[:args.number_maps]:
             # Load clustering
             clustering_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                "method_results",
+                                                "places_results",
                                                 method,
                                                 semantic_map.semantic_map_id,
                                                 "clustering.json")
@@ -260,7 +258,7 @@ def main_categorization(args):
 
                 # Save prompt
                 prompt_text_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                "method_results",
+                                                "places_results",
                                                 method,
                                                 semantic_map.semantic_map_id,
                                                 "categorization_prompts",
@@ -278,16 +276,16 @@ def main_categorization(args):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Performs place categorization on a set of semantic map")
+        description="Perform place segmentation and categorization on a set of semantic maps")
 
     parser.add_argument("-p", "--persist-log",
-                        help="Redirect output to a log file instead of printing to the terminal.",
-                        action="store_true")
+                        action="store_true",
+                        help="Redirect output to a log file instead of printing to the terminal.")
 
     parser.add_argument("-n", "--number-maps",
-                        help="Number of semantic map to which place categorization will be applied.",
                         type=int,
-                        default=10)
+                        default=10,
+                        help="Number of semantic map to which place categorization will be applied.")
 
     parser.add_argument("--stage",
                         help="Stage of the pipeline to run.",
