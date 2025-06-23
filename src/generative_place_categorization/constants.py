@@ -26,6 +26,7 @@ SEMANTIC_MAPS_COLORS_PATHS = ["/home/ubuntu/datasets/ScanNet/raw_data/scene0000_
                               None,
                               None]
 RESULTS_FOLDER_PATH = "results/"
+PLACES_RESULTS_FOLDER_PATH = "results/places_results/"
 CLUSTERINGS_FOLDER_PATH = "data/clusterings/"
 LLM_CACHE_FILE_PATH = "results/llm_cache.json"
 
