@@ -8,16 +8,17 @@ Given two objects in a semantic map, identified by both name and unique object I
 
 If no relationships are observed between the objects, return an empty JSON array: `[]`.
 
-For each relation, include both the `source_id` and `target_id` fields in the output, matching the provided IDs.
+For every relation you detect, include both the `source_id` and `target_id` fields matching the provided IDs.
 
 Possible relationship types:
-- **spatial**: geometric relations that capture positional arrangements, such as "above", "below", "inside", "near", or "adjacent to".
-- **structural**: connections reflecting physical assembly or support, like "part of", "joined to", "supported by", or "attached to".
-- **functional**: usage-based links expressing how objects serve a purpose together, such as "used with", "required for", "paired with", or "enables".
-- **causal**: cause-effect interactions where one object triggers a change in another, e.g., "activates", "opens", "locks", or "turns on/off".
+- **spatial**: positional arrangements (e.g., "above", "below", "inside", "near", or "adjacent to").
+- **structural**: assembly or support connections (e.g., "part of", "joined to", "supported by").
+- **functional**: usage-based links (e.g., "used with", "required for", "enables").
+- **causal**: cause-effect interactions (e.g., "activates", "opens", "turns on/off").
 
-Return a JSON array of relation objects. Each entry must include:
-```
+**Return a JSON array of relation objects**. Include as many entries as apply:
+
+```json
 [
   {
     "source_id": "<object1_id>",
@@ -26,36 +27,37 @@ Return a JSON array of relation objects. Each entry must include:
     "target":    "<object2_name>",
     "type":      "<relation_type>",
     "predicate": "<open vocabulary predicate>"
-  },
-  ...
+  }
+  // … additional relations here …
 ]
 ```
 
 Examples:
-1. Spatial example
-  ```json
+
+1. Spatial example  
+   ```json
    [{"source_id":"obj1","source":"cup","target_id":"obj2","target":"table","type":"spatial","predicate":"is on"}]
    ```
 
-2. Structural example
-  ```json
-  [{"source_id":"obj3","source":"wheel","target_id":"obj4","target":"car","type":"structural","predicate":"is part of"}]
-  ```
+2. Structural example  
+   ```json
+   [{"source_id":"obj3","source":"wheel","target_id":"obj4","target":"car","type":"structural","predicate":"is part of"}]
+   ```
 
-3. Functional example
-  ```json
-  [{"source_id":"obj5","source":"knife","target_id":"obj6","target":"fork","type":"functional","predicate":"is used with"}]
-  ```
+3. Functional example  
+   ```json
+   [{"source_id":"obj5","source":"knife","target_id":"obj6","target":"fork","type":"functional","predicate":"is used with"}]
+   ```
 
-4. Causal example
-  ```json
-  [{"source_id":"obj7","source":"switch","target_id":"obj8","target":"light","type":"causal","predicate":"turns on"}]
-  ```
+4. Causal example  
+   ```json
+   [{"source_id":"obj7","source":"switch","target_id":"obj8","target":"light","type":"causal","predicate":"turns on"}]
+   ```
 
-5. No relationships example 
-  ```json
-  []
-  ```
+5. No relationships example  
+   ```json
+   []
+   ```
 
 Now infer relationships for the two objects using the provided information:
 - object1_id: "{{object1_id}}"

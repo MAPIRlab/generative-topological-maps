@@ -15,12 +15,14 @@ from generative_place_categorization.embedding.roberta_embedder import RoBERTaEm
 from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
-from generative_place_categorization.llm.large_language_model import LargeLanguageModel
-from generative_place_categorization.llm.large_vision_language_model import LargeVisionLanguageModel
+from generative_place_categorization.llm.gemini_provider import GeminiProvider
+from generative_place_categorization.prompt.conversation_history import (
+    ConversationHistory,
+)
 from generative_place_categorization.prompt.place_categorizer_prompt import (
     PlaceCategorizerPrompt,
 )
-from generative_place_categorization.prompt.place_classifier_prompt import (
+from generative_place_categorization.prompt.place_segmenter_prompt import (
     PlaceSegmenterPrompt,
 )
 from generative_place_categorization.semantic.clustering_engine import ClusteringEngine
@@ -43,11 +45,11 @@ def get_results_path_for_method(args):
     base_path = os.path.join(constants.RESULTS_FOLDER_PATH, "places_results")
     method_specific_path = f"{args.method}"
 
-    if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
+    if args.method in (constants.METHOD_BERT_POST, constants.METHOD_LLM_SBERT_POST):
         method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_mgt_{args.merge_geometric_threshold}_mst_{args.merge_semantic_threshold}_sst_{args.split_semantic_threshold}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
     elif args.method == constants.METHOD_GEOMETRIC:
         method_specific_path += f"_e{args.eps}_m{args.min_samples}_ca{args.clustering_algorithm}"
-    elif args.method != constants.METHOD_DEEPSEEK:
+    elif args.method != constants.METHOD_LLM:
         method_specific_path += f"_e{args.eps}_m{args.min_samples}_w{args.semantic_weight}_d{args.semantic_dimension}_r{args.dimensionality_reductor}_ca{args.clustering_algorithm}"
 
     return os.path.join(base_path, method_specific_path)
@@ -58,7 +60,7 @@ def get_geometric_descriptor(semantic_map_object: SemanticMapObject):
 
 
 def main_segmentation(args):
-
+    # Load environment variables
     load_dotenv()
 
     # Instantiate models
@@ -67,8 +69,13 @@ def main_segmentation(args):
     openai_embedder = OpenAIEmbedder()
     sbert_embedder = SentenceBERTEmbedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
-    llm = LargeLanguageModel.from_pretrained(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                      cache_path=constants.LLM_CACHE_FILE_PATH)
+    llm = GeminiProvider(
+        credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
+        project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
+        project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
+        model_name=GeminiProvider.GEMINI_2_0_FLASH,
+        cache_path=constants.LLM_CACHE_FILE_PATH
+    )
 
     # Instantiate semantic descriptor engine
     semantic_descriptor_engine = SemanticDescriptorEngine(
@@ -109,31 +116,51 @@ def main_segmentation(args):
             semantic_map_object.geometric_descriptor = get_geometric_descriptor(
                 semantic_map_object)
 
-        if args.method == constants.METHOD_DEEPSEEK:
+        if args.method == constants.METHOD_LLM:
 
+            # Build prompt and conversation history
             place_classifier_prompt = PlaceSegmenterPrompt(
-                semantic_map=semantic_map.get_json_representation())
-            response = llm.generate_json_retrying(prompt=place_classifier_prompt.get_prompt_text(),
-                                                  params={
-                "max_length": 10000},
-                retries=10)
+                semantic_map=semantic_map.get_prompt_json_representation())
+            conv_his = ConversationHistory.create_from_user_message(
+                place_classifier_prompt.get_prompt_text())
 
-            # Check and create clustering
-            mixed_clustering = Clustering([])
-            for i, cluster_label in enumerate(response["places"]):
-                # Create cluster
-                cluster = Cluster(cluster_id=i,
-                                  objects=[],
-                                  description=cluster_label)
-                # Fill with objects
-                for object_id in response["places"][cluster_label]:
-                    semantic_map_object = semantic_map.find_object(object_id)
-                    print(semantic_map_object.object_id)
-                    print(semantic_map_object.geometric_descriptor)
-                    if semantic_map_object is not None:
-                        cluster.append_object(semantic_map_object)
-                # Append to clustering
-                mixed_clustering.append_cluster(cluster)
+            if args.llm_request:
+                response = llm.generate_json(conv_his, retries=10)
+
+                # Assemble clustering from the new JSON list format
+                mixed_clustering = Clustering([])
+                for i, place_entry in enumerate(response["places"]):
+                    tag = place_entry["name"]
+                    description = place_entry.get("description", "")
+                    objects_list = place_entry["objects"]
+
+                    # Create cluster (you can store description on the cluster if supported)
+                    cluster = Cluster(
+                        cluster_id=i,
+                        objects=[],
+                        tag=tag,
+                        description=description,
+                    )
+
+                    # Fill cluster with semantic_map objects
+                    for object_id in objects_list:
+                        semantic_map_object = semantic_map.find_object(
+                            object_id)
+                        if semantic_map_object is not None:
+                            cluster.append_object(semantic_map_object)
+
+                    mixed_clustering.append_cluster(cluster)
+
+            # Save prompt
+            prompt_text_path = os.path.join(
+                get_results_path_for_method(args),
+                semantic_map.semantic_map_id,
+                "prompt.txt"
+            )
+            file_utils.create_directories_for_file(prompt_text_path)
+            file_utils.save_text_to_file(
+                place_classifier_prompt.get_prompt_text(), prompt_text_path
+            )
 
         else:
             # Assign semantic descriptor
@@ -205,42 +232,49 @@ def main_segmentation(args):
                 semantic_map, args.clustering_algorithm, eps=args.eps, min_samples=args.min_samples, semantic_weight=args.semantic_weight, noise_objects_new_clusters=True)
 
             # Merge clusters
-            if args.method in (constants.METHOD_BERT_POST, constants.METHOD_DEEPSEEK_SBERT_POST):
+            if args.method in (constants.METHOD_BERT_POST, constants.METHOD_LLM_SBERT_POST):
                 mixed_clustering = clustering_engine.post_process_clustering(
                     semantic_map, mixed_clustering, args.merge_geometric_threshold, args.merge_semantic_threshold, args.split_semantic_threshold, json_file_path, plot_file_path)
 
-        # Save clustering
-        file_utils.create_directories_for_file(json_file_path)
-        file_utils.create_directories_for_file(plot_file_path)
-        mixed_clustering.save_to_json(json_file_path)
-        mixed_clustering.visualize_2D(
-            f"{semantic_map.semantic_map_id}\n s_d={args.method} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}",
-            semantic_map,
-            geometric_threshold=args.merge_geometric_threshold,
-            file_path=plot_file_path)
+        if args.method != constants.METHOD_LLM or args.llm_request:
+            # Save clustering
+            file_utils.create_directories_for_file(json_file_path)
+            file_utils.create_directories_for_file(plot_file_path)
+            mixed_clustering.save_to_json(json_file_path)
+            mixed_clustering.visualize_2D(
+                f"{semantic_map.semantic_map_id}\n s_d={args.method} eps={args.eps}, m_s={args.min_samples}, s_w={args.semantic_weight}, s_d={args.semantic_dimension}",
+                semantic_map,
+                geometric_threshold=args.merge_geometric_threshold,
+                file_path=plot_file_path)
 
     print("[main] The main script finished successfully!")
 
 
 def main_categorization(args):
-
+    # Load environment variables
     load_dotenv()
 
-    # Load and pre-process semantic map
-    semantic_maps: List[SemanticMap] = list()
-    for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
+    # Instantiate models
+    llm = GeminiProvider(
+        credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
+        project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
+        project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
+        model_name=GeminiProvider.GEMINI_2_0_FLASH,
+        cache_path=constants.LLM_CACHE_FILE_PATH
+    )
 
-        semantic_map_basename = file_utils.get_file_basename(
-            semantic_map_file_name)
-        # Load semantic map
-        semantic_map_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                              semantic_map_file_name))
-        # Create SemanticMap object
-        semantic_maps.append(SemanticMap(semantic_map_basename,
-                                         [SemanticMapObject(obj_id, obj_data) for obj_id, obj_data in semantic_map_dict["instances"].items()]))
+    # Load semantic maps
+    semantic_maps: List[SemanticMap] = []
+    for semantic_map_path, colors_path in zip(constants.SEMANTIC_MAPS_PATHS, constants.SEMANTIC_MAPS_COLORS_PATHS):
+        sm = SemanticMap.from_json_path(
+            semantic_map_path, colors_path=colors_path)
+        semantic_maps.append(sm)
 
     for method in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
                                                               "places_results")):  # TODO: pasar a constants, igual que en evaluate.py
+        if method == constants.METHOD_LLM:
+            print(f"Skipping method {method} for categorization.")
+            continue
         for semantic_map in semantic_maps[:args.number_maps]:
             # Load clustering
             clustering_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
@@ -252,25 +286,35 @@ def main_categorization(args):
 
             # Iterate over clusters
             for cluster in clustering.clusters:
-
+                # Build prompt and conversation history
                 place_categorizer_prompt = PlaceCategorizerPrompt(
                     [semantic_map.find_object(cluster_object.object_id) for cluster_object in cluster.objects])
+                conv_his = ConversationHistory.create_from_user_message(
+                    place_categorizer_prompt.get_prompt_text())
+
+                # Perform LLM request
+                if args.llm_request:
+                    response = llm.generate_json(conv_his,
+                                                 retries=3)
+                    clustering.find_cluster_by_id(
+                        cluster.cluster_id).tag = response["tag"]
+                    clustering.find_cluster_by_id(
+                        cluster.cluster_id).description = response["description"]
 
                 # Save prompt
                 prompt_text_path = os.path.join(constants.RESULTS_FOLDER_PATH,
                                                 "places_results",
                                                 method,
                                                 semantic_map.semantic_map_id,
-                                                "categorization_prompts",
-                                                f"cluster_{cluster.cluster_id}.txt")
+                                                f"cluster_{cluster.cluster_id}_prompt.txt")
                 file_utils.create_directories_for_file(prompt_text_path)
-
                 file_utils.save_text_to_file(
                     place_categorizer_prompt.get_prompt_text(), prompt_text_path)
 
-                # Perform LLM request
-                if args.llm_request:
-                    raise NotImplementedError("Not implemented yet!")
+            if args.llm_request:
+                print(
+                    f"Saving clustering for {semantic_map.semantic_map_id}...")
+                clustering.save_to_json(clustering_file_path)
 
 
 if __name__ == "__main__":
@@ -301,11 +345,11 @@ if __name__ == "__main__":
                                  constants.METHOD_BERT,
                                  constants.METHOD_OPENAI,
                                  constants.METHOD_ROBERTA,
-                                 constants.METHOD_DEEPSEEK_SBERT,
-                                 constants.METHOD_DEEPSEEK_OPENAI,
+                                 constants.METHOD_LLM_SBERT,
+                                 constants.METHOD_LLM_OPENAI,
                                  constants.METHOD_BERT_POST,
-                                 constants.METHOD_DEEPSEEK_SBERT_POST,
-                                 constants.METHOD_DEEPSEEK],
+                                 constants.METHOD_LLM_SBERT_POST,
+                                 constants.METHOD_LLM],
                         default=constants.METHOD_BERT)
 
     parser.add_argument("-w", "--semantic-weight",

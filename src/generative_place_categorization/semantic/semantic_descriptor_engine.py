@@ -8,6 +8,9 @@ from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
 from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.prompt.conversation_history import (
+    ConversationHistory,
+)
 from generative_place_categorization.prompt.sentence_generator_prompt import (
     SentenceGeneratorPrompt,
 )
@@ -23,7 +26,7 @@ class SemanticDescriptorEngine:
                  roberta_embedder: RoBERTaEmbedder,
                  openai_embedder: OpenAIEmbedder,
                  sbert_embedder: SentenceBERTEmbedder,
-                 deepseek_llm: LargeLanguageModel = None):
+                 llm: LargeLanguageModel = None):
         """
         Initialize the SemanticDescriptorEngine with embedding models.
 
@@ -32,13 +35,13 @@ class SemanticDescriptorEngine:
             roberta_embedder (RoBERTaEmbedder): RoBERTa embedding model.
             openai_embedder (OpenAIEmbedder): OpenAI embedding model.
             sbert_embedder (SentenceBERTEmbedder): Sentence-BERT embedding model.
-            deepseek_llm (LargeLanguageModel, optional): Large language model for DeepSeek. Defaults to None.
+            llm (LargeLanguageModel, optional): Large Language Model for generating sentences. Defaults to None.
         """
         self.bert_embedder = bert_embedder
         self.roberta_embedder = roberta_embedder
         self.openai_embedder = openai_embedder
         self.sbert_embedder = sbert_embedder
-        self.deepseek_llm = deepseek_llm
+        self.llm = llm
 
     def get_semantic_descriptor_from_method(self, method_arg: str, text: str):
         """
@@ -59,10 +62,10 @@ class SemanticDescriptorEngine:
             return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_ROBERTA, text)
         elif method_arg == constants.METHOD_OPENAI:
             return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_OPENAI, text)
-        elif method_arg in (constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_SBERT_POST):
-            return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, text)
-        elif method_arg == constants.METHOD_DEEPSEEK_OPENAI:
-            return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI, text)
+        elif method_arg in (constants.METHOD_LLM_SBERT, constants.METHOD_LLM_SBERT_POST):
+            return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_LLM_SBERT, text)
+        elif method_arg == constants.METHOD_LLM_OPENAI:
+            return self.get_semantic_descriptor(constants.SEMANTIC_DESCRIPTOR_LLM_OPENAI, text)
         else:
             raise NotImplementedError(
                 f"Not implemented semantic descriptor {method_arg}")
@@ -87,22 +90,23 @@ class SemanticDescriptorEngine:
             return self.roberta_embedder.embed_text(text)
         elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_OPENAI:
             return self.openai_embedder.embed_text(text)
-        elif semantic_descriptor_arg in (constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT, constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI):
+        elif semantic_descriptor_arg in (constants.SEMANTIC_DESCRIPTOR_LLM_SBERT, constants.SEMANTIC_DESCRIPTOR_LLM_OPENAI):
 
             # Generate sentence
             sentence_generator_prompt = SentenceGeneratorPrompt(word=text)
-            response = self.deepseek_llm.generate_json_retrying(
-                sentence_generator_prompt.get_prompt_text(),
-                params={"max_length": 1000},
-                retries=10,
+            conv_his = ConversationHistory.create_from_user_message(
+                sentence_generator_prompt.get_prompt_text())
+            response = self.llm.generate_json(
+                conversation_history=conv_his,
+                retries=3,
             )
 
             sentence = response["description"]
 
             # Generate embedding
-            if semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT:
+            if semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_LLM_SBERT:
                 return self.sbert_embedder.embed_text(sentence)
-            elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI:
+            elif semantic_descriptor_arg == constants.SEMANTIC_DESCRIPTOR_LLM_OPENAI:
                 return self.openai_embedder.embed_text(sentence)
         else:
             raise NotImplementedError(

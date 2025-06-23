@@ -10,17 +10,19 @@ from generative_place_categorization.voxeland.semantic_map_object import (
 class Cluster:
     """Represents a cluster containing objects with an optional description or tag."""
 
-    def __init__(self, cluster_id: int, objects: List[SemanticMapObject], description: Optional[str] = None):
+    def __init__(self, cluster_id: int, objects: List[SemanticMapObject], tag: Optional[str] = None, description: Optional[str] = None):
         """
         Initializes a cluster with a unique identifier, a list of objects, and an optional description.
 
         Args:
             cluster_id (int): Unique identifier for the cluster (DBSCAN assigns -1 to noise).
             objects (List[SemanticMapObject]): List of semantic map objects that belong to the cluster.
+            tag (Optional[str]): Optional tag for the cluster, used for categorization or identification.
             description (Optional[str]): Optional description or tag for the cluster.
         """
         self.cluster_id = cluster_id
         self.objects = objects
+        self.tag = tag
         self.description = description
 
     def append_object(self, semantic_map_object: SemanticMapObject):

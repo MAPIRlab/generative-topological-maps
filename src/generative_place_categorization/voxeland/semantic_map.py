@@ -103,14 +103,13 @@ class SemanticMap:
                 "colors_path is not defined for this SemanticMap")
         return file_utils.open_image(self.colors_path, str(frame_id))
 
-    def get_json_representation(self) -> str:
+    def get_prompt_json_representation(self) -> str:
         repr_dict = {"instances": {}}
         for obj in self.get_all_objects():
             obj_entry = {
                 "bbox": {"center": [round(c, 2) for c in obj.bbox_center],
                          "size": [round(s, 2) for s in obj.bbox_size]},
-                "class": obj.get_most_probable_class(),
-                "frames": obj.frames
+                "class": obj.get_most_probable_class()
             }
             repr_dict["instances"][obj.object_id] = obj_entry
         return json.dumps(repr_dict)

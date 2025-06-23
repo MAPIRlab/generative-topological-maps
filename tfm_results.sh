@@ -1,4 +1,36 @@
 
+# PLACES
+
+# Stage 1. Categorization
+
+# Method 1. geometric
+echo "Running model: geometric"
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method geometric --clustering-algorithm dbscan --eps 1.5 --min-samples 2 --dimensionality_reductor pca
+
+# Method 2. bert
+echo "Running model: bert"
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method bert --clustering-algorithm dbscan --eps 1.5 --min-samples 2 --semantic-weight 0.55 --semantic-dimension 3 --dimensionality_reductor pca
+
+# Method 3. roberta
+echo "Running model: roberta"
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method roberta --clustering-algorithm dbscan --eps 1.5 --min-samples 2  --semantic-weight 0.55 --semantic-dimension 3 --dimensionality_reductor pca
+
+# Method 4. deepseek+sbert
+echo "Running model: deepseek+sbert"
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method llm+sbert --clustering-algorithm dbscan --eps 1.5 --min-samples 2  --semantic-weight 0.55 --semantic-dimension 3 --dimensionality_reductor pca
+
+# Method 4. llm+sbert+post
+echo "Running model: deepseek+sbert+post"
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method llm+sbert+post --clustering-algorithm dbscan --eps 1.5 --min-samples 2  --semantic-weight 0.55 --semantic-dimension 3 --dimensionality_reductor pca --merge-geometric-threshold 1.0 --merge-semantic-threshold 0.55 --split-semantic-threshold 2.5
+
+# Method 5. llm
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage segmentation -n 10 --method llm --llm-request
+
+# Stage 2. Categorization
+PYTHONPATH=src python src/generative_place_categorization/main_places.py --stage categorization
+
+# EVALUATE PLACES
+PYTHONPATH=src python src/generative_place_categorization/evaluate_places.py
 
 # RELATIONSHIPS
 

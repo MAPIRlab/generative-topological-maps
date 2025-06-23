@@ -37,14 +37,14 @@ def main(args):
     # Load method clustering results
     methods_clustering_results = dict()
     for method in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                              "method_results")):
+                                                              "places_results")):
         methods_clustering_results[method] = dict()
         for semantic_map in file_utils.list_subdirectories(os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                                        "method_results",
+                                                                        "places_results",
                                                                         method)):
             methods_clustering_results[method][semantic_map] = Clustering.load_from_json(
                 os.path.join(constants.RESULTS_FOLDER_PATH,
-                             "method_results",
+                             "places_results",
                              method,
                              semantic_map,
                              "clustering.json"))

@@ -171,6 +171,8 @@ class ClusteringEngine:
             # Decide clusters to split
             cluster_to_be_split = self.decide_cluster_to_be_split(
                 clustering, split_semantic_threshold)
+            print(
+                f"[ClusteringEngine.post_process_clustering] Cluster to be split: {cluster_to_be_split}")
 
             if cluster_to_be_split is not None:
                 # Split clusters
@@ -270,19 +272,22 @@ class ClusteringEngine:
     def decide_cluster_to_be_split(self, clustering: Clustering, split_semantic_threshold: float):
         """Decide which clusters should be split based on TODO."""
         cluster_to_be_split = None
-
         max_splitting_score = 0.0
 
         for cluster in clustering.clusters:
 
             splitting_score = cluster.compute_splitting_score()
-            print(f"{cluster.cluster_id} -> {splitting_score}")
-            if splitting_score >= split_semantic_threshold and splitting_score > max_splitting_score:
+            print(
+                f"[ClusteringEngine.decide_cluster_to_be_split] Splitting score for cluster {cluster.cluster_id}: {splitting_score}")
+            print(splitting_score >= split_semantic_threshold)
+            print(splitting_score > max_splitting_score)
+            if splitting_score >= split_semantic_threshold and splitting_score >= max_splitting_score:
+                print("hola!")
                 cluster_to_be_split = cluster.cluster_id
                 max_splitting_score = splitting_score
 
         print(
-            f"[Clustering.decide_cluster_to_be_merged] Cluster to be split: {cluster_to_be_split}")
+            f"[ClusteringEngine.decide_cluster_to_be_split] Cluster to be split: {cluster_to_be_split}")
         return cluster_to_be_split
 
     def split_clusters(self, clustering: Clustering, clusters_to_be_split: list[str]):

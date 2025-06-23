@@ -104,7 +104,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--semantic-descriptor",
                         help="How to compute the semantic descriptor.",
                         choices=[constants.METHOD_BERT, constants.METHOD_OPENAI,
-                                 constants.METHOD_DEEPSEEK_SBERT, constants.METHOD_DEEPSEEK_OPENAI],
+                                 constants.METHOD_LLM_SBERT, constants.METHOD_LLM_OPENAI],
                         default=constants.METHOD_BERT)
 
     parser.add_argument("-w", "--semantic-weight",

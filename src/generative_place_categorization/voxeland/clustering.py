@@ -135,6 +135,7 @@ class Clustering:
             "clusters": {
                 str(cluster.cluster_id): {
                     "description": cluster.description,
+                    "tag": cluster.tag,
                     "objects": list(map(lambda obj: obj.object_id, cluster.objects))
                 }
                 for cluster in self.clusters

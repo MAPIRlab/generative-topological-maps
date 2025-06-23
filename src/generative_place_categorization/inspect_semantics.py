@@ -17,7 +17,7 @@ from generative_place_categorization.embedding.roberta_embedder import RoBERTaEm
 from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
-from generative_place_categorization.llm.large_language_model import LargeLanguageModel
+from generative_place_categorization.llm._large_language_model import LargeLanguageModel
 from generative_place_categorization.semantic.dimensionality_reduction_engine import (
     DimensionalityReductionEngine,
 )
@@ -129,8 +129,8 @@ def main(args, object_set: List[str]):
             constants.SEMANTIC_DESCRIPTOR_BERT,
             constants.SEMANTIC_DESCRIPTOR_ROBERTA,
             constants.SEMANTIC_DESCRIPTOR_OPENAI,
-            constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT,
-            constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI]
+            constants.SEMANTIC_DESCRIPTOR_LLM_SBERT,
+            constants.SEMANTIC_DESCRIPTOR_LLM_OPENAI]
     else:
         semantic_descriptors = [args.semantic_descriptor]
 
@@ -190,8 +190,8 @@ if __name__ == "__main__":
             constants.SEMANTIC_DESCRIPTOR_BERT,
             constants.SEMANTIC_DESCRIPTOR_ROBERTA,
             constants.SEMANTIC_DESCRIPTOR_OPENAI,
-            constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_SBERT,
-            constants.SEMANTIC_DESCRIPTOR_DEEPSEEK_OPENAI,
+            constants.SEMANTIC_DESCRIPTOR_LLM_SBERT,
+            constants.SEMANTIC_DESCRIPTOR_LLM_OPENAI,
         ],
         required=True,
     )
