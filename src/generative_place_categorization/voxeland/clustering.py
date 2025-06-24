@@ -156,17 +156,19 @@ class Clustering:
             objects = list()
             for object_id in data["objects"]:
                 if semantic_map is not None:  # if semantic map -> search object
-                    object = semantic_map.find_object(object_id)
-                    if object is None:
+                    semantic_map_object = semantic_map.find_object(object_id)
+                    if semantic_map_object is None:
                         raise ValueError(
                             f"Object {object_id} not found in semantic map {semantic_map.semantic_map_id}.")
-                    objects.append(object)  # else -> add object
+                    objects.append(semantic_map_object)  # else -> add object
                 else:
-                    objects.append(SemanticMapObject(object_id, None))
+                    objects.append(SemanticMapObject(object_id,
+                                                     data=None))
 
-            clusters.append(Cluster(int(cluster_id),
-                                    objects,
-                                    data.get("description")))
+            clusters.append(Cluster(cluster_id=int(cluster_id),
+                                    objects=objects,
+                                    tag=data.get("tag"),
+                                    description=data.get("description")))
 
         return Clustering(clusters)
 
@@ -175,9 +177,9 @@ class Clustering:
         Visualizes the clustered objects from a top-down view and saves the plot if file_path is specified.
         Otherwise, displays the plot on the screen.
         """
-        print("self", self)
-        print("title", title)
-        print("semantic_map", semantic_map)
+        # print("self", self)
+        # print("title", title)
+        # print("semantic_map", semantic_map)
         plt.figure(figsize=(8, 8))
 
         num_clusters = len(self.clusters)

@@ -3,35 +3,22 @@ import argparse
 import os
 from typing import Dict, List
 
+import tqdm
+
 from generative_place_categorization import constants
 from generative_place_categorization.utils import file_utils
 from generative_place_categorization.voxeland.clustering import Clustering
 from generative_place_categorization.voxeland.semantic_map import SemanticMap
-from generative_place_categorization.voxeland.semantic_map_object import (
-    SemanticMapObject,
-)
 
 
 def main(args):
 
-    # Load and pre-process semantic map
+    # Load semantic maps
     semantic_maps: Dict[str, SemanticMap] = dict()
-    for semantic_map_file_name in sorted(os.listdir(constants.SEMANTIC_MAPS_FOLDER_PATH)):
-
-        # Load semantic map
-        semantic_map_basename = file_utils.get_file_basename(
-            semantic_map_file_name)
-        semantic_map_objects_dict = file_utils.load_json(os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
-                                                                      semantic_map_file_name))
-        # Create SemanticMap object
-        semantic_map_objects: List[SemanticMapObject] = []
-        for obj_id, obj_data in semantic_map_objects_dict["instances"].items():
-            # Create SemanticMapObject object
-            semantic_map_object = SemanticMapObject(obj_id, obj_data)
-
-            semantic_map_objects.append(semantic_map_object)
-        semantic_maps[semantic_map_basename] = SemanticMap(semantic_map_basename,
-                                                           semantic_map_objects)
+    for semantic_map_path, colors_path in zip(constants.SEMANTIC_MAPS_PATHS, constants.SEMANTIC_MAPS_COLORS_PATHS):
+        sm = SemanticMap.from_json_path(
+            semantic_map_path, colors_path=colors_path)
+        semantic_maps[sm.semantic_map_id] = sm
 
     # Load semantic map clusterings
     clusterings: Dict[str, List[Clustering]] = dict()
@@ -54,18 +41,11 @@ def main(args):
                 Clustering.load_from_json(clustering_file_path, semantic_maps[semantic_map_basename]))
 
     # For each semantic map
-    for semantic_map in list(semantic_maps.values())[:args.number_maps]:
-
-        print("#"*40)
-        print(f"Processing {semantic_map.semantic_map_id}...")
-        print("#"*40)
+    for semantic_map in tqdm.tqdm(list(semantic_maps.values())[:args.number_maps],
+                                  desc="Processing semantic maps"):
 
         # For each clustreing possibility
         for option_id, ground_truth_cr in enumerate(clusterings[semantic_map.semantic_map_id]):
-
-            print("#"*20)
-            print(f"Option {option_id}...")
-            print("#"*20)
 
             # Check that all objects in the map are present in the place segmentation/clustering result
             for object1 in semantic_map.get_all_objects():
@@ -76,11 +56,11 @@ def main(args):
                             occurrences += 1
                 if occurrences != 1:
                     print(
-                        f"Warning: Object {object1.object_id} in semantic map {semantic_map.semantic_map_id} appears {occurrences} times in the clustering ground truth.")
+                        f"Warning: Object {object1.object_id} in semantic map {semantic_map.semantic_map_id} option {option_id} appears {occurrences} times in the clustering ground truth.")
 
             # Visualize place segmentation
             ground_truth_cr_plot_file_path = os.path.join(constants.RESULTS_FOLDER_PATH,
-                                                          "ground_truth",
+                                                          "places_ground_truth",
                                                           f"{semantic_map.semantic_map_id}_opt{option_id}.png")
             file_utils.create_directories_for_file(
                 ground_truth_cr_plot_file_path)
@@ -93,7 +73,7 @@ def main(args):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Performs some checks on the ground truth, and represents the places")
+        description="Performs some checks on the places ground truth, and represents the places")
 
     parser.add_argument("-n", "--number-maps",
                         help="Number of semantic map to which place categorization will be applied.",

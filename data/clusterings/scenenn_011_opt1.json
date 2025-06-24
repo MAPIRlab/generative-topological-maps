@@ -2,26 +2,26 @@
   "clusters": {
     "0": {
       "tag": "seating",
-      "description": "A small conversation area with two armchairs and one chair arranged for casual chats.",
+      "description": "An intimate seating circle of three armchairs and one chair positioned for small-group interaction.",
       "objects": [
         "obj6",
         "obj10",
+        "obj11",
         "obj14"
       ]
     },
     "1": {
       "tag": "workstation",
-      "description": "A dedicated work corner featuring a desk, presentation board, an armchair for breaks, and a small prop on the desk.",
+      "description": "A dedicated work area around the desk and board, with a small prop on the desk for demonstrations.",
       "objects": [
         "obj5",
-        "obj11",
         "obj12",
         "obj20"
       ]
     },
     "2": {
       "tag": "display",
-      "description": "A decorative display area with four framed pictures and a standalone prop stand for visual interest.",
+      "description": "A decorative display comprised of four framed pictures and a standalone prop stand arranged for visual interest.",
       "objects": [
         "obj16",
         "obj17",
@@ -32,7 +32,7 @@
     },
     "3": {
       "tag": "waste",
-      "description": "A single trash bin placed conveniently for disposal needs.",
+      "description": "A single trash bin placed conveniently for easy disposal.",
       "objects": [
         "obj15"
       ]

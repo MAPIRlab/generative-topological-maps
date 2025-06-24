@@ -1,0 +1,67 @@
+{
+  "explanation": "In this layout, the room splits into a central reception zone, two dedicated desks on the left and right, a compact cabinet cluster (now including loose papers), and a utility nook for printing and waste.",
+  "clusters": {
+    "0": {
+      "tag": "reception",
+      "description": "Shared seating arranged around the counter, ideal for quick catch-ups or welcoming visitors.",
+      "objects": [
+        "obj3",
+        "obj5",
+        "obj7",
+        "obj11"
+      ]
+    },
+    "1": {
+      "tag": "left_desk",
+      "description": "A personal workstation on the left equipped with dual monitors, computer, keyboard and phone, with nearby bags and papers.",
+      "objects": [
+        "obj17",
+        "obj23",
+        "obj24",
+        "obj36",
+        "obj31",
+        "obj18",
+        "obj22",
+        "obj25",
+        "obj33",
+        "obj34"
+      ]
+    },
+    "2": {
+      "tag": "right_desk",
+      "description": "A standalone desk on the right featuring a full PC setup, keyboard, TV for presentations and nearby documents.",
+      "objects": [
+        "obj16",
+        "obj20",
+        "obj26",
+        "obj27",
+        "obj30",
+        "obj32",
+        "obj35"
+      ]
+    },
+    "3": {
+      "tag": "cabinets",
+      "description": "A tight cluster of storage cabinets, stacked boxes, and loose papers for organizing bulk supplies and documents.",
+      "objects": [
+        "obj9",
+        "obj10",
+        "obj12",
+        "obj15",
+        "obj21",
+        "obj28",
+        "obj29"
+      ]
+    },
+    "4": {
+      "tag": "utility",
+      "description": "A functional corner with the printer, overhead lamp and trash bins for essential support tasks.",
+      "objects": [
+        "obj8",
+        "obj13",
+        "obj14",
+        "obj19"
+      ]
+    }
+  }
+}

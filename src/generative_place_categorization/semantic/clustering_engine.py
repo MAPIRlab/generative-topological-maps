@@ -279,10 +279,7 @@ class ClusteringEngine:
             splitting_score = cluster.compute_splitting_score()
             print(
                 f"[ClusteringEngine.decide_cluster_to_be_split] Splitting score for cluster {cluster.cluster_id}: {splitting_score}")
-            print(splitting_score >= split_semantic_threshold)
-            print(splitting_score > max_splitting_score)
             if splitting_score >= split_semantic_threshold and splitting_score >= max_splitting_score:
-                print("hola!")
                 cluster_to_be_split = cluster.cluster_id
                 max_splitting_score = splitting_score
 

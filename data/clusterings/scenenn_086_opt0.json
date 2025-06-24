@@ -1,41 +1,60 @@
 {
+  "explanation": "This schema organizes the space into four broad zones: a reception area for seating, an electronics hub for all devices, a large storage section for cabinets and supplies, and a utilities corner combining the printer, lighting and waste bins.",
   "clusters": {
     "0": {
-      "tag": "office",
-      "description": "Open workspace centered around a large counter, with multiple chairs, storage cabinets, electronics (computers, monitors, printer, TV), and various supplies (papers, boxes, trash bins, bags, books).",
+      "tag": "reception",
+      "description": "An informal seating area around the central counter with multiple chairs for quick meetups or greetings.",
       "objects": [
         "obj3",
         "obj5",
-        "obj10",
-        "obj11",
-        "obj18",
-        "obj25",
-        "obj29",
-        "obj33",
-        "obj34",
         "obj7",
-        "obj9",
-        "obj14",
-        "obj15",
-        "obj19",
-        "obj21",
-        "obj8",
-        "obj12",
-        "obj20",
-        "obj30",
+        "obj11"
+      ]
+    },
+    "1": {
+      "tag": "electronics",
+      "description": "A dedicated hub for computers, monitors, keyboards and a TV—plus the overhead light—for all digital and multimedia tasks.",
+      "objects": [
         "obj16",
-        "obj22",
-        "obj24",
-        "obj31",
         "obj17",
+        "obj20",
         "obj23",
-        "obj36",
+        "obj24",
         "obj26",
         "obj27",
-        "obj35",
+        "obj36"
+      ]
+    },
+    "2": {
+      "tag": "storage",
+      "description": "A large zone of cabinets, boxes, bags, papers and books providing organized storage for supplies and documents.",
+      "objects": [
+        "obj9",
+        "obj10",
+        "obj12",
+        "obj15",
+        "obj21",
+        "obj18",
+        "obj22",
+        "obj25",
         "obj28",
+        "obj29",
+        "obj30",
+        "obj31",
         "obj32",
-        "obj13"
+        "obj33",
+        "obj34",
+        "obj35"
+      ]
+    },
+    "3": {
+      "tag": "utilities",
+      "description": "A support corner housing the printer, overhead light fixture and waste bins for day-to-day operations.",
+      "objects": [
+        "obj8",
+        "obj13",
+        "obj14",
+        "obj19"
       ]
     }
   }

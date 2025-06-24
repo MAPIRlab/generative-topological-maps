@@ -1,0 +1,55 @@
+{
+  "explanation": "This configuration compresses the room into three zones: a collaborative workspace around the counter, a comprehensive storage area, and a utilities corner for printing, lighting and waste disposal.",
+  "clusters": {
+    "0": {
+      "tag": "workspace",
+      "description": "A collaborative zone around the main counter combining seating and key digital equipment for group work.",
+      "objects": [
+        "obj3",
+        "obj5",
+        "obj7",
+        "obj11",
+        "obj16",
+        "obj17",
+        "obj20",
+        "obj23",
+        "obj24",
+        "obj26",
+        "obj27",
+        "obj36"
+      ]
+    },
+    "1": {
+      "tag": "storage",
+      "description": "An all-in-one storage zone with cabinets, boxes, bags, papers and books neatly arranged.",
+      "objects": [
+        "obj9",
+        "obj10",
+        "obj12",
+        "obj15",
+        "obj21",
+        "obj18",
+        "obj22",
+        "obj25",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj31",
+        "obj32",
+        "obj33",
+        "obj34",
+        "obj35"
+      ]
+    },
+    "2": {
+      "tag": "utilities",
+      "description": "A support corner hosting the printer, lighting fixture and waste bins to service the entire room.",
+      "objects": [
+        "obj8",
+        "obj13",
+        "obj14",
+        "obj19"
+      ]
+    }
+  }
+}
