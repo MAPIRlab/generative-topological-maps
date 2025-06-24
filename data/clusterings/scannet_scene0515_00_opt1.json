@@ -1,36 +1,40 @@
 {
-    "clusters": {
-        "0": {
-            "description": "personal area with a bed and a desk",
-            "objects": [
-                "obj14",
-                "obj20",
-                "obj21",
-                "obj1",
-                "obj10"
-            ]
-        },
-        "1": {
-            "description": "bathroom",
-            "objects": [
-                "obj0",
-                "obj13",
-                "obj19"
-            ]
-        },
-        "2": {
-            "description": "kitchen area",
-            "objects": [
-                "obj15",
-                "obj16",
-                "obj17"
-            ]
-        },
-        "3": {
-            "description": "leisure area with a couch",
-            "objects": [
-                "obj18"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "studio",
+      "description": "A versatile personal space featuring a bed, desk with laptop, chair, and shelving for storage.",
+      "objects": [
+        "obj14",
+        "obj20",
+        "obj21",
+        "obj1",
+        "obj10"
+      ]
+    },
+    "1": {
+      "tag": "bathroom",
+      "description": "A compact bathroom area equipped with a sink, toilet, and towel.",
+      "objects": [
+        "obj0",
+        "obj13",
+        "obj19"
+      ]
+    },
+    "2": {
+      "tag": "kitchen",
+      "description": "A small kitchen corner with built-in cabinets and a refrigerator.",
+      "objects": [
+        "obj15",
+        "obj16",
+        "obj17"
+      ]
+    },
+    "3": {
+      "tag": "lounge",
+      "description": "A casual relaxation spot centered on a single couch.",
+      "objects": [
+        "obj18"
+      ]
     }
+  }
 }

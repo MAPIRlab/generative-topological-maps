@@ -1,61 +1,67 @@
 {
-    "clusters": {
-        "0": {
-            "description": "closet and closet area",
-            "objects": [
-                "obj8",
-                "obj9",
-                "obj30",
-                "obj28",
-                "obj22"
-            ]
-        },
-        "1": {
-            "description": "work area with a desk and chair",
-            "objects": [
-                "obj10",
-                "obj15",
-                "obj16",
-                "obj31",
-                "obj19"
-            ]
-        },
-        "2": {
-            "description": "relaxation and leisure area, with a sofa",
-            "objects": [
-                "obj7"
-            ]
-        },
-        "3": {
-            "description": "bathroom",
-            "objects": [
-                "obj17",
-                "obj24",
-                "obj32"
-            ]
-        },
-        "4": {
-            "description": "resting area with a bed",
-            "objects": [
-                "obj20",
-                "obj29"
-            ]
-        },
-        "5": {
-            "description": "kitchen area with cooking-related utensils",
-            "objects": [
-                "obj23",
-                "obj33",
-                "obj35",
-                "obj25",
-                "obj26",
-                "obj12",
-                "obj11",
-                "obj21",
-                "obj34",
-                "obj14",
-                "obj27"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "closet",
+      "description": "A storage corner with wardrobe doors, a cabinet, a drawer table, and a bag placed nearby.",
+      "objects": [
+        "obj8",
+        "obj9",
+        "obj30",
+        "obj28",
+        "obj22"
+      ]
+    },
+    "1": {
+      "tag": "office",
+      "description": "A productive workspace including a main desk, an office table, a supportive chair, a side table, and a shelf for supplies.",
+      "objects": [
+        "obj10",
+        "obj15",
+        "obj16",
+        "obj31",
+        "obj19"
+      ]
+    },
+    "2": {
+      "tag": "lounge",
+      "description": "A seating area with a single couch for relaxation.",
+      "objects": [
+        "obj7"
+      ]
+    },
+    "3": {
+      "tag": "bathroom",
+      "description": "A full bathroom fitted with a toilet, a sink, and a bathtub.",
+      "objects": [
+        "obj17",
+        "obj24",
+        "obj32"
+      ]
+    },
+    "4": {
+      "tag": "bedroom",
+      "description": "An area dedicated to rest, featuring a bed mounted on its bedframe.",
+      "objects": [
+        "obj20",
+        "obj29"
+      ]
+    },
+    "5": {
+      "tag": "kitchen",
+      "description": "A cooking zone equipped with a stove, electric hob, integrated sink and countertop, multiple kitchen cabinets and tops, a table with chairs, and extra cabinet storage.",
+      "objects": [
+        "obj23",
+        "obj33",
+        "obj35",
+        "obj25",
+        "obj26",
+        "obj12",
+        "obj11",
+        "obj21",
+        "obj34",
+        "obj14",
+        "obj27"
+      ]
     }
+  }
 }

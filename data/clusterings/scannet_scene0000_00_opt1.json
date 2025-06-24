@@ -1,73 +1,78 @@
 {
-    "clusters": {
-        "0": {
-            "description": "eating area with some chairs and a table",
-            "objects": [
-                "obj2",
-                "obj28",
-                "obj29",
-                "obj30",
-                "obj31",
-                "obj42",
-                "obj0"
-            ]
-        },
-        "1": {
-            "description": "A cozy bedroom with a bed, desk, guitar, and personal decor.",
-            "objects": [
-                "obj16",
-                "obj37",
-                "obj44",
-                "obj46",
-                "obj47",
-                "obj50",
-                "obj41",
-                "obj6",
-                "obj17",
-                "obj39",
-                "obj48",
-                "obj49",
-                "obj14",
-                "obj7",
-                "obj35"
-            ]
-        },
-        "2": {
-            "description": "leisure area with a sofa",
-            "objects": [
-                "obj8",
-                "obj15",
-                "obj5",
-                "obj32",
-                "obj18",
-                "obj34"
-            ]
-        },
-        "3": {
-            "description": "bathroom",
-            "objects": [
-                "obj4",
-                "obj10",
-                "obj36",
-                "obj1",
-                "obj11"
-            ]
-        },
-        "4": {
-            "description": "kitchen area with cooking utensils and cupboards",
-            "objects": [
-                "obj40",
-                "obj43",
-                "obj52",
-                "obj3",
-                "obj33",
-                "obj45",
-                "obj51",
-                "obj53",
-                "obj12",
-                "obj13",
-                "obj38"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "dining",
+      "description": "Counter-height dining spot beneath a window, with a long countertop over cabinet storage and four backless stools lined up underneath",
+      "objects": [
+        "obj2",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj31",
+        "obj42",
+        "obj0"
+      ]
+    },
+    "1": {
+      "tag": "studio",
+      "description": "Combined sleeping and work zone featuring a single bed with pillows and nightstand, adjacent laundry basket and towel, a corner desk with side table and wall clock overhead, built-in cabinets holding a tissue box, floor trashcan, and a guitar leaning against storage",
+      "objects": [
+        "obj16",
+        "obj37",
+        "obj44",
+        "obj46",
+        "obj47",
+        "obj50",
+        "obj41",
+        "obj6",
+        "obj17",
+        "obj39",
+        "obj48",
+        "obj49",
+        "obj14",
+        "obj7",
+        "obj35"
+      ]
+    },
+    "2": {
+      "tag": "lounge",
+      "description": "Relaxation area with a sofa facing a TV on a low table, backed by a tall bookshelf, accented by a decorative curtain and a backpack on the floor",
+      "objects": [
+        "obj8",
+        "obj15",
+        "obj5",
+        "obj32",
+        "obj18",
+        "obj34"
+      ]
+    },
+    "3": {
+      "tag": "bathroom",
+      "description": "Small bathroom equipped with a walk-in shower, wall-mount sink, standard toilet, frosted window for light and ventilation, and a digital floor scale",
+      "objects": [
+        "obj4",
+        "obj10",
+        "obj36",
+        "obj1",
+        "obj11"
+      ]
+    },
+    "4": {
+      "tag": "kitchen",
+      "description": "Compact kitchen composed of continuous countertops framed by upper and lower cabinets, housing a built-in refrigerator and microwave, with countertop appliances (toaster oven and toaster), a dishrack, and two floor-level trashcans",
+      "objects": [
+        "obj40",
+        "obj43",
+        "obj52",
+        "obj3",
+        "obj33",
+        "obj45",
+        "obj51",
+        "obj53",
+        "obj12",
+        "obj13",
+        "obj38"
+      ]
     }
+  }
 }

@@ -1,56 +1,60 @@
 {
-    "clusters": {
-        "0": {
-            "description": "working area with some tables and a screen",
-            "objects": [
-                "obj7",
-                "obj13",
-                "obj20",
-                "obj32",
-                "obj33",
-                "obj34",
-                "obj35",
-                "obj36",
-                "obj39",
-                "obj18",
-                "obj15",
-                "obj31",
-                "obj38",
-                "obj41",
-                "obj27"
-            ]
-        },
-        "1": {
-            "description": "workspace with a desk and chair",
-            "objects": [
-                "obj14",
-                "obj22",
-                "obj40",
-                "obj17"
-            ]
-        },
-        "2": {
-            "description": "set of trash bins and bags",
-            "objects": [
-                "obj25",
-                "obj26",
-                "obj28",
-                "obj29",
-                "obj30",
-                "obj37"
-            ]
-        },
-        "3": {
-            "description": "resting area with a bed and a window",
-            "objects": [
-                "obj10",
-                "obj16",
-                "obj21",
-                "obj24",
-                "obj4",
-                "obj19",
-                "obj23"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "workstation",
+      "description": "Multi-screen computer station with a central table, seating, tower, keyboard, mouse, and nearby bookshelf stocked with reading materials.",
+      "objects": [
+        "obj7",
+        "obj13",
+        "obj20",
+        "obj32",
+        "obj33",
+        "obj34",
+        "obj35",
+        "obj36",
+        "obj39",
+        "obj18",
+        "obj15",
+        "obj31",
+        "obj38",
+        "obj41",
+        "obj27"
+      ]
+    },
+    "1": {
+      "tag": "desk",
+      "description": "Compact desk setup by a window, featuring a chair, tabletop surface, and a wall-hung picture.",
+      "objects": [
+        "obj14",
+        "obj22",
+        "obj40",
+        "obj17"
+      ]
+    },
+    "2": {
+      "tag": "storage",
+      "description": "Assortment of waste bins, bags, and a box, accompanied by a pair of sandals.",
+      "objects": [
+        "obj25",
+        "obj26",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj37"
+      ]
+    },
+    "3": {
+      "tag": "bedroom",
+      "description": "Sleeping nook with a bed, reading lamp, stool, adjacent window, bookshelf, and a personal bag.",
+      "objects": [
+        "obj10",
+        "obj16",
+        "obj21",
+        "obj24",
+        "obj4",
+        "obj19",
+        "obj23"
+      ]
     }
+  }
 }

@@ -1,45 +1,49 @@
 {
-    "clusters": {
-        "0": {
-            "description": "sleeping area with a bed",
-            "objects": [
-                "obj8",
-                "obj16",
-                "obj13",
-                "obj20",
-                "obj23"
-            ]
-        },
-        "1": {
-            "description": "work area, with a desk",
-            "objects": [
-                "obj10",
-                "obj21",
-                "obj22",
-                "obj0",
-                "obj7"
-            ]
-        },
-        "2": {
-            "description": "bathroom",
-            "objects": [
-                "obj11",
-                "obj24"
-            ]
-        },
-        "3": {
-            "description": "kitchen area with appliances",
-            "objects": [
-                "obj6",
-                "obj12",
-                "obj18",
-                "obj25",
-                "obj26",
-                "obj14",
-                "obj15",
-                "obj19",
-                "obj9"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "bedroom",
+      "description": "A resting zone containing a bed, TV on a stand, side table, and a guitar for casual entertainment.",
+      "objects": [
+        "obj8",
+        "obj16",
+        "obj13",
+        "obj20",
+        "obj23"
+      ]
+    },
+    "1": {
+      "tag": "workspace",
+      "description": "A multifunctional work corner featuring a desk, chair, small table, sofa, and a bookshelf for organization.",
+      "objects": [
+        "obj10",
+        "obj21",
+        "obj22",
+        "obj0",
+        "obj7"
+      ]
+    },
+    "2": {
+      "tag": "bathroom",
+      "description": "A compact washroom area equipped with a toilet and a sink.",
+      "objects": [
+        "obj11",
+        "obj24"
+      ]
+    },
+    "3": {
+      "tag": "kitchen",
+      "description": "A culinary zone with a stove, countertop, refrigerator, microwave, cabinets, two stools, and a small table; bicycle stored nearby.",
+      "objects": [
+        "obj6",
+        "obj12",
+        "obj18",
+        "obj25",
+        "obj26",
+        "obj14",
+        "obj15",
+        "obj19",
+        "obj9"
+      ]
     }
+  }
 }

@@ -1,51 +1,54 @@
 {
-    "clusters": {
-        "0": {
-            "description": "working area with some tables and a screen",
-            "objects": [
-                "obj7",
-                "obj13",
-                "obj20",
-                "obj32",
-                "obj33",
-                "obj34",
-                "obj35",
-                "obj36",
-                "obj39",
-                "obj18",
-                "obj15",
-                "obj31",
-                "obj38",
-                "obj41",
-                "obj27",
-                "obj14",
-                "obj22",
-                "obj40",
-                "obj17"
-            ]
-        },
-        "1": {
-            "description": "set of trash bins and bags",
-            "objects": [
-                "obj25",
-                "obj26",
-                "obj28",
-                "obj29",
-                "obj30",
-                "obj37"
-            ]
-        },
-        "2": {
-            "description": "resting area with a bed and a window",
-            "objects": [
-                "obj10",
-                "obj16",
-                "obj21",
-                "obj24",
-                "obj4",
-                "obj19",
-                "obj23"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "workspace",
+      "description": "Consolidated work hub featuring two tables, a bookshelf, multiple seating options, dual screens (TV and monitor), a computer tower, keyboard, mouse, and assorted reading materials, illuminated by nearby window light and accented with a wall picture.",
+      "objects": [
+        "obj7",
+        "obj13",
+        "obj20",
+        "obj32",
+        "obj33",
+        "obj34",
+        "obj35",
+        "obj36",
+        "obj39",
+        "obj18",
+        "obj15",
+        "obj31",
+        "obj38",
+        "obj41",
+        "obj27",
+        "obj14",
+        "obj22",
+        "obj40",
+        "obj17"
+      ]
+    },
+    "1": {
+      "tag": "storage",
+      "description": "Cluster of waste and storage items including several bags, trash bins, a box, and a pair of sandals.",
+      "objects": [
+        "obj25",
+        "obj26",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj37"
+      ]
+    },
+    "2": {
+      "tag": "bedroom",
+      "description": "Sleeping nook with a bed beneath a window, accompanied by a bookshelf, reading lamp, small stool, and a personal bag.",
+      "objects": [
+        "obj10",
+        "obj16",
+        "obj21",
+        "obj24",
+        "obj4",
+        "obj19",
+        "obj23"
+      ]
     }
+  }
 }

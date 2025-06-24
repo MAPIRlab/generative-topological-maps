@@ -1,50 +1,55 @@
 {
-    "clusters": {
-        "0": {
-            "description": "sleeping area with a bed",
-            "objects": [
-                "obj8",
-                "obj16",
-                "obj13",
-                "obj20",
-                "obj23"
-            ]
-        },
-        "1": {
-            "description": "leisure and work area, with a desk and a sofa",
-            "objects": [
-                "obj10",
-                "obj21",
-                "obj22",
-                "obj7"
-            ]
-        },
-        "2": {
-            "description": "leisure area with a sofa",
-            "objects": [
-                "obj0"
-            ]
-        },
-        "3": {
-            "description": "bathroom",
-            "objects": [
-                "obj11",
-                "obj24"
-            ]
-        },
-        "4": {
-            "description": "kitchen area with appliances",
-            "objects": [
-                "obj6",
-                "obj12",
-                "obj18",
-                "obj25",
-                "obj26",
-                "obj14",
-                "obj15",
-                "obj19",
-                "obj9"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "bedroom",
+      "description": "A resting zone featuring a bed, TV on a stand, adjacent table, and a guitar for casual music.",
+      "objects": [
+        "obj8",
+        "obj16",
+        "obj13",
+        "obj20",
+        "obj23"
+      ]
+    },
+    "1": {
+      "tag": "office",
+      "description": "A work and study corner with a desk, chair, small side table, and a bookshelf.",
+      "objects": [
+        "obj10",
+        "obj21",
+        "obj22",
+        "obj7"
+      ]
+    },
+    "2": {
+      "tag": "lounge",
+      "description": "A simple seating area centered on a single couch for relaxation.",
+      "objects": [
+        "obj0"
+      ]
+    },
+    "3": {
+      "tag": "bathroom",
+      "description": "A compact washroom area equipped with a toilet and a sink.",
+      "objects": [
+        "obj11",
+        "obj24"
+      ]
+    },
+    "4": {
+      "tag": "kitchen",
+      "description": "A culinary area with a stove, countertop, refrigerator, microwave, kitchen cabinets, two stools, a small table, and a bicycle stored nearby.",
+      "objects": [
+        "obj6",
+        "obj12",
+        "obj18",
+        "obj25",
+        "obj26",
+        "obj14",
+        "obj15",
+        "obj19",
+        "obj9"
+      ]
     }
+  }
 }

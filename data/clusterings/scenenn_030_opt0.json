@@ -1,57 +1,62 @@
 {
-    "clusters": {
-        "0": {
-            "description": "workspace with two tables and some chairs",
-            "objects": [
-                "obj3",
-                "obj5",
-                "obj7",
-                "obj8",
-                "obj12",
-                "obj13",
-                "obj14",
-                "obj19",
-                "obj21",
-                "obj22",
-                "obj24",
-                "obj25",
-                "obj26",
-                "obj27",
-                "obj28",
-                "obj30",
-                "obj31"
-            ]
-        },
-        "1": {
-            "description": "",
-            "objects": [
-                "obj9",
-                "obj10",
-                "obj11",
-                "obj18"
-            ]
-        },
-        "2": {
-            "description": "",
-            "objects": [
-                "obj15",
-                "obj16",
-                "obj20",
-                "obj29"
-            ]
-        },
-        "3": {
-            "description": null,
-            "objects": [
-                "obj4",
-                "obj23"
-            ]
-        },
-        "4": {
-            "description": null,
-            "objects": [
-                "obj6"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "office",
+      "description": "A comprehensive office area with window blinds, a desk and tables, multiple chairs, electronics (computer, keyboard, two TVs, phone), a lamp, a globe, and a trashcan.",
+      "objects": [
+        "obj3",
+        "obj5",
+        "obj7",
+        "obj8",
+        "obj12",
+        "obj13",
+        "obj14",
+        "obj19",
+        "obj21",
+        "obj22",
+        "obj24",
+        "obj25",
+        "obj26",
+        "obj27",
+        "obj28",
+        "obj30",
+        "obj31"
+      ]
+    },
+    "1": {
+      "tag": "shelving",
+      "description": "A trio of wall-mounted shelves partially occupied by a few books.",
+      "objects": [
+        "obj9",
+        "obj10",
+        "obj11",
+        "obj18"
+      ]
+    },
+    "2": {
+      "tag": "bookcase",
+      "description": "A standalone bookshelf densely packed with several stacks of books.",
+      "objects": [
+        "obj15",
+        "obj16",
+        "obj20",
+        "obj29"
+      ]
+    },
+    "3": {
+      "tag": "utility",
+      "description": "A functional corner featuring a wall-mounted whiteboard alongside a grouping of clothes.",
+      "objects": [
+        "obj4",
+        "obj23"
+      ]
+    },
+    "4": {
+      "tag": "lounge",
+      "description": "A solitary sofa placed independently for casual seating.",
+      "objects": [
+        "obj6"
+      ]
     }
+  }
 }

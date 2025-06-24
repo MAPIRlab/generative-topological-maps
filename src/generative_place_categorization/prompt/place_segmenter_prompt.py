@@ -1,3 +1,5 @@
+import json
+
 from generative_place_categorization.prompt.prompt import Prompt
 
 
@@ -5,62 +7,63 @@ class PlaceSegmenterPrompt(Prompt):
 
     SYSTEM_PROMPT = """
 <INSTRUCTION>
-Classify objects into places based on their class and their location. Objects that are close and are (more or less) of the same class should be grouped in the same place. A place is not necessarily a room but a meaningful area where objects are commonly found together.
-Objects should be grouped into places based on both their semantics (e.g., "chair" is often found in an "eating area") and spatial proximity (objects close together likely belong to the same place).
+You are given a set of detected objects, each with a semantic class and a 3D bounding box. Your goal is to group these objects into places—meaningful clusters that share a common functionality and are spatially proximate. A place might be “seating_area,” “workstation,” or “storage_zone,” not necessarily a single room.
+When grouping:
+- Semantic similarity: Objects serving similar functionality (e.g., chair + couch → seating area) should be in the same place.
+- Spatial proximity: Objects that are near each other in 3D space and functionally related reinforce the same grouping.
+- Completeness and exclusivity: Every object in the semantic_map must be assigned to exactly one place; no object may appear in more than one place.
 </INSTRUCTION>
 
 <GUIDELINES>
-You may include your internal reasoning or explanations, but you **must** end your response with **only** the JSON object specified in `<OUTPUT_FORMAT>`.  
-Do not wrap the JSON in markdown or code fences, and do not output any text after the JSON.
+You may perform internal, step-by-step reasoning, but your final response must contain only the JSON object in the required structure. Do not include any extra text before or after the JSON.
 </GUIDELINES>
 
 <INPUT_FORMAT>
-- Objects are represented with bounding boxes (bbox), containing their center position (x, y, z) and size (width, depth, height).
-- Class: the most probable class of the object, given by an object detector.
-The semantic map comes in JSON:
-```json
+You will receive a JSON object named semantic_map with this structure:
 {
-    "instances": {
-        "obj0": {
-            "bbox": {
-                "center": [x, y, z],
-                "size": [dx, dy, dz]
-            },
-            "class": "object_class"
-        },
-        "obj1": { ... },
-        "obj2": { ... },
-        "obj3": { ... },
-        ...
-    }
+  "instances": {
+    "obj0": {
+      "bbox": { "center": [x, y, z], "size": [dx, dy, dz] },
+      "class": "object_class"
+    },
+    "obj1": { … },
+    …
+  }
 }
-```
+- bbox.center: [x, y, z] position in meters  
+- bbox.size: [width, depth, height]  
+- class: semantic label (e.g., "chair", "table")
 </INPUT_FORMAT>
 
 <OUTPUT_FORMAT>
-Return exactly this structure as valid JSON, listing each place with a short tag, a human-readable description, and the list of object IDs it contains:
+Return exactly this JSON structure, listing each place with a short tag, a human-readable description, and the list of object IDs it contains. Do not add comments or extra keys.
 
-```json
 {
-    "places": [
-        {
-            "name": "<place_tag>",
-            "description": "<brief description of this place>",
-            "objects": ["obj1", "obj2", "obj3"]
-        },
-        {
-            "name": "<another_tag>",
-            "description": "<description>",
-            "objects": ["obj4", "obj5"]
-        }
-        // … additional places …
-    ]
+  "places": [
+    {
+      "name": "<place_tag>",
+      "description": "<brief description of this place>",
+      "objects": ["obj1", "obj2", "obj3"]
+    },
+    {
+      "name": "<another_tag>",
+      "description": "<brief description>",
+      "objects": ["obj4", "obj5"]
+    }
+    // … more places …
+  ]
 }
-```
+
+- name: short, unique tag for the place (e.g., "seating_area", "kitchen_zone")
+- description: one or two phrases describing the place and its function
+- objects: list of object IDs in that place
 </OUTPUT_FORMAT>
 
-Now classify the following semantic map step by step, but **only output** the final JSON matching `<OUTPUT_FORMAT>`:
+<TASK>
+Classify the following semantic_map into places using the rules above. Only output the final JSON in the specified format.
+
 {{semantic_map}}
+</TASK>
 """
 
     def get_system_prompt(self) -> str:
@@ -80,5 +83,6 @@ if __name__ == "__main__":
             "obj4": {"bbox": {"center": [5, 6, 0], "size": [1, 1, 1]}, "class": "toilet"}
         }
     }
-    prompt = PlaceSegmenterPrompt(semantic_map=dummy_map)
+    dummy_map_str = json.dumps(dummy_map)
+    prompt = PlaceSegmenterPrompt(semantic_map=dummy_map_str)
     print(prompt.get_prompt_text())

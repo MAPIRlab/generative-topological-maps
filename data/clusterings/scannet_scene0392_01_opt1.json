@@ -1,56 +1,61 @@
 {
-    "clusters": {
-        "0": {
-            "description": "closet and closet area",
-            "objects": [
-                "obj8",
-                "obj9",
-                "obj30",
-                "obj28",
-                "obj22"
-            ]
-        },
-        "1": {
-            "description": "personal area with a desk, a chair and a bed",
-            "objects": [
-                "obj10",
-                "obj15",
-                "obj16",
-                "obj31",
-                "obj19",
-                "obj20",
-                "obj29"
-            ]
-        },
-        "2": {
-            "description": "relaxation and leisure area, with a sofa",
-            "objects": [
-                "obj7"
-            ]
-        },
-        "3": {
-            "description": "bathroom",
-            "objects": [
-                "obj17",
-                "obj24",
-                "obj32"
-            ]
-        },
-        "4": {
-            "description": "kitchen area with cooking-related utensils",
-            "objects": [
-                "obj23",
-                "obj33",
-                "obj35",
-                "obj25",
-                "obj26",
-                "obj12",
-                "obj11",
-                "obj21",
-                "obj34",
-                "obj14",
-                "obj27"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "closet",
+      "description": "A storage zone featuring wardrobe doors, a cabinet, a drawer table, and a bag nearby.",
+      "objects": [
+        "obj8",
+        "obj9",
+        "obj30",
+        "obj28",
+        "obj22"
+      ]
+    },
+    "1": {
+      "tag": "studio",
+      "description": "A combined personal space with a bed on its frame, a main desk and office table, a desk chair, a side table, and a shelf for organization.",
+      "objects": [
+        "obj10",
+        "obj15",
+        "obj16",
+        "obj31",
+        "obj19",
+        "obj20",
+        "obj29"
+      ]
+    },
+    "2": {
+      "tag": "lounge",
+      "description": "A seating area centered on a single couch for relaxation.",
+      "objects": [
+        "obj7"
+      ]
+    },
+    "3": {
+      "tag": "bathroom",
+      "description": "A full washroom equipped with a toilet, a sink, and a bathtub.",
+      "objects": [
+        "obj17",
+        "obj24",
+        "obj32"
+      ]
+    },
+    "4": {
+      "tag": "kitchen",
+      "description": "A cooking zone with a stove, electric hob, integrated sinks and countertops, multiple cabinets and tops, and an adjacent table with cabinet storage.",
+      "objects": [
+        "obj23",
+        "obj33",
+        "obj35",
+        "obj25",
+        "obj26",
+        "obj12",
+        "obj11",
+        "obj21",
+        "obj34",
+        "obj14",
+        "obj27"
+      ]
     }
+  }
 }

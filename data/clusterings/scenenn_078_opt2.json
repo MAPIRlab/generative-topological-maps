@@ -1,38 +1,40 @@
 {
-    "clusters": {
-        "0": {
-            "description": "working area with a table, some chairs and a bookcase containing books",
-            "objects": [
-                "obj4",
-                "obj17",
-                "obj21",
-                "obj24",
-                "obj25",
-                "obj26",
-                "obj7",
-                "obj11",
-                "obj6",
-                "obj13",
-                "obj14",
-                "obj15",
-                "obj16",
-                "obj18",
-                "obj5",
-                "obj20",
-                "obj22",
-                "obj23",
-                "obj8",
-                "obj9",
-                "obj12",
-                "obj3"
-            ]
-        },
-        "1": {
-            "description": "small eating area with just a fridge and a toaster",
-            "objects": [
-                "obj10",
-                "obj19"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "workspace",
+      "description": "A multifunctional work zone featuring a desk setup with monitor, keyboard, chair and files, an adjacent bookshelf filled with books, plus a presentation table, chair, and blackboard area complete with papers, box, and pillow.",
+      "objects": [
+        "obj4",
+        "obj17",
+        "obj21",
+        "obj24",
+        "obj25",
+        "obj26",
+        "obj7",
+        "obj11",
+        "obj6",
+        "obj13",
+        "obj14",
+        "obj15",
+        "obj16",
+        "obj18",
+        "obj5",
+        "obj20",
+        "obj22",
+        "obj23",
+        "obj8",
+        "obj9",
+        "obj12",
+        "obj3"
+      ]
+    },
+    "1": {
+      "tag": "kitchenette",
+      "description": "A small refreshment corner equipped only with a refrigerator and a toaster.",
+      "objects": [
+        "obj10",
+        "obj19"
+      ]
     }
+  }
 }

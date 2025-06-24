@@ -1,73 +1,78 @@
 {
-    "clusters": {
-        "0": {
-            "description": "living room area with a sofa, a table and some stools",
-            "objects": [
-                "obj2",
-                "obj28",
-                "obj29",
-                "obj30",
-                "obj31",
-                "obj42",
-                "obj0",
-                "obj8",
-                "obj15",
-                "obj5",
-                "obj32",
-                "obj18",
-                "obj34"
-            ]
-        },
-        "1": {
-            "description": "sleeping area, with a bed",
-            "objects": [
-                "obj16",
-                "obj37",
-                "obj44",
-                "obj46",
-                "obj47",
-                "obj50",
-                "obj41"
-            ]
-        },
-        "2": {
-            "description": "work area with a desk and chairs",
-            "objects": [
-                "obj6",
-                "obj17",
-                "obj39",
-                "obj48",
-                "obj49",
-                "obj14",
-                "obj7",
-                "obj35"
-            ]
-        },
-        "4": {
-            "description": "bathroom",
-            "objects": [
-                "obj4",
-                "obj10",
-                "obj36",
-                "obj1",
-                "obj11"
-            ]
-        },
-        "5": {
-            "description": "kitchen area with cooking utensils and cupboards",
-            "objects": [
-                "obj40",
-                "obj43",
-                "obj52",
-                "obj3",
-                "obj33",
-                "obj45",
-                "obj51",
-                "obj53",
-                "obj12",
-                "obj13",
-                "obj38"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "lounge",
+      "description": "Multi-purpose living zone with a sofa facing a TV on a low table, backed by a bookshelf; includes a window-side countertop with four stools, a side table, decorative curtain, and a backpack on the floor",
+      "objects": [
+        "obj2",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj31",
+        "obj42",
+        "obj0",
+        "obj8",
+        "obj15",
+        "obj5",
+        "obj32",
+        "obj18",
+        "obj34"
+      ]
+    },
+    "1": {
+      "tag": "bedroom",
+      "description": "Sleeping corner with a single bed topped by pillows, accompanied by a nightstand, towel rack, laundry basket, storage cabinet, and a guitar leaning against the cabinet",
+      "objects": [
+        "obj16",
+        "obj37",
+        "obj44",
+        "obj46",
+        "obj47",
+        "obj50",
+        "obj41"
+      ]
+    },
+    "2": {
+      "tag": "office",
+      "description": "Workspace featuring a desk and small side table next to built-in cabinets, with a wall clock overhead, curtains for light control, a tissue box on the cabinet, and a floor trashcan",
+      "objects": [
+        "obj6",
+        "obj17",
+        "obj39",
+        "obj48",
+        "obj49",
+        "obj14",
+        "obj7",
+        "obj35"
+      ]
+    },
+    "4": {
+      "tag": "bathroom",
+      "description": "Compact bathroom with a walk-in shower, wall-mounted sink, standard toilet, frosted window for ventilation, and a digital floor scale",
+      "objects": [
+        "obj4",
+        "obj10",
+        "obj36",
+        "obj1",
+        "obj11"
+      ]
+    },
+    "5": {
+      "tag": "kitchen",
+      "description": "Functional kitchen area with continuous countertops framed by upper and lower cabinets, a built-in refrigerator and microwave, plus a toaster oven, toaster, dishrack, and two floor-level trashcans",
+      "objects": [
+        "obj40",
+        "obj43",
+        "obj52",
+        "obj3",
+        "obj33",
+        "obj45",
+        "obj51",
+        "obj53",
+        "obj12",
+        "obj13",
+        "obj38"
+      ]
     }
+  }
 }

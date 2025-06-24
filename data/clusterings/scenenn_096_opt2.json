@@ -1,46 +1,48 @@
 {
-    "clusters": {
-        "0": {
-            "description": "working area with some tables and a screen",
-            "objects": [
-                "obj7",
-                "obj13",
-                "obj20",
-                "obj32",
-                "obj33",
-                "obj34",
-                "obj35",
-                "obj36",
-                "obj39",
-                "obj18",
-                "obj15",
-                "obj31",
-                "obj38",
-                "obj41",
-                "obj27",
-                "obj14",
-                "obj22",
-                "obj40",
-                "obj17",
-                "obj25",
-                "obj26",
-                "obj28",
-                "obj29",
-                "obj30",
-                "obj37"
-            ]
-        },
-        "2": {
-            "description": "resting area with a bed and a window",
-            "objects": [
-                "obj10",
-                "obj16",
-                "obj21",
-                "obj24",
-                "obj4",
-                "obj19",
-                "obj23"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "workspace",
+      "description": "Integrated work zone combining tables, shelving, seating, dual screens (TV and monitor), computer tower with keyboard and mouse, assorted books and bags, plus waste bins and a box for storage.",
+      "objects": [
+        "obj7",
+        "obj13",
+        "obj20",
+        "obj32",
+        "obj33",
+        "obj34",
+        "obj35",
+        "obj36",
+        "obj39",
+        "obj18",
+        "obj15",
+        "obj31",
+        "obj38",
+        "obj41",
+        "obj27",
+        "obj14",
+        "obj22",
+        "obj40",
+        "obj17",
+        "obj25",
+        "obj26",
+        "obj28",
+        "obj29",
+        "obj30",
+        "obj37"
+      ]
+    },
+    "2": {
+      "tag": "bedroom",
+      "description": "Quiet sleeping area featuring a bed beneath a window, accompanied by a lamp, small stool, nearby bookshelf, and a personal bag.",
+      "objects": [
+        "obj10",
+        "obj16",
+        "obj21",
+        "obj24",
+        "obj4",
+        "obj19",
+        "obj23"
+      ]
     }
+  }
 }

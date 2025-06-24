@@ -1,42 +1,47 @@
 {
-    "clusters": {
-        "0": {
-            "description": "sitting place with some sofas and chairs",
-            "objects": [
-                "obj14",
-                "obj16",
-                "obj10",
-                "obj19",
-                "obj6"
-            ]
-        },
-        "1": {
-            "description": "working place with a desk and a sofa",
-            "objects": [
-                "obj20",
-                "obj5",
-                "obj11",
-                "obj12"
-            ]
-        },
-        "2": {
-            "description": "trash place",
-            "objects": [
-                "obj15"
-            ]
-        },
-        "3": {
-            "description": "elevated prop",
-            "objects": [
-                "obj21"
-            ]
-        },
-        "4": {
-            "description": "pair of pictures",
-            "objects": [
-                "obj18",
-                "obj17"
-            ]
-        }
+  "clusters": {
+    "0": {
+      "tag": "lounge",
+      "description": "A relaxed seating area featuring armchairs and a single chair arranged for casual conversation.",
+      "objects": [
+        "obj14",
+        "obj16",
+        "obj10",
+        "obj19",
+        "obj6"
+      ]
+    },
+    "1": {
+      "tag": "workspace",
+      "description": "A functional work zone composed of a desk, a board, and a nearby armchair with a small prop on the desk.",
+      "objects": [
+        "obj20",
+        "obj5",
+        "obj11",
+        "obj12"
+      ]
+    },
+    "2": {
+      "tag": "wastebin",
+      "description": "A designated area containing a single trash bin for disposal purposes.",
+      "objects": [
+        "obj15"
+      ]
+    },
+    "3": {
+      "tag": "stand",
+      "description": "An isolated elevated prop, positioned separately from other furniture.",
+      "objects": [
+        "obj21"
+      ]
+    },
+    "4": {
+      "tag": "artwork",
+      "description": "A duo of framed pictures hung together as a decorative pairing.",
+      "objects": [
+        "obj18",
+        "obj17"
+      ]
     }
+  }
 }
