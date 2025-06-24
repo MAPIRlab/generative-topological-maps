@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import argparse
-import json
 import os
 import sys
 from typing import Any, Dict, List
@@ -44,14 +43,11 @@ def main_relationships(args):
     # For each map, infer relations and aggregate into a single JSON
     for semantic_map in semantic_maps:
         base_dir = os.path.join(
-            constants.RESULTS_FOLDER_PATH,
-            "relationships_results",
+            constants.RELATIONSHIPS_RESULTS_FOLDER_PATH,
             args.method,
             semantic_map.semantic_map_id
         )
-        out_path = os.path.join(base_dir, "relationships.json")
-        # Ensure output directory exists
-        file_utils.create_directories_for_file(out_path)
+        relationships_file_path = os.path.join(base_dir, "relationships.json")
 
         all_relationships: List[Dict[str, Any]] = []
 
@@ -66,7 +62,7 @@ def main_relationships(args):
         for obj1, obj2 in tqdm.tqdm(
             pairs, desc=f"Processing pairs for map {semantic_map.semantic_map_id}"
         ):
-            pair_dir = os.path.join(
+            pair_dir_path = os.path.join(
                 base_dir, f"{obj1.object_id}_{obj2.object_id}")
 
             prompt_data = {
@@ -81,92 +77,63 @@ def main_relationships(args):
             }
 
             if args.method == constants.METHOD_LLM:
-                # LLM-only prompt
+                # Build prompt and conversation history
                 prompt_obj = RelationshipInfererPrompt(**prompt_data)
                 conv_his = ConversationHistory.create_from_user_message(
                     prompt_obj.get_prompt_text()
                 )
 
                 if args.llm_request:
+                    # Perform LLM request
                     response = llm.generate_json(
                         conversation_history=conv_his, retries=3
                     )
-                    print(response)
                     all_relationships.extend(response)
 
                     # Update relationships.json on disk
-                    with open(out_path, "w") as f:
-                        json.dump(
-                            {"relationships": all_relationships}, f, indent=2)
-                    print(
-                        f"[{semantic_map.semantic_map_id}] relationships.json updated "
-                        f"({len(all_relationships)} total)"
-                    )
+                    _update_relationships_file(
+                        relationships_file_path, all_relationships)
 
                 # Save prompt text
-                prompt_path = os.path.join(pair_dir, "prompt.txt")
-                file_utils.create_directories_for_file(prompt_path)
-                file_utils.save_text_to_file(
-                    prompt_obj.get_prompt_text(), prompt_path
-                )
-                print(
-                    f"[{semantic_map.semantic_map_id}] Prompt saved to {prompt_path}")
+                _save_prompt(prompt_obj,
+                             prompt_path=os.path.join(pair_dir_path, "prompt.txt"))
 
             elif args.method == constants.METHOD_LVLM:
-                # LVLM prompt with images
-                prompt_obj = RelationshipInfererWithImagePrompt(**prompt_data)
-
                 # Collect a few representative frames
                 frames_ids = semantic_map.get_common_frames_by_pixel_count(
                     obj1.object_id, obj2.object_id
                 )
                 top_frames_ids = frames_ids[: args.num_images]
-                frames_imgs = [
-                    semantic_map.get_frame_image(frame_id)
-                    for frame_id in top_frames_ids
+                top_frames_imgs = [
+                    semantic_map.get_frame_image(f_id)
+                    for f_id in top_frames_ids
                 ]
 
-                # Build multimodal conversation
+                # Build multimodal prompt and conversation history
+                prompt_obj = RelationshipInfererWithImagePrompt(**prompt_data)
                 conv_his = ConversationHistory()
                 conv_his.append_user_message(prompt_obj.get_prompt_text())
-                for frame_img in frames_imgs:
+                for frame_img in top_frames_imgs:
                     conv_his.append_user_image(frame_img)
 
                 if args.llm_request:
+                    # Perform LVLM request
                     response = llm.generate_json(
                         conversation_history=conv_his, retries=3
                     )
-                    print(response)
                     all_relationships.extend(response)
 
                     # Update relationships.json on disk
-                    with open(out_path, "w") as f:
-                        json.dump(
-                            {"relationships": all_relationships}, f, indent=2)
-                    print(
-                        f"[{semantic_map.semantic_map_id}] relationships.json updated "
-                        f"({len(all_relationships)} total)"
-                    )
+                    _update_relationships_file(
+                        relationships_file_path, all_relationships)
 
                 # Save prompt text
-                prompt_path = os.path.join(pair_dir, "prompt.txt")
-                file_utils.create_directories_for_file(prompt_path)
-                file_utils.save_text_to_file(
-                    prompt_obj.get_prompt_text(), prompt_path
-                )
-                print(
-                    f"[{semantic_map.semantic_map_id}] Prompt saved to {prompt_path}")
+                _save_prompt(prompt_obj,
+                             prompt_path=os.path.join(pair_dir_path, "prompt.txt"))
 
                 # Save image frames
-                for rank, (frame_id, frame_img) in enumerate(
-                    zip(top_frames_ids, frames_imgs), start=1
-                ):
-                    filename = f"{rank:02d}_{frame_id}.png"
-                    print(
-                        f"[{semantic_map.semantic_map_id}] Saving frame "
-                        f"{frame_id} as {filename}"
-                    )
-                    frame_img.save(os.path.join(pair_dir, filename))
+                _save_images(pair_dir_path,
+                             top_frames_ids, top_frames_imgs)
 
         if args.llm_request:
             print(
@@ -175,6 +142,38 @@ def main_relationships(args):
             )
 
     print("[main_relationships] Done.")
+
+
+def _save_prompt(prompt_obj, prompt_path):
+    file_utils.create_directories_for_file(prompt_path)
+    file_utils.save_text_to_file(
+        prompt_obj.get_prompt_text(), prompt_path
+    )
+    print(
+        f"Prompt saved to {prompt_path}")
+
+
+def _save_images(pair_dir_path, top_frames_ids, frames_imgs):
+    for rank, (frame_id, frame_img) in enumerate(
+        zip(top_frames_ids, frames_imgs), start=1
+    ):
+        image_file_name = f"{rank:02d}_{frame_id}.png"
+        image_file_path = os.path.join(pair_dir_path, image_file_name)
+        file_utils.create_directories_for_file(image_file_path)
+        print(
+            f"Saving frame {frame_id} as {image_file_name}"
+        )
+        frame_img.save(image_file_path)
+
+
+def _update_relationships_file(relationships_file_path, all_relationships):
+    file_utils.create_directories_for_file(
+        relationships_file_path)
+    file_utils.save_dict_to_json_file(
+        {"relationships": all_relationships}, relationships_file_path)
+    print(
+        f"relationships.json updated ({len(all_relationships)} total)"
+    )
 
 
 if __name__ == '__main__':
@@ -220,7 +219,9 @@ if __name__ == '__main__':
     # Redirect logs if requested
     if args.persist_log:
         log_path = os.path.join(
-            constants.RESULTS_FOLDER_PATH, "relationships_log.txt"
+            constants.RELATIONSHIPS_RESULTS_FOLDER_PATH,
+            args.method,
+            "log.txt"
         )
         file_utils.create_directories_for_file(log_path)
         sys.stdout = open(log_path, 'w')
