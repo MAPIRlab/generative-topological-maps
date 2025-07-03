@@ -122,6 +122,16 @@ class ConversationHistory:
 
         return system_instruction, contents
 
+    def get_last_user_message(self) -> str:
+        """
+        Returns the content of the last user message in the conversation history.
+        If no user message exists, returns an empty string.
+        """
+        for msg in reversed(self.conversation_history_list):
+            if msg[KEY_ROLE] == ROLE_USER:
+                return msg.get(KEY_CONTENT, "")
+        return ""
+
     def to_serializable(self) -> List[dict]:
         """
         Return a JSON-serializable version of the history, where:

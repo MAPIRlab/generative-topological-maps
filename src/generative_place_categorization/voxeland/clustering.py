@@ -3,6 +3,8 @@ from typing import Dict, List, Optional
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import numpy as np
+import open3d as o3d
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from sklearn.metrics import (
@@ -101,7 +103,7 @@ class Clustering:
 
         return {
             "ARI": adjusted_rand_score(ground_truth_labels, predicted_labels),
-            "NMI": normalized_mutual_info_score(ground_truth_labels, predicted_labels),
+            "NMI": normalized_mutual_info_score(ground_truth_labels, predicted_labels, average_method="geometric"),
             "V-Measure": v_measure_score(ground_truth_labels, predicted_labels),
             "FMI": fowlkes_mallows_score(ground_truth_labels, predicted_labels),
         }
@@ -164,6 +166,8 @@ class Clustering:
                 else:
                     objects.append(SemanticMapObject(object_id,
                                                      data=None))
+                    print(
+                        f"[Clustering.load_from_json] Warning: No semantic map provided, using incomplete object {object_id}.")
 
             clusters.append(Cluster(cluster_id=int(cluster_id),
                                     objects=objects,
@@ -246,9 +250,9 @@ class Clustering:
             plt.text(cluster_center[0], cluster_center[1], cluster_label_text,
                      fontsize=16, ha='center', va='center', color='black')
 
-            if cluster.description:
-                plt.text(cluster_center[0], cluster_center[1] - 0.25, cluster.description,
-                         fontsize=11, ha='center', va='center', color='black')
+            # if cluster.description:
+            #     plt.text(cluster_center[0], cluster_center[1] - 0.25, cluster.description[:20] + "...",
+            #              fontsize=11, ha='center', va='center', color='black')
 
         # # Draw lines between cluster centers with semantic similarity annotations
         # for i, cluster_a in enumerate(self.clusters):
@@ -380,6 +384,98 @@ class Clustering:
             plt.close()
         else:
             plt.show()
+
+    def visualize_in_point_cloud(
+        self,
+        ply_path: str,
+        semantic_map: Optional[SemanticMap] = None,
+        show_axes: bool = False
+    ):
+        """
+        Displays the point cloud from a PLY file and overlays each object’s
+        bounding box as a thick wireframe, with its object_id shown at its center
+        (using Text3D if available). WASD keys pan the view.
+
+        :param ply_path: Path to the .ply point cloud file.
+        :param semantic_map: (Optional) to resolve incomplete bbox data.
+        :param show_axes: If True, adds a coordinate frame at the origin.
+        """
+        # 1) Load the point cloud
+        pcd = o3d.io.read_point_cloud(ply_path)
+
+        # 2) Color per cluster
+        n_clusters = len(self.clusters)
+        norm = mcolors.Normalize(vmin=0, vmax=max(1, n_clusters - 1))
+        cmap = cm.get_cmap("tab10", n_clusters)
+        cluster_colors = [tuple(cmap(norm(i))[:3]) for i in range(n_clusters)]
+
+        # 3) Build geometry list + collect (center, object_id)
+        geometries = [pcd]
+        labels = []
+        for idx, (cluster, color) in enumerate(zip(self.clusters, cluster_colors)):
+            for obj in cluster.objects:
+                complete = semantic_map.find_object(
+                    obj.object_id) if semantic_map else obj
+                center = np.array(complete.bbox_center)
+                size = np.array(complete.bbox_size)
+
+                # create AABB → LineSet
+                aabb = o3d.geometry.AxisAlignedBoundingBox(
+                    center - size/2, center + size/2
+                )
+                ls = o3d.geometry.LineSet.create_from_axis_aligned_bounding_box(
+                    aabb)
+                ls.paint_uniform_color(color)
+                geometries.append(ls)
+
+                labels.append((center, complete.object_id))
+
+        # 4) Optional axes
+        if show_axes:
+            geometries.append(
+                o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5)
+            )
+
+        # 5) Visualizer setup
+        vis = o3d.visualization.VisualizerWithKeyCallback()
+        vis.create_window("PointCloud + Object IDs", width=1024, height=768)
+        opt = vis.get_render_option()
+        opt.line_width = 5
+
+        for g in geometries:
+            vis.add_geometry(g)
+
+        # 6) Add 3D text labels if supported
+        try:
+            # available in Open3D >= 0.17
+            for center, obj_id in labels:
+                text3d = o3d.geometry.Text3D(
+                    text=str(obj_id),
+                    position=center,
+                    direction=(0.0, 0.0, 1.0),
+                    font_size=20,
+                    density=1.0
+                )
+                text3d.paint_uniform_color((1.0, 1.0, 1.0))  # white
+                vis.add_geometry(text3d)
+        except (AttributeError, TypeError):
+            print(
+                "[Warning] Text3D not available in this Open3D build—object IDs will not be shown in 3D.")
+
+        # 7) WASD panning callbacks
+        def move(vis, dx, dy):
+            ctr = vis.get_view_control()
+            ctr.translate(dx, dy)
+            return False
+
+        vis.register_key_callback(ord("W"), lambda v: move(v,  0, -10))
+        vis.register_key_callback(ord("S"), lambda v: move(v,  0,  10))
+        vis.register_key_callback(ord("A"), lambda v: move(v, -10,  0))
+        vis.register_key_callback(ord("D"), lambda v: move(v,  10,  0))
+
+        # 8) Run
+        vis.run()
+        vis.destroy_window()
 
     def __repr__(self):
         return f"Clustering(num_clusters={self.get_cluster_count()}, total_objects={self.get_total_object_count()})"

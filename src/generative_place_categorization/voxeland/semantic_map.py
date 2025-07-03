@@ -2,6 +2,7 @@ import json
 import os
 from typing import List, Optional, Tuple
 
+import numpy as np
 from PIL import Image
 
 from generative_place_categorization.utils import file_utils
@@ -67,8 +68,11 @@ class SemanticMap:
         include_all_classes: bool = False
     ) -> List[Tuple[SemanticMapObject, SemanticMapObject]]:
         """
-        Returns a list of object pairs whose bbox-center distance is
-        less than or equal to the given threshold.
+        Returns a list of object pairs whose bounding boxes are closer
+        than or equal to the given threshold_distance.
+
+        The distance is computed as the minimal separation between
+        their axis-aligned bounding boxes (AABB).
         """
         objects = self.get_all_objects(include_all_classes)
         pairs: List[Tuple[SemanticMapObject, SemanticMapObject]] = []
@@ -76,7 +80,22 @@ class SemanticMap:
             for j in range(i + 1, len(objects)):
                 obj1 = objects[i]
                 obj2 = objects[j]
-                dist = obj1.distance_to(obj2)
+
+                # Get centers and sizes
+                c1 = np.asarray(obj1.bbox_center)  # [x, y, z]
+                s1 = np.asarray(obj1.bbox_size)    # [sx, sy, sz]
+                c2 = np.asarray(obj2.bbox_center)  # [x, y, z]
+                s2 = np.asarray(obj2.bbox_size)    # [sx, sy, sz]
+
+                # Distance along each axis:
+                d = np.abs(c1 - c2) - (s1 / 2.0) - (s2 / 2.0)
+
+                # Distance for each axis is clipped to be at least 0
+                d = np.maximum(d, 0.0)
+
+                # Final distance is the Euclidean distance
+                dist = np.linalg.norm(d)
+
                 if dist <= threshold_distance:
                     pairs.append((obj1, obj2))
         return pairs

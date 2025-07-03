@@ -16,6 +16,9 @@ from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
 from generative_place_categorization.llm.gemini_provider import GeminiProvider
+from generative_place_categorization.llm.huggingface_large_language_model import (
+    HuggingfaceLargeLanguageModel,
+)
 from generative_place_categorization.prompt.conversation_history import (
     ConversationHistory,
 )
@@ -119,13 +122,15 @@ def main_segmentation(args):
     openai_embedder = OpenAIEmbedder()
     sbert_embedder = SentenceBERTEmbedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
-    llm = GeminiProvider(
-        credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
-        project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
-        project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
-        model_name=GeminiProvider.GEMINI_2_0_FLASH,
-        cache_path=constants.LLM_CACHE_FILE_PATH
-    )
+    # llm = GeminiProvider(
+    #     credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
+    #     project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
+    #     project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
+    #     model_name=GeminiProvider.GEMINI_2_0_FLASH,
+    #     cache_path=constants.LLM_CACHE_FILE_PATH
+    # )
+    llm = HuggingfaceLargeLanguageModel(
+        model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
 
     # Engines
     semantic_descriptor_engine = SemanticDescriptorEngine(
@@ -171,7 +176,11 @@ def main_segmentation(args):
 
             if args.llm_request:
                 # Perform LLM request
-                response = llm.generate_json(conversation_history, retries=10)
+                # response = llm.generate_json(conversation_history, retries=10)
+                response = file_utils.load_json(
+                    os.path.join(get_results_path_for_method(args),
+                                 semantic_map.semantic_map_id,
+                                 "clustering.json"))
 
                 # Assemble clustering from response
                 mixed_clustering = Clustering([])
@@ -300,7 +309,7 @@ def main_categorization(args):
         credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
         project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
         project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
-        model_name=GeminiProvider.GEMINI_2_0_FLASH,
+        model_name=GeminiProvider.GEMINI_1_5_PRO,
         cache_path=constants.LLM_CACHE_FILE_PATH
     )
 
@@ -350,7 +359,7 @@ def main_categorization(args):
                 prompt_text_path = os.path.join(constants.PLACES_RESULTS_FOLDER_PATH,
                                                 method,
                                                 semantic_map.semantic_map_id,
-                                                f"cluster_{cluster.cluster_id}_prompt.txt")
+                                                f"place_{cluster.cluster_id}_categorization_prompt.txt")
                 file_utils.create_directories_for_file(prompt_text_path)
                 file_utils.save_text_to_file(
                     place_categorizer_prompt.get_prompt_text(), prompt_text_path)

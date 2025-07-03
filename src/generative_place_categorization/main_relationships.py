@@ -41,7 +41,7 @@ def main_relationships(args):
         semantic_maps.append(sm)
 
     # For each map, infer relations and aggregate into a single JSON
-    for semantic_map in semantic_maps:
+    for semantic_map in semantic_maps[:args.number_maps]:
         base_dir = os.path.join(
             constants.RELATIONSHIPS_RESULTS_FOLDER_PATH,
             args.method,
@@ -68,12 +68,13 @@ def main_relationships(args):
             prompt_data = {
                 "object1_id": obj1.object_id,
                 "object1_name": obj1.get_most_probable_class(),
-                "object1_centroid": str(obj1.bbox_center),
-                "object1_size": str(obj1.bbox_size),
+                "object1_centroid": str([round(v, 2) for v in obj1.bbox_center]),
+                "object1_size": str([round(v, 2) for v in obj1.bbox_size]),
+
                 "object2_id": obj2.object_id,
                 "object2_name": obj2.get_most_probable_class(),
-                "object2_centroid": str(obj2.bbox_center),
-                "object2_size": str(obj2.bbox_size),
+                "object2_centroid": str([round(v, 2) for v in obj2.bbox_center]),
+                "object2_size": str([round(v, 2) for v in obj2.bbox_size]),
             }
 
             if args.method == constants.METHOD_LLM:

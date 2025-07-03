@@ -1,9 +1,6 @@
 import argparse
 import os
 
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
-
 from generative_place_categorization import constants
 from generative_place_categorization.utils import file_utils
 from generative_place_categorization.voxeland.clustering import Clustering
@@ -14,9 +11,6 @@ from generative_place_categorization.voxeland.semantic_map_object import (
 
 
 def main(args):
-    # Load clustering
-    clustering = Clustering.load_from_json(args.clustering_file)
-
     # Load semantic map
     semantic_map_dict = file_utils.load_json(
         os.path.join(constants.SEMANTIC_MAPS_FOLDER_PATH,
@@ -30,23 +24,28 @@ def main(args):
         ],
     )
 
-    # Generate unique colors for each cluster
-    norm = mcolors.Normalize(vmin=0, vmax=len(clustering.clusters) - 1)
-    colormap = cm.get_cmap("tab10", len(clustering.clusters))
-    colors = [colormap(norm(i)) for i in range(len(clustering.clusters))]
+    # Load clustering
+    clustering = Clustering.load_from_json(
+        args.clustering_file, semantic_map=semantic_map)
 
-    # Plot based on dimensions
-    if args.dimensions == 2:
+    # Plot based on visualization method
+    if args.visualization_method == constants.VISUALIZATION_METHOD_2D:
         clustering.visualize_2D(
-            title="2D Cluster Visualization",
+            title="",
             file_path=args.output_file,
             semantic_map=semantic_map
         )
-    elif args.dimensions == 3:
+    elif args.visualization_method == constants.VISUALIZATION_METHOD_3D:
         clustering.visualize_3D(
-            title="3D Cluster Visualization",
+            title="",
             file_path=args.output_file,
             semantic_map=semantic_map
+        )
+    elif args.visualization_method == constants.VISUALIZATION_METHOD_POINT_CLOUD:
+        clustering.visualize_in_point_cloud(
+            ply_path=args.ply_path,
+            semantic_map=semantic_map,
+            show_axes=True
         )
     else:
         raise ValueError("Only 2D and 3D visualizations are supported.")
@@ -69,12 +68,18 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "-d",
-        "--dimensions",
-        help="Number of dimensions for visualization (2 or 3).",
-        type=int,
-        choices=[2, 3],
+        "-v",
+        "--visualization-method",
+        choices=[constants.VISUALIZATION_METHOD_2D, constants.VISUALIZATION_METHOD_3D,
+                 constants.VISUALIZATION_METHOD_POINT_CLOUD],
         required=True,
+        help="Method of visualization: 2D, 3D, or point Cloud.",
+    )
+    parser.add_argument(
+        "-p",
+        "--ply-path",
+        help="Path to the PLY file for point cloud visualization. Required if visualization method is 'point_cloud'.",
+        required=False
     )
     parser.add_argument(
         "-o",
@@ -83,4 +88,9 @@ if __name__ == "__main__":
         required=False,
     )
     args = parser.parse_args()
+
+    if args.visualization_method == constants.VISUALIZATION_METHOD_POINT_CLOUD and not args.ply_path:
+        parser.error(
+            "The --ply-path argument is required when using point cloud visualization.")
+
     main(args)

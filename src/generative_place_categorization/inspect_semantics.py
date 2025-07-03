@@ -17,7 +17,9 @@ from generative_place_categorization.embedding.roberta_embedder import RoBERTaEm
 from generative_place_categorization.embedding.sentence_embedder import (
     SentenceBERTEmbedder,
 )
-from generative_place_categorization.llm._large_language_model import LargeLanguageModel
+from generative_place_categorization.llm.hf_large_language_model import (
+    HuggingFaceLargeLanguageModel,
+)
 from generative_place_categorization.semantic.dimensionality_reduction_engine import (
     DimensionalityReductionEngine,
 )
@@ -253,7 +255,7 @@ if __name__ == "__main__":
     openai_embedder = OpenAIEmbedder()
     sbert_embedder = SentenceBERTEmbedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
-    deepseek_llm = LargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-                                      cache_path=constants.LLM_CACHE_FILE_PATH)
+    deepseek_llm = HuggingFaceLargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+                                                 cache_path=constants.LLM_CACHE_FILE_PATH)
 
     main(args, object_set)

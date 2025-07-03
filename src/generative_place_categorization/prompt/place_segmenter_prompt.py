@@ -59,7 +59,7 @@ Return exactly this JSON structure, listing each place with a short tag, a human
 - objects: list of object IDs in that place
 </OUTPUT_FORMAT>
 
-<TASK>
+<TASK> 
 Classify the following semantic_map into places using the rules above. Only output the final JSON in the specified format.
 
 {{semantic_map}}
