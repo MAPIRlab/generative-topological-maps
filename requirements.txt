@@ -1,4 +1,4 @@
-transformers==4.50.0
+transformers==4.53.1
 torch==2.6.0
 pillow==10.3.0
 scikit-learn==1.6.1

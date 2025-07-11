@@ -73,3 +73,11 @@ class SentenceBERTEmbedder:
             sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
 
         return sentence_embeddings.cpu().numpy().tolist()[0]
+
+
+if __name__ == "__main__":
+
+    embedder = SentenceBERTEmbedder(model_id="Qwen/Qwen3-Embedding-8B")
+    sentence = "This is a test sentence."
+    embedding = embedder.embed_text(sentence)
+    print(f"Embedding for '{sentence}': {embedding}")
