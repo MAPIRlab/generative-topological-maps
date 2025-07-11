@@ -3,16 +3,10 @@ import torch.nn.functional as F
 from transformers import AutoModel, AutoTokenizer
 
 
-class SentenceBERTEmbedder:
-    def __init__(self, model_id="sentence-transformers/all-mpnet-base-v2", device=None):
-        """
-        Initializes the SentenceBERTEmbedder with lazy loading for the model and tokenizer.
-
-        Args:
-            model_name (str): Name of the pretrained Sentence-BERT model.
-            device (str, optional): Device to run the model on ('cuda' or 'cpu'). Defaults to None.
-        """
-        self.device = device if device else (
+class SentenceEmbedder:
+    def __init__(self, model_id, device=None):
+        """Initializes the SentenceEmbedder with lazy loading for the model and tokenizer."""
+        self.device = device or (
             'cuda' if torch.cuda.is_available() else 'cpu')
         self.model_id = model_id
         self.tokenizer = None
@@ -27,57 +21,26 @@ class SentenceBERTEmbedder:
                 self.model_id).to(self.device)
             self.model.eval()
 
-    def mean_pooling(self, model_output, attention_mask):
-        """
-        Applies mean pooling to get a fixed-size sentence embedding.
-
-        Args:
-            model_output (torch.Tensor): The model output containing token embeddings.
-            attention_mask (torch.Tensor): The attention mask to account for padding.
-
-        Returns:
-            torch.Tensor: Sentence embedding after mean pooling.
-        """
-        token_embeddings = model_output.last_hidden_state  # Extract token embeddings
+    def _mean_pooling(self, model_output, attention_mask):
+        """Applies mean pooling to get a fixed-size sentence embedding."""
+        token_embeddings = model_output.last_hidden_state
         input_mask_expanded = attention_mask.unsqueeze(
             -1).expand(token_embeddings.size()).float()
-        return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+        return (token_embeddings * input_mask_expanded).sum(dim=1) / torch.clamp(input_mask_expanded.sum(dim=1), min=1e-9)
 
     def embed_text(self, sentence: str, normalize=True):
-        """
-        Computes sentence embeddings with optional normalization.
-
-        Args:
-            sentences (str): A single sentence or a list of sentences.
-            normalize (bool): Whether to normalize embeddings (L2 norm). Defaults to True.
-
-        Returns:
-            list: A list of sentence embeddings.
-        """
+        """Computes sentence embeddings with optional normalization."""
         self._initialize_model_and_tokenizer()
-
-        # Tokenize input
-        encoded_input = self.tokenizer(
+        encoded = self.tokenizer(
             [sentence], padding=True, truncation=True, return_tensors='pt').to(self.device)
 
-        # Compute token embeddings
         with torch.no_grad():
-            model_output = self.model(**encoded_input)
+            model_output = self.model(**encoded)
 
-        # Apply mean pooling
-        sentence_embeddings = self.mean_pooling(
-            model_output, encoded_input['attention_mask'])
+        sentence_embedding = self._mean_pooling(
+            model_output, encoded['attention_mask'])
 
-        # Normalize embeddings if required
         if normalize:
-            sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
+            sentence_embedding = F.normalize(sentence_embedding, p=2, dim=1)
 
-        return sentence_embeddings.cpu().numpy().tolist()[0]
-
-
-if __name__ == "__main__":
-
-    embedder = SentenceBERTEmbedder(model_id="Qwen/Qwen3-Embedding-8B")
-    sentence = "This is a test sentence."
-    embedding = embedder.embed_text(sentence)
-    print(f"Embedding for '{sentence}': {embedding}")
+        return sentence_embedding.cpu().numpy().tolist()[0]

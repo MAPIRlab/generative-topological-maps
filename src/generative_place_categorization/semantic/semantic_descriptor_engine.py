@@ -4,8 +4,8 @@ from generative_place_categorization import constants
 from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
 from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
 from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
-from generative_place_categorization.embedding.sentence_embedder import (
-    SentenceBERTEmbedder,
+from generative_place_categorization.embedding.all_mpnet_base_v2_embedder import (
+    AllMpnetBaseV2Embedder,
 )
 from generative_place_categorization.llm.large_language_model import LargeLanguageModel
 from generative_place_categorization.prompt.conversation_history import (
@@ -25,7 +25,7 @@ class SemanticDescriptorEngine:
                  bert_embedder: BERTEmbedder,
                  roberta_embedder: RoBERTaEmbedder,
                  openai_embedder: OpenAIEmbedder,
-                 sbert_embedder: SentenceBERTEmbedder,
+                 sbert_embedder: AllMpnetBaseV2Embedder,
                  llm: LargeLanguageModel = None):
         """
         Initialize the SemanticDescriptorEngine with embedding models.

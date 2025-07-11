@@ -12,8 +12,8 @@ from tqdm import tqdm
 from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
 from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
 from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
-from generative_place_categorization.embedding.sentence_embedder import (
-    SentenceBERTEmbedder,
+from generative_place_categorization.embedding.all_mpnet_base_v2_embedder import (
+    AllMpnetBaseV2Embedder,
 )
 from generative_place_categorization.llm.gemini_provider import GeminiProvider
 from generative_place_categorization.llm.huggingface_large_language_model import (
@@ -120,7 +120,7 @@ def main_segmentation(args):
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceBERTEmbedder(
+    sbert_embedder = AllMpnetBaseV2Embedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
     # llm = GeminiProvider(
     #     credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,

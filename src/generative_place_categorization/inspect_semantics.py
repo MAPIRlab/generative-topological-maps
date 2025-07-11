@@ -14,8 +14,8 @@ from generative_place_categorization import constants
 from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
 from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
 from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
-from generative_place_categorization.embedding.sentence_embedder import (
-    SentenceBERTEmbedder,
+from generative_place_categorization.embedding.all_mpnet_base_v2_embedder import (
+    AllMpnetBaseV2Embedder,
 )
 from generative_place_categorization.llm.hf_large_language_model import (
     HuggingFaceLargeLanguageModel,
@@ -253,7 +253,7 @@ if __name__ == "__main__":
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = SentenceBERTEmbedder(
+    sbert_embedder = AllMpnetBaseV2Embedder(
         model_id="sentence-transformers/all-mpnet-base-v2")
     deepseek_llm = HuggingFaceLargeLanguageModel(model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
                                                  cache_path=constants.LLM_CACHE_FILE_PATH)
