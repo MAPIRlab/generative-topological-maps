@@ -7,6 +7,7 @@ import numpy as np
 import open3d as o3d
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from scipy.spatial.transform import Rotation as R
 from sklearn.metrics import (
     adjusted_rand_score,
     fowlkes_mallows_score,
@@ -388,86 +389,120 @@ class Clustering:
     def visualize_in_point_cloud(
         self,
         ply_path: str,
-        semantic_map: Optional[SemanticMap] = None,
-        show_axes: bool = False
+        semantic_map=None,
+        show_axes: bool = False,
+        edge_radius: float = 0.02,
+        cylinder_resolution: int = 12
     ):
         """
         Displays the point cloud from a PLY file and overlays each object’s
-        bounding box as a thick wireframe, with its object_id shown at its center
-        (using Text3D if available). WASD keys pan the view.
-
-        :param ply_path: Path to the .ply point cloud file.
-        :param semantic_map: (Optional) to resolve incomplete bbox data.
-        :param show_axes: If True, adds a coordinate frame at the origin.
+        bounding box as thick cylinders along each edge, with its object_id shown
+        at its center (using Text3D if available). WASD keys pan the view.
         """
-        # 1) Load the point cloud
+        def cylinder_between(p0, p1, radius, resolution, color):
+            """Create a cylinder mesh between p0 and p1."""
+            axis = p1 - p0
+            length = np.linalg.norm(axis)
+            if length == 0:
+                return None
+            direction = axis / length
+
+            # find rotation from default Z to our edge direction
+            z_axis = np.array([0, 0, 1.0])
+            rot_axis = np.cross(z_axis, direction)
+            if np.allclose(rot_axis, 0):
+                R_mat = np.eye(3)
+            else:
+                angle = np.arccos(
+                    np.clip(np.dot(z_axis, direction), -1.0, 1.0))
+                R_mat = R.from_rotvec(
+                    rot_axis / np.linalg.norm(rot_axis) * angle).as_matrix()
+
+            cyl = o3d.geometry.TriangleMesh.create_cylinder(
+                radius=radius, height=length, resolution=resolution)
+            cyl.rotate(R_mat, center=(0, 0, 0))
+            cyl.translate(p0 + axis * 0.5)
+            cyl.paint_uniform_color(color)
+            return cyl
+
+        # 1) Load point cloud
         pcd = o3d.io.read_point_cloud(ply_path)
 
-        # 2) Color per cluster
-        n_clusters = len(self.clusters)
-        norm = mcolors.Normalize(vmin=0, vmax=max(1, n_clusters - 1))
+        # 2) Cluster colors
+        n_clusters = max(1, len(self.clusters))
+        norm = mcolors.Normalize(vmin=0, vmax=n_clusters - 1)
         cmap = cm.get_cmap("tab10", n_clusters)
         cluster_colors = [tuple(cmap(norm(i))[:3]) for i in range(n_clusters)]
 
-        # 3) Build geometry list + collect (center, object_id)
+        # 3) Build geometry list + labels
         geometries = [pcd]
         labels = []
+        EDGE_PAIRS = [
+            (0, 1), (1, 2), (2, 3), (3, 0),  # bottom
+            (4, 5), (5, 6), (6, 7), (7, 4),  # top
+            (0, 4), (1, 5), (2, 6), (3, 7)   # verticals
+        ]
+
         for idx, (cluster, color) in enumerate(zip(self.clusters, cluster_colors)):
             for obj in cluster.objects:
                 complete = semantic_map.find_object(
                     obj.object_id) if semantic_map else obj
-                center = np.array(complete.bbox_center)
-                size = np.array(complete.bbox_size)
+                ctr = np.array(complete.bbox_center)
+                sz = np.array(complete.bbox_size) / 2.0
 
-                # create AABB → LineSet
-                aabb = o3d.geometry.AxisAlignedBoundingBox(
-                    center - size/2, center + size/2
-                )
-                ls = o3d.geometry.LineSet.create_from_axis_aligned_bounding_box(
-                    aabb)
-                ls.paint_uniform_color(color)
-                geometries.append(ls)
+                # 8 corners of the AABB
+                corners = np.array([
+                    ctr + [-sz[0], -sz[1], -sz[2]],
+                    ctr + [sz[0], -sz[1], -sz[2]],
+                    ctr + [sz[0],  sz[1], -sz[2]],
+                    ctr + [-sz[0],  sz[1], -sz[2]],
+                    ctr + [-sz[0], -sz[1],  sz[2]],
+                    ctr + [sz[0], -sz[1],  sz[2]],
+                    ctr + [sz[0],  sz[1],  sz[2]],
+                    ctr + [-sz[0],  sz[1],  sz[2]],
+                ])
 
-                labels.append((center, complete.object_id))
+                # add a cylinder for each edge
+                for i, j in EDGE_PAIRS:
+                    cyl = cylinder_between(corners[i], corners[j],
+                                           radius=edge_radius,
+                                           resolution=cylinder_resolution,
+                                           color=color)
+                    if cyl is not None:
+                        geometries.append(cyl)
+
+                labels.append((ctr, complete.object_id))
 
         # 4) Optional axes
         if show_axes:
             geometries.append(
-                o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5)
-            )
+                o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.5))
 
-        # 5) Visualizer setup
+        # 5) Visualizer
         vis = o3d.visualization.VisualizerWithKeyCallback()
         vis.create_window("PointCloud + Object IDs", width=1024, height=768)
-        opt = vis.get_render_option()
-        opt.line_width = 5
+        for geo in geometries:
+            vis.add_geometry(geo)
 
-        for g in geometries:
-            vis.add_geometry(g)
-
-        # 6) Add 3D text labels if supported
+        # 6) 3D Text labels (if supported)
         try:
-            # available in Open3D >= 0.17
-            for center, obj_id in labels:
+            for ctr, obj_id in labels:
                 text3d = o3d.geometry.Text3D(
                     text=str(obj_id),
-                    position=center,
+                    position=ctr,
                     direction=(0.0, 0.0, 1.0),
-                    font_size=20,
-                    density=1.0
+                    font_size=20, density=1.0
                 )
-                text3d.paint_uniform_color((1.0, 1.0, 1.0))  # white
+                text3d.paint_uniform_color((1.0, 1.0, 1.0))
                 vis.add_geometry(text3d)
-        except (AttributeError, TypeError):
-            print(
-                "[Warning] Text3D not available in this Open3D build—object IDs will not be shown in 3D.")
+        except Exception:
+            print("[Warning] Text3D not available—skipping object IDs.")
 
-        # 7) WASD panning callbacks
+        # 7) WASD panning
         def move(vis, dx, dy):
             ctr = vis.get_view_control()
             ctr.translate(dx, dy)
             return False
-
         vis.register_key_callback(ord("W"), lambda v: move(v,  0, -10))
         vis.register_key_callback(ord("S"), lambda v: move(v,  0,  10))
         vis.register_key_callback(ord("A"), lambda v: move(v, -10,  0))

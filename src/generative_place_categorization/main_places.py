@@ -9,12 +9,12 @@ from dotenv import load_dotenv
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
-from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
-from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
-from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
 from generative_place_categorization.embedding.all_mpnet_base_v2_embedder import (
     AllMpnetBaseV2Embedder,
 )
+from generative_place_categorization.embedding.bert_embedder import BERTEmbedder
+from generative_place_categorization.embedding.openai_embedder import OpenAIEmbedder
+from generative_place_categorization.embedding.roberta_embedder import RoBERTaEmbedder
 from generative_place_categorization.llm.gemini_provider import GeminiProvider
 from generative_place_categorization.llm.huggingface_large_language_model import (
     HuggingfaceLargeLanguageModel,
@@ -45,10 +45,15 @@ def get_results_path_for_method(args):
     base_path = os.path.join(constants.PLACES_RESULTS_FOLDER_PATH)
     method_specific_path = f"{args.method}"
 
+    def clustering_suffix():
+        suffix = f"_ca{args.clustering_algorithm}"
+        if args.clustering_algorithm != "hdbscan":
+            suffix += f"_e{args.eps}_m{args.min_samples}"
+        return suffix
+
     if args.method in (constants.METHOD_BERT_POST, constants.METHOD_LLM_SBERT_POST):
         method_specific_path += (
-            f"_ca{args.clustering_algorithm}"
-            f"_e{args.eps}_m{args.min_samples}"
+            clustering_suffix() +
             f"_w{args.semantic_weight}"
             f"_r{args.dimensionality_reductor}"
             f"_d{args.semantic_dimension}"
@@ -57,14 +62,10 @@ def get_results_path_for_method(args):
             f"_sst_{args.split_semantic_threshold}"
         )
     elif args.method == constants.METHOD_GEOMETRIC:
-        method_specific_path += (
-            f"_ca{args.clustering_algorithm}"
-            f"_e{args.eps}_m{args.min_samples}"
-        )
+        method_specific_path += clustering_suffix()
     elif args.method != constants.METHOD_LLM:
         method_specific_path += (
-            f"_ca{args.clustering_algorithm}"
-            f"_e{args.eps}_m{args.min_samples}"
+            clustering_suffix() +
             f"_w{args.semantic_weight}"
             f"_r{args.dimensionality_reductor}"
             f"_d{args.semantic_dimension}"
@@ -120,8 +121,7 @@ def main_segmentation(args):
     bert_embedder = BERTEmbedder()
     roberta_embedder = RoBERTaEmbedder()
     openai_embedder = OpenAIEmbedder()
-    sbert_embedder = AllMpnetBaseV2Embedder(
-        model_id="sentence-transformers/all-mpnet-base-v2")
+    sbert_embedder = AllMpnetBaseV2Embedder()
     # llm = GeminiProvider(
     #     credentials_file=constants.GOOGLE_GEMINI_CREDENTIALS_FILENAME,
     #     project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
@@ -130,7 +130,8 @@ def main_segmentation(args):
     #     cache_path=constants.LLM_CACHE_FILE_PATH
     # )
     llm = HuggingfaceLargeLanguageModel(
-        model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B")
+        model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+        cache_path=constants.LLM_CACHE_FILE_PATH)
 
     # Engines
     semantic_descriptor_engine = SemanticDescriptorEngine(
