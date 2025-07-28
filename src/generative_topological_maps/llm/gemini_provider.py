@@ -1,5 +1,3 @@
-
-
 import base64
 from io import BytesIO
 from typing import Optional
@@ -11,9 +9,7 @@ from vertexai.preview.generative_models import GenerativeModel
 
 from generative_topological_maps import constants
 from generative_topological_maps.llm.large_language_model import LargeLanguageModel
-from generative_topological_maps.prompt.conversation_history import (
-    ConversationHistory,
-)
+from generative_topological_maps.prompt.conversation_history import ConversationHistory
 
 
 class GeminiProvider(LargeLanguageModel):
@@ -64,10 +60,11 @@ class GeminiProvider(LargeLanguageModel):
         """
         Generates a text response for a conversation that may include image messages.
         """
-        system_instruction, contents = conversation_history.get_gemini_conversation_history()
+        system_instruction, contents = (
+            conversation_history.get_gemini_conversation_history()
+        )
         model = GenerativeModel(
-            model_name=self.model_name,
-            system_instruction=system_instruction
+            model_name=self.model_name, system_instruction=system_instruction
         )
         response = model.generate_content(contents=contents)
         return response.candidates[0].content.parts[0].text
@@ -79,7 +76,7 @@ if __name__ == "__main__":
         project_id=constants.GOOGLE_GEMINI_PROJECT_ID,
         project_location=constants.GOOGLE_GEMINI_PROJECT_LOCATION,
         model_name=GeminiProvider.GEMINI_2_0_FLASH,
-        cache_path=constants.LLM_CACHE_FILE_PATH
+        cache_path=constants.LLM_CACHE_FILE_PATH,
     )
 
     # Test text generation from prompt

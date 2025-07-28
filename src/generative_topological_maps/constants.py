@@ -1,30 +1,36 @@
 # Credentials
-GOOGLE_GEMINI_CREDENTIALS_FILENAME = "credentials/procesamiento-documentos-ia-574a79820d6f.json"
+GOOGLE_GEMINI_CREDENTIALS_FILENAME = (
+    "credentials/procesamiento-documentos-ia-574a79820d6f.json"
+)
 GOOGLE_GEMINI_PROJECT_ID = "procesamiento-documentos-ia"
 GOOGLE_GEMINI_PROJECT_LOCATION = "us-central1"
 
 # Paths
 SEMANTIC_MAPS_FOLDER_PATH = "data/semantic_maps/"
-SEMANTIC_MAPS_PATHS = ["data/semantic_maps/scannet_scene0000_00.json",
-                       "data/semantic_maps/scannet_scene0101_00.json",
-                       "data/semantic_maps/scannet_scene0392_01.json",
-                       "data/semantic_maps/scannet_scene0515_00.json",
-                       "data/semantic_maps/scannet_scene0673_04.json",
-                       "data/semantic_maps/scenenn_011.json",
-                       "data/semantic_maps/scenenn_030.json",
-                       "data/semantic_maps/scenenn_078.json",
-                       "data/semantic_maps/scenenn_086.json",
-                       "data/semantic_maps/scenenn_096.json"]
-SEMANTIC_MAPS_COLORS_PATHS = ["/home/ubuntu/datasets/ScanNet/raw_data/scene0000_00/color/",
-                              "/home/ubuntu/datasets/ScanNet/raw_data/scene0101_00/color/",
-                              "/home/ubuntu/datasets/ScanNet/raw_data/scene0392_01/color/",
-                              "/home/ubuntu/datasets/ScanNet/raw_data/scene0515_00/color/",
-                              "/home/ubuntu/datasets/ScanNet/raw_data/scene0673_04/color/",
-                              None,
-                              None,
-                              None,
-                              None,
-                              None]
+SEMANTIC_MAPS_PATHS = [
+    "data/semantic_maps/scannet_scene0000_00.json",
+    "data/semantic_maps/scannet_scene0101_00.json",
+    "data/semantic_maps/scannet_scene0392_01.json",
+    "data/semantic_maps/scannet_scene0515_00.json",
+    "data/semantic_maps/scannet_scene0673_04.json",
+    "data/semantic_maps/scenenn_011.json",
+    "data/semantic_maps/scenenn_030.json",
+    "data/semantic_maps/scenenn_078.json",
+    "data/semantic_maps/scenenn_086.json",
+    "data/semantic_maps/scenenn_096.json",
+]
+SEMANTIC_MAPS_COLORS_PATHS = [
+    "/home/ubuntu/datasets/ScanNet/raw_data/scene0000_00/color/",
+    "/home/ubuntu/datasets/ScanNet/raw_data/scene0101_00/color/",
+    "/home/ubuntu/datasets/ScanNet/raw_data/scene0392_01/color/",
+    "/home/ubuntu/datasets/ScanNet/raw_data/scene0515_00/color/",
+    "/home/ubuntu/datasets/ScanNet/raw_data/scene0673_04/color/",
+    None,
+    None,
+    None,
+    None,
+    None,
+]
 RESULTS_FOLDER_PATH = "results/"
 PLACES_RESULTS_FOLDER_PATH = "results/places_results/"
 RELATIONSHIPS_RESULTS_FOLDER_PATH = "results/relationships_results/"
