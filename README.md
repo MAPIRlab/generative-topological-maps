@@ -1,6 +1,19 @@
 # Generative Topological Maps
 
-A comprehensive system for semantic place segmentation and categorization, and semantic relationships inference on pre-built semantic maps using AI models and clustering algorithms.
+Generative Topological Maps is a framework for semantic place segmentation, categorization, and inference of spatial relationships within pre-built semantic maps. 
+It combines clustering techniques with generative AI models to deliver accurate and interpretable map analyses.
+
+This work was completed as the Master’s Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.  
+- **[Full Thesis Report](doc/pdfs/tfm_report.pdf)**  
+- **[Presentation Slides](doc/pdfs/tfm_presentation.pdf)**  
+
+![Master Thesis title and author](doc/images/tfm_title.png)
+
+A core component of the place segmentation and categorization pipeline has been accepted for presentation at the European Conference on Mobile Robotics (ECMR) 2025 in Padua, Italy.  
+- **[ECMR 2025 Conference Paper](doc/pdfs/ecmr_paper.pdf)**  
+
+![ECMR 2025 paper title and authors](doc/images/ecmr_title.png)
+
 
 ## Overview
 
