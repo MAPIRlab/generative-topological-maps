@@ -14,72 +14,103 @@ A core component of the place segmentation and categorization pipeline has been 
 
 ![ECMR 2025 paper title and authors](doc/images/ecmr_title.png)
 
+## Setup
+
+In order to run the Python code in this repository you need to:
+
+1. **Create and activate a virtual environment**  
+    ```bash
+    python -m venv venv
+    # On macOS/Linux
+    source venv/bin/activate
+    # On Windows (PowerShell)
+    .\venv\Scripts\Activate.ps1
+    ```
+2. **Install dependencies**
+    ```bash
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    ```
 
 ## Overview
 
-This repository provides tools for transforming raw spatial data into categorized places and inferred relationships through two main processing pipelines:
+The project provides three main scripts to run the core pipelines:
 
-- **Place Understanding Pipeline**: Groups objects into spatial clusters and assigns semantic labels [2](#0-1) 
-- **Relationship Inference Pipeline**: Analyzes spatial and semantic relationships between object pairs <cite/>
+- **`tfm_places.sh`**  
+  Executes the full place segmentation and categorization pipeline as detailed in the Master’s thesis.  
+  ```bash
+  bash tfm_places.sh
+  ```  
+  Outputs are saved to `results/places_results/`.
 
-## Key Features
+- **`tfm_relationships.sh`**  
+  Infers and exports the spatial relationship data between segmented places using our generative AI models.  
+  ```bash
+  bash tfm_relationships.sh
+  ```  
+  Results are written to `results/relationships_results/`.
 
-### Semantic Processing
-- Multiple embedding models (BERT, RoBERTa, OpenAI, Sentence-BERT) [3](#0-2) 
-- Dimensionality reduction with PCA/UMAP [4](#0-3) 
-- LLM-based categorization using Gemini [5](#0-4) 
+- **`ecmr.sh`**  
+  Generates the semantic place segmentation results used in the ECMR 2025 submission.  
+  ```bash
+  bash ecmr.sh
+  ```  
+  This will produce the ECMR-specific output files under the designated `results/places_results/` directory.
+  Please note that, due to minor implementation adjustments, your results may differ slightly from those reported in the paper. 
+  The model hierarchy, however, remains unchanged.
 
-### Clustering Algorithms
-- DBSCAN and HDBSCAN clustering [6](#0-5) 
-- Post-processing with merge/split operations [7](#0-6) 
-- Evaluation metrics (ARI, NMI, V-Measure, FMI) [8](#0-7) 
+## Code organization
 
-### Visualization Tools
-- 2D/3D cluster visualization [9](#0-8) 
-- Point cloud overlay visualization [10](#0-9) 
-- Semantic embedding space analysis <cite/>
+The project is structured into individual modules and focused subpackages, each responsible for a distinct part of the pipeline:
 
-## Usage
+- **`check_places_ground_truth.py`**
+    Checks the ground-truth place segmentation annotations to ensure consistency and correctness.
 
-### Place Categorization
-```bash
-python src/generative_place_categorization/main_places.py \
-    --method METHOD_BERT \
-    --clustering-algorithm dbscan \
-    --stage segmentation
-```
+- **`constants.py`**  
+    Centralizes global constants: file paths, method names, default parameter values, environment variable keys, etc.
 
-### Cluster Visualization
-```bash
-python src/generative_place_categorization/inspect_clusters.py \
-    --clustering-file results/clustering.json \
-    --semantic-map map_name \
-    --visualization-method 2D
-``` [11](#0-10) 
+- **`evaluate_places.py`**  
+    Computes quantitative metrics by comparing the place segmentation outputs to the ground truth.
 
-## Core Components
+- **`ask_queries.py`**  
+    Generates the queries to perform to the LLM to evaluate its behavior in robotic tasks when equipped with a semantic map, and a semantic-topological map.
 
-### Data Structures
-- `Clustering`: Container for object clusters with evaluation capabilities [12](#0-11) 
-- `SemanticMap`: Spatial object representation with semantic properties [13](#0-12) 
+- **`inspect_clusters.py`**  
+    Provides routines to visualize cluster (places) compositions.
 
-### Processing Engines
-- `SemanticDescriptorEngine`: Multi-model embedding generation [14](#0-13) 
-- `ClusteringEngine`: Spatial grouping algorithms [15](#0-14) 
-- `DimensionalityReductionEngine`: Feature space optimization [16](#0-15) 
+- **`inspect_semantics.py`**  
+    Offers graphical representations for examining the distribution of semantic descriptors.
 
-## Installation
+- **`main_places.py`**  
+  **Entry point for place segmentation & categorization.**  
+  1. Argument parsing (`--stage`, embedding method, clustering params, LLM flags, etc.)  
+  2. Setup: loads `.env`, instantiates embedders & LLM clients, engines.  
+  3. **Segmentation**: builds descriptors, reduces dimensions, clusters, post‑processes, saves JSON & plots.  
+  4. **Categorization**: loads clusters, constructs prompts, optionally sends LLM requests, writes tags/descriptions.
 
-```bash
-pip install -r requirements.txt
-```
+- **`main_relationships.py`**  
+  **Entry point for spatial relationship inference.**  
+  1. Argument parsing (`-g`, `--method`, `--num-images`, etc.)  
+  2. Setup: loads `.env`, instantiates LLM client.  
+  3. Finds object pairs, builds text or multimodal prompts, optionally sends LLM/LVLM requests, aggregates into `relationships.json`.
 
-Set up environment variables for API access (OpenAI, Google Gemini). <cite/>
+- **`embedding/`**  
+  Text‑embedding backends and base classes (`all_mpnet_base_v2_embedder.py`, `bert_embedder.py`, etc.).
 
-## Notes
+- **`llm/`**  
+  LLM provider abstractions (`gemini_provider.py`, `huggingface_large_language_model.py`, `large_language_model.py`).
 
-The system supports both embedding-based clustering and direct LLM segmentation approaches, with comprehensive visualization tools for analysis and validation. [17](#0-16)  The codebase includes extensive parameter configuration for systematic experimentation across different semantic descriptors and clustering methods. <cite/>
+- **`prompt/`**  
+  Prompt templates and history management (`place_segmenter_prompt.py`, `conversation_history.py`, etc.).
 
-Wiki pages you might want to explore:
-- [Processing Pipelines (MAPIRlab/generative-topological-maps)](/wiki/MAPIRlab/generative-topological-maps#4)
-- [Visualization and Inspection Tools (MAPIRlab/generative-topological-maps)](/wiki/MAPIRlab/generative-topological-maps#7)
+- **`semantic/`**  
+  Engines for descriptor computation, dimensionality reduction, and clustering (`semantic_descriptor_engine.py`, `clustering_engine.py`, etc.).
+
+- **`show/`**  
+  Visualization helpers (`metrics_table.py`).
+
+- **`utils/`**  
+  General utilities for file I/O and data structures (`file_utils.py`, `dict_utils.py`).
+
+- **`voxeland/`**  
+  Domain classes for loading and handling semantic maps (`semantic_map.py`, `cluster.py`, etc.).
