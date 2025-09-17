@@ -1,16 +1,19 @@
 # Generative Topological Maps
 
-Generative Topological Maps is a framework for semantic place segmentation, categorization, and inference of spatial relationships within pre-built semantic maps. 
-It combines clustering techniques with generative AI models to deliver accurate and interpretable map analyses.
+Generative Topological Maps is a framework for *place segmentation and categorization*, and *semantic object relationships inference* within pre-built semantic maps containing information about objects.
 
-This work was completed as the Master’s Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.  
-- **[Full Thesis Report](doc/pdfs/tfm_report.pdf)**  
-- **[Presentation Slides](doc/pdfs/tfm_presentation.pdf)**  
+This work was completed as the Master’s Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.
+
+- **[Full Thesis Report](doc/pdfs/tfm_report.pdf)**
+- **[Presentation Slides](doc/pdfs/tfm_presentation.pdf)**
 
 ![Master Thesis title and author](doc/images/tfm_title.png)
 
-A core component of the place segmentation and categorization pipeline has been accepted for presentation at the European Conference on Mobile Robotics (ECMR) 2025 in Padua, Italy.  
-- **[ECMR 2025 Conference Paper](doc/pdfs/ecmr_paper.pdf)**  
+A core component of the place segmentation and categorization pipeline has been accepted and presented at the European Conference on Mobile Robotics (ECMR) 2025 in Padua, Italy.
+
+- **[ECMR 2025 Conference Paper](doc/pdfs/ecmr_paper.pdf)**
+- **[ECMR 2025 Presentation Slides](doc/pdfs/ecmr_slides.pdf)**
+- **[ECMR 2025 Paper Poster](doc/pdfs/ecmr_poster.pdf)**
 
 ![ECMR 2025 paper title and authors](doc/images/ecmr_title.png)
 
@@ -18,7 +21,7 @@ A core component of the place segmentation and categorization pipeline has been 
 
 In order to run the Python code in this repository you need to:
 
-1. **Create and activate a virtual environment**  
+1. Create and activate a virtual environment
     ```bash
     python -m venv venv
     # On macOS/Linux
@@ -26,91 +29,148 @@ In order to run the Python code in this repository you need to:
     # On Windows (PowerShell)
     .\venv\Scripts\Activate.ps1
     ```
-2. **Install dependencies**
+2. Install dependencies
     ```bash
     pip install --upgrade pip
     pip install -r requirements.txt
     ```
 
-## Overview
+## Code Organization
 
-The project provides three main scripts to run the core pipelines:
+### `data` folder
+
+- **`data/semantic_maps/`**  
+  Contains ten semantic maps sourced from **ScanNet** (`scannet_*.json`) and **SceneNN** (`scenenn_*.json`).  
+  All the methods presented in the thesis and the ECMR 2025 paper were deployed and tested on these maps.  
+  To experiment with your own semantic maps, place additional files in this folder using the same JSON schema.
+
+- **`data/clusterings/`**  
+  Stores the **ground-truth place segmentations** corresponding to each semantic map in `data/semantic_maps/`.  
+  These ground truths are essential for evaluating the proposed methods, computing metrics, and performing ablation studies, as detailed in the thesis and conference paper.
+
+### `doc` folder
+
+- **`doc/pdfs/`**  
+  Includes all related documents:
+  - `tfm_report.pdf` – Complete Master’s Thesis report.  
+  - `tfm_presentation.pdf` – Defense presentation slides.  
+  - `ecmr_paper.pdf` – ECMR 2025 accepted paper.  
+  - `ecmr_slides.pdf` – ECMR 2025 talk slides.  
+  - `ecmr_poster.pdf` – ECMR 2025 poster.
+
+- **`doc/images/`**  
+  Contains figures and illustrations used in the thesis and README, such as cover pages (`tfm_title.png`, `ecmr_title.png`).
+
+### Scripts
+
+Three shell scripts are provided to run the main pipelines for **place segmentation & categorization** and **semantic-relationship inference**:
 
 - **`tfm_places.sh`**  
-  Executes the full place segmentation and categorization pipeline as detailed in the Master’s thesis.  
+  Runs all place-segmentation and categorization methods described in the Master’s Thesis.  
   ```bash
-  bash tfm_places.sh
+  ./tfm_places.sh
   ```  
-  Outputs are saved to `results/places_results/`.
+  Results are written to `results/places_results/`.
 
 - **`tfm_relationships.sh`**  
-  Infers and exports the spatial relationship data between segmented places using our generative AI models.  
+  Runs all semantic-relationship inference methods described in the Master’s Thesis.  
   ```bash
-  bash tfm_relationships.sh
+  ./tfm_relationships.sh
   ```  
   Results are written to `results/relationships_results/`.
 
 - **`ecmr.sh`**  
-  Generates the semantic place segmentation results used in the ECMR 2025 submission.  
+  Reproduces the semantic place-segmentation and categorization experiments presented in the ECMR 2025 paper.  
   ```bash
-  bash ecmr.sh
+  ./ecmr.sh
   ```  
-  This will produce the ECMR-specific output files under the designated `results/places_results/` directory.
-  Please note that, due to minor implementation adjustments, your results may differ slightly from those reported in the paper. 
-  The model hierarchy, however, remains unchanged.
+  Results are also saved in `results/places_results/`.  
+  ⚠️ **Important:** Save any outputs produced by `tfm_places.sh` elsewhere before running this script to avoid overwriting them.  
+  **Note**: minor implementation tweaks may cause slight numerical differences from the published paper, but the model hierarchy remains the same.
 
-## Code organization
+### `src` folder
 
-The project is structured into individual modules and focused subpackages, each responsible for a distinct part of the pipeline:
-
-- **`check_places_ground_truth.py`**
-    Checks the ground-truth place segmentation annotations to ensure consistency and correctness.
-
-- **`constants.py`**  
-    Centralizes global constants: file paths, method names, default parameter values, environment variable keys, etc.
-
-- **`evaluate_places.py`**  
-    Computes quantitative metrics by comparing the place segmentation outputs to the ground truth.
+The `src` folder contains the project code, organized into modules and subpackages, each handling a specific part of the pipeline:
 
 - **`ask_queries.py`**  
-    Generates the queries to perform to the LLM to evaluate its behavior in robotic tasks when equipped with a semantic map, and a semantic-topological map.
+  Generates prompts for evaluating LLMs in response to user queries about semantic maps including information about places and relationships between objects.  
+  Used for the qualitative evaluation of an LLM equipped with a semantic map in the Master’s thesis.
+
+- **`check_places_ground_truth.py`**  
+  Validates ground‑truth place‑segmentation annotations in `data/clusterings/` for consistency and completeness.  
+  Run this script whenever a ground‑truth JSON file is modified to ensure no object is missing.
+
+- **`constants.py`**  
+  Centralizes global constants such as file paths, method names, default parameter values, and environment variable keys.
+
+- **`evaluate_places.py`**  
+  Computes clustering metrics to evaluate segmentations in `results/places_results/` against ground truths in `data/clusterings/`.  
+  Outputs tables with metrics including Normalized Mutual Information (NMI), V‑Measure, and Adjusted Rand Index (ARI).
 
 - **`inspect_clusters.py`**  
-    Provides routines to visualize cluster (places) compositions.
+  Provides 2D/3D visualizations of the places generated by the segmentation and categorization methods.  
+  Useful for qualitative evaluation and method development.
 
 - **`inspect_semantics.py`**  
-    Offers graphical representations for examining the distribution of semantic descriptors.
+  Visualizes the distribution of semantic descriptors produced by different methods.  
+  Enables comparisons, e.g., between BERT-based descriptors and those from the contextualized method implemented here.
 
 - **`main_places.py`**  
-  **Entry point for place segmentation & categorization.**  
-  1. Argument parsing (`--stage`, embedding method, clustering params, LLM flags, etc.)  
-  2. Setup: loads `.env`, instantiates embedders & LLM clients, engines.  
-  3. **Segmentation**: builds descriptors, reduces dimensions, clusters, post‑processes, saves JSON & plots.  
-  4. **Categorization**: loads clusters, constructs prompts, optionally sends LLM requests, writes tags/descriptions.
+  **Entry point for place segmentation and categorization.**  
+  - `--stage` specifies `segmentation` or `categorization` (segmentation must be run first).  
+  - `--method` selects which presented method to execute.  
+  Results are saved to `results/places_results/`.
 
 - **`main_relationships.py`**  
-  **Entry point for spatial relationship inference.**  
-  1. Argument parsing (`-g`, `--method`, `--num-images`, etc.)  
-  2. Setup: loads `.env`, instantiates LLM client.  
-  3. Finds object pairs, builds text or multimodal prompts, optionally sends LLM/LVLM requests, aggregates into `relationships.json`.
+  **Entry point for semantic‑relationship inference.**  
+  Runs the inference methods described in the thesis.  
+  Results are saved to `results/relationships_results/`.
 
-- **`embedding/`**  
+- **`embedding/`**
   Text‑embedding backends and base classes (`all_mpnet_base_v2_embedder.py`, `bert_embedder.py`, etc.).
 
-- **`llm/`**  
+- **`llm/`**
   LLM provider abstractions (`gemini_provider.py`, `huggingface_large_language_model.py`, `large_language_model.py`).
 
-- **`prompt/`**  
-  Prompt templates and history management (`place_segmenter_prompt.py`, `conversation_history.py`, etc.).
+- **`prompt/`**
+  Prompt templates and conversion history management (`place_segmenter_prompt.py`, `conversation_history.py`, etc.).
 
-- **`semantic/`**  
-  Engines for descriptor computation, dimensionality reduction, and clustering (`semantic_descriptor_engine.py`, `clustering_engine.py`, etc.).
+- **`semantic/`**
+  Engines for descriptor computation, dimensionality reduction, and clustering (`semantic_descriptor_engine.py`, `clustering_engine.py`).
 
 - **`show/`**  
-  Visualization helpers (`metrics_table.py`).
+  Visualization helpers for tables (`metrics_table.py`).
 
 - **`utils/`**  
   General utilities for file I/O and data structures (`file_utils.py`, `dict_utils.py`).
 
 - **`voxeland/`**  
   Domain classes for loading and handling semantic maps (`semantic_map.py`, `cluster.py`, etc.).
+
+## Prompts
+
+All prompts used in this project are implemented as Python classes inside [`src/generative_topological_maps/prompt/`](src/generative_topological_maps/prompt/):
+
+- [`sentence_generator_prompt.py`](src/generative_topological_maps/prompt/sentence_generator_prompt.py)  
+  Generates textual descriptions of object functionality within a scene.
+
+- [`place_segmenter_prompt.py`](src/generative_topological_maps/prompt/place_segmenter_prompt.py)  
+  Drives the place‑segmentation and categorization process performed entirely by an LLM.
+
+- [`place_categorizer_prompt.py`](src/generative_topological_maps/prompt/place_categorizer_prompt.py)  
+  Handles place categorization prompts used after segmentation.
+
+- [`relationship_inferer_prompt.py`](src/generative_topological_maps/prompt/relationship_inferer_prompt.py)  
+  Infers semantic relationships between objects using an LLM.
+
+- [`relationship_inferer_with_image_prompt.py`](src/generative_topological_maps/prompt/relationship_inferer_with_image_prompt.py)  
+  Infers semantic relationships using an LVLM with visual input.
+
+- [`simple_scene_helper_prompt.py`](src/generative_topological_maps/prompt/simple_scene_helper_prompt.py) and [`complex_scene_helper_prompt.py`](src/generative_topological_maps/prompt/complex_scene_helper_prompt.py)  
+  Evaluate LLM performance when answering user questions based on a semantic map:  
+  - `simple_scene_helper_prompt.py` for maps containing only objects.  
+  - `complex_scene_helper_prompt.py` for maps including objects, places, and relationships.
+
+Support classes:  
+- [`prompt.py`](src/generative_topological_maps/prompt/prompt.py) provides a common interface to manage all prompts.  
+- [`conversation_history.py`](src/generative_topological_maps/prompt/conversation_history.py) manages LLM conversation histories.
