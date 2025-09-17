@@ -1,6 +1,6 @@
 # Generative Topological Maps
 
-Generative Topological Maps is a framework for *place segmentation and categorization*, and *semantic object relationships inference* within pre-built semantic maps containing information about objects.
+Generative Topological Maps is a framework for **place segmentation and categorization**, and **semantic object relationships inference** within pre-built semantic maps containing information about objects.
 
 This work was completed as the Master’s Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.
 
