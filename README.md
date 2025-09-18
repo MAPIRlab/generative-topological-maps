@@ -193,4 +193,4 @@ Once places are segmented, categorization is done by an LLM that generates conci
 
 There are two complementary pipelines for inferring open-vocabulary object-object relationships: a text-only LLM method and a multimodal LVLM variant that uses images and text. Both recover spatial, structural, and functional links (such as on top of, supports, or used with). However, the LVLM often provides more detailed, visually grounded predicates. These relationships integrate smoothly with the segmented and categorized places. This enables richer topological maps that support advanced reasoning and task planning.
 
-For a complete description of the methodology, qualitative examples, and full experimental analysis, please refer to the [ECMR article](doc/pdfs/ecmr_paper.pdf) article and the [full Master's Thesis Report](doc/pdfs/tfm_report.pdf) linked in this repository.
+For a complete description of the methodology, qualitative examples, and full experimental analysis, please refer to the [ECMR article](doc/pdfs/ecmr_paper.pdf) article and the [full Master's Thesis report](doc/pdfs/tfm_report.pdf) linked in this repository.
