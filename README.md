@@ -185,9 +185,9 @@ The geometric–semantic clustering pipeline finds functionally coherent places 
 
 Once places are segmented, categorization is done by an LLM that generates concise tags and natural-language descriptions for each cluster. This produces results that consistently reflect each area's purpose (for example, kitchen_zone or media_lounge). It goes beyond a mere list of objects to describe likely activities and functional context. These annotations enrich the semantic map, making it more useful for downstream robotic reasoning and planning. Robots can now reason in terms of meaningful zones instead of just individual objects.
 
-![Segmentation result for ScanNet scene scene0101_00, showing the abstracted 3D representation with colored bounding boxes.](doc/images/segmentation_example_3d.png){ width=400px style="display:block; margin:auto;" }
+![Segmentation result for ScanNet scene scene0101_00, showing the abstracted 3D representation with colored bounding boxes.](doc/images/segmentation_example_3d.png)
 
-![Segmentation result for ScanNet scene scene0101_00, showing the segmentation overlaid on the point cloud of the scene.](doc/images/segmentation_example_point_cloud.png){ width=400px style="display:block; margin:auto;" }
+![Segmentation result for ScanNet scene scene0101_00, showing the segmentation overlaid on the point cloud of the scene.](doc/images/segmentation_example_point_cloud.png)
 
 ### Relationship inference
 
