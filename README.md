@@ -2,12 +2,12 @@
 
 Generative Topological Maps is a framework for **place segmentation and categorization**, and **semantic object relationships inference** within pre-built semantic maps containing information about objects.
 
-This work was completed as the Master’s Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.
+This work was completed as the Master's Thesis of Jesús Moncada Ramírez for the M.Sc. in Mechatronics Engineering at the University of Málaga.
 
 - **[Full Thesis Report](doc/pdfs/tfm_report.pdf)**
 - **[Presentation Slides](doc/pdfs/tfm_presentation.pdf)**
 
-![Master Thesis title and author](doc/images/tfm_title.png)
+![Master's Thesis title and author](doc/images/tfm_title.png)
 
 A core component of the place segmentation and categorization pipeline has been accepted and presented at the European Conference on Mobile Robotics (ECMR) 2025 in Padua, Italy.
 
@@ -52,7 +52,7 @@ In order to run the Python code in this repository you need to:
 
 - **`doc/pdfs/`**  
   Includes all related documents:
-  - `tfm_report.pdf` – Complete Master’s Thesis report.  
+  - `tfm_report.pdf` – Complete Master's Thesis report.  
   - `tfm_presentation.pdf` – Defense presentation slides.  
   - `ecmr_paper.pdf` – ECMR 2025 accepted paper.  
   - `ecmr_slides.pdf` – ECMR 2025 talk slides.  
@@ -66,14 +66,14 @@ In order to run the Python code in this repository you need to:
 Three shell scripts are provided to run the main pipelines for **place segmentation & categorization** and **semantic-relationship inference**:
 
 - **`tfm_places.sh`**  
-  Runs all place-segmentation and categorization methods described in the Master’s Thesis.  
+  Runs all place-segmentation and categorization methods described in the Master's Thesis.  
   ```bash
   ./tfm_places.sh
   ```  
   Results are written to `results/places_results/`.
 
 - **`tfm_relationships.sh`**  
-  Runs all semantic-relationship inference methods described in the Master’s Thesis.  
+  Runs all semantic-relationship inference methods described in the Master's Thesis.  
   ```bash
   ./tfm_relationships.sh
   ```  
@@ -94,7 +94,7 @@ The `src` folder contains the project code, organized into modules and subpackag
 
 - **`ask_queries.py`**  
   Generates prompts for evaluating LLMs in response to user queries about semantic maps including information about places and relationships between objects.  
-  Used for the qualitative evaluation of an LLM equipped with a semantic map in the Master’s thesis.
+  Used for the qualitative evaluation of an LLM equipped with a semantic map in the Master's thesis.
 
 - **`check_places_ground_truth.py`**  
   Validates ground‑truth place‑segmentation annotations in `data/clusterings/` for consistency and completeness.  
@@ -174,3 +174,23 @@ All prompts used in this project are implemented as Python classes inside [`src/
 Support classes:  
 - [`prompt.py`](src/generative_topological_maps/prompt/prompt.py) provides a common interface to manage all prompts.  
 - [`conversation_history.py`](src/generative_topological_maps/prompt/conversation_history.py) manages LLM conversation histories.
+
+## Results
+
+### Place segmentation
+
+The geometric–semantic clustering pipeline finds functionally coherent places within complex indoor scenes. It combines spatial proximity, context-aware semantic descriptors, and a separate refinement stage. This method captures both the geometric arrangement of objects and their functional roles. It produces stable, human-interpretable clusters—such as kitchens, lounges, or shared workspaces—even when the environment lacks clear architectural boundaries. Purely geometric or simple word-embedding methods tend to over- or under-segment and are less reliable in mixed or open layouts.
+
+### Place categorization
+
+Once places are segmented, categorization is done by an LLM that generates concise tags and natural-language descriptions for each cluster. This produces results that consistently reflect each area's purpose (for example, kitchen_zone or media_lounge). It goes beyond a mere list of objects to describe likely activities and functional context. These annotations enrich the semantic map, making it more useful for downstream robotic reasoning and planning. Robots can now reason in terms of meaningful zones instead of just individual objects.
+
+![Segmentation result for ScanNet scene scene0101_00, showing the abstracted 3D representation with colored bounding boxes.](doc/images/segmentation_example_3d.png){ width=400px style="display:block; margin:auto;" }
+
+![Segmentation result for ScanNet scene scene0101_00, showing the segmentation overlaid on the point cloud of the scene.](doc/images/segmentation_example_point_cloud.png){ width=400px style="display:block; margin:auto;" }
+
+### Relationship inference
+
+There are two complementary pipelines for inferring open-vocabulary object-object relationships: a text-only LLM method and a multimodal LVLM variant that uses images and text. Both recover spatial, structural, and functional links (such as on top of, supports, or used with). However, the LVLM often provides more detailed, visually grounded predicates. These relationships integrate smoothly with the segmented and categorized places. This enables richer topological maps that support advanced reasoning and task planning.
+
+For a complete description of the methodology, qualitative examples, and full experimental analysis, please refer to the [ECMR article](doc/pdfs/ecmr_paper.pdf) article and the [full Master's Thesis Report](doc/pdfs/tfm_report.pdf) linked in this repository.
